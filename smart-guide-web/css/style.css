@@ -1,0 +1,262 @@
+/* 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (@xylito) & DORO Inc. & You
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+*/
+/* 도로랜드 스마트 안내 시스템 CSS */
+/* 교육 목표: CSS 기본 적용 (글자 크기, 색상, 여백, 간단한 디자인 넣기) */
+
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700&display=swap');
+
+/* 공통 변수 설정: 예쁜 프리미엄 디자인을 위한 색상 세트 */
+:root {
+    --primary-color: #ff6b6b;      /* 버튼 및 주요 제목 색상 */
+    --secondary-color: #4ecdc4;    /* 테이블 헤더, 안내 테두리 등 서브 색상 */
+    --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); /* 배경 그라데이션 */
+    --text-color: #2f3542;         /* 기본 글자 색 */
+    --glass-bg: rgba(255, 255, 255, 0.75); /* 투명한 유리 느낌 배경 */
+    --glass-border: rgba(255, 255, 255, 0.5); /* 유리 느낌 외곽선 */
+    --glass-shadow: 0 8px 32px 0 rgba(100, 100, 255, 0.15); /* 부드러운 그림자 */
+}
+
+/* 1. 페이지 전체 기본 디자인 */
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-gradient);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative; /* 배경 이미지를 위해 */
+}
+
+/* 제목 폰트 예쁘게 바꾸기 */
+h1, h2, h3 {
+    font-family: 'Jua', sans-serif;
+    color: var(--primary-color);
+}
+
+/* 2. 배경 장식 이미지들 부드러운 애니메이션 (시각 요소 보완하기 - 마이크로 인터랙션) */
+.deco {
+    position: absolute;
+    z-index: -1;
+}
+
+.cloud { filter: opacity(0.8); }
+.cloud-1 { top: 5%; left: -10%; animation: floatAir 25s infinite linear; height: 90px; }
+.cloud-2 { top: 18%; right: -15%; animation: floatAir 35s infinite linear reverse; height: 110px; }
+.balloon { top: 12%; left: 8%; animation: bobbing 4.5s infinite ease-in-out; height: 160px; }
+.robot-balloon { top: 35%; right: 5%; animation: bobbing 5.5s infinite ease-in-out alternate; height: 140px; }
+.robot-right { top: 60%; right: 2%; height: 180px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); animation: bobbing 6s infinite ease-in-out;}
+.ferriswheel { 
+    bottom: 0; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    height: 48vh; 
+    max-height: 450px; 
+    z-index: -2; 
+    mix-blend-mode: multiply;
+    opacity: 0.2;
+}
+
+/* 애니메이션 동작 정의 */
+@keyframes floatAir {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(120vw); }
+}
+
+@keyframes bobbing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* 3. 메인 콘텐츠가 담기는 상자 */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    position: relative;
+    z-index: 10; /* 배경보다 위에 보이도록 */
+}
+
+/* 헤더 영역 */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: var(--glass-bg);
+    border-radius: 20px;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+}
+
+header h1 {
+    font-size: 2.8rem;
+    margin: 0 0 10px 0;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+.source-info {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 15px;
+}
+
+/* 4. 글래스모피즘 공통 클래스 (유리 느낌 나는 예쁜 카드 디자인) */
+.glass {
+    background: var(--glass-bg);
+    border-radius: 20px;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 카드 배치 (나란히 두기) */
+.card-container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap; /* 화면이 작아지면 세로로 배치 */
+}
+
+/* 개별 카드들 */
+.card {
+    flex: 1; /* 똑같은 너비 나누어 가지기 */
+    min-width: 280px; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 카드 마우스 오버 효과 (다이내믹 디자인) */
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px 0 rgba(100, 100, 255, 0.25);
+}
+
+.card-header h2 {
+    margin-top: 0;
+    border-bottom: 2px dashed var(--secondary-color);
+    padding-bottom: 10px;
+}
+
+/* 큰 강조 데이터 */
+.data-value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+/* 5. 표 디자인 */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.data-table th, .data-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.data-table th {
+    background-color: var(--secondary-color);
+    color: white;
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.data-table tr:hover {
+    background-color: rgba(255,255,255,0.9);
+}
+
+/* 6. 버튼 디자인 */
+.action-btn-container {
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-family: 'Jua', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+    transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+    background-color: #ff5252;
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.8);
+}
+
+/* 7. 상태 상태 뱃지 (시각 요소 보완하기 - 색상으로 가독성 높이기) */
+.badge {
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 미세먼지 단계별 색상 */
+.badge.good { background-color: #2ecc71; } /* 좋음 초록색 */
+.badge.normal { background-color: #f1c40f; color:#333; } /* 보통 노란색 */
+.badge.bad { background-color: #e74c3c; } /* 나쁨 빨간색 */
+
+/* 8. 데이터 해석 안내 영역 디자인 */
+#recommendation-msg {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    font-weight: bold;
+    color: #444;
+}
+
+.guide-container {
+    border-left: 10px solid var(--secondary-color);
+}
+
+/* 9. 푸터 디자인 */
+.ui-footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #64748b;
+    padding: 15px 0;
+    margin-top: 30px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+.ui-footer a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: bold;
+}
+.ui-footer a:hover {
+    text-decoration: underline;
+}

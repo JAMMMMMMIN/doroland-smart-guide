@@ -1,0 +1,232 @@
+<!-- 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (@xylito) & DORO Inc.
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도로랜드 정보국 - 신입 요원 훈련 포털</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            padding: 4rem 2rem 2rem;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h2 {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+            color: #e2e8f0;
+        }
+
+        .card-desc {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .link-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .link-list li {
+            margin-bottom: 0.8rem;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .link-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 1.5rem;
+        }
+
+        .link-btn::before {
+            content: '→';
+            margin-right: 10px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .final-app {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            grid-column: 1 / -1;
+        }
+        
+        .final-app .link-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            justify-content: center;
+        }
+
+        .final-app .link-btn:hover {
+            padding-left: 1.2rem;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        .final-app .link-btn::before {
+            display: none;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>도로랜드 정보국 훈련 포털 🎯</h1>
+        <p>신입 요원 여러분, 환영합니다.<br>이곳은 공공데이터를 활용해 도로랜드의 스마트 가이드를 구축하는 비밀 훈련 기지입니다.</p>
+    </div>
+
+    <div class="grid-container">
+        <!-- 1단계: API 연습장 -->
+        <div class="card">
+            <div class="card-icon">📡</div>
+            <h2>1단계: 공공데이터 해킹(API) 연습장</h2>
+            <p class="card-desc">기상청과 에어코리아의 서버에 접속하여 데이터를 가져오는 훈련을 진행합니다.</p>
+            <ul class="link-list">
+                <li><a href="api-test/api-test-weather.html" class="link-btn">날씨 데이터 API 접속 훈련</a></li>
+                <li><a href="api-test/api-test-air.html" class="link-btn">미세먼지 데이터 API 접속 훈련</a></li>
+            </ul>
+        </div>
+
+        <!-- 2단계: 웹 페이지 훈련소 -->
+        <div class="card">
+            <div class="card-icon">💻</div>
+            <h2>2단계: 웹 특수작전팀 훈련소</h2>
+            <p class="card-desc">HTML, CSS, JS 요원들의 지도를 받으며 웹 페이지 구축의 기초를 다집니다.</p>
+            <ul class="link-list">
+                <li><a href="agent-training/agent-training-html.html" class="link-btn">HTML 요원의 뼈대 훈련</a></li>
+                <li><a href="agent-training/agent-training-css.html" class="link-btn">CSS 요원의 디자인 훈련</a></li>
+                <li><a href="agent-training/agent-training-js.html" class="link-btn">JS 요원의 생명력 훈련</a></li>
+            </ul>
+        </div>
+
+        <!-- 최종 단계: 스마트 가이드 완성 -->
+        <div class="card final-app">
+            <div class="card-icon">🎢</div>
+            <h2>최종 미션: 스마트 가이드 구축</h2>
+            <p class="card-desc">직접 코드를 채워넣을 뼈대(Skeleton)를 다운로드 하거나, 어떤 모습으로 완성될지 프로토타입을 확인하세요!</p>
+            <ul class="link-list">
+                <li><a href="smart-guide-skeleton.zip" class="link-btn" download>🛠️ 뼈대 코드(Skeleton) 다운로드</a></li>
+                <li><a href="smart-guide-web/index.html" class="link-btn" style="background: linear-gradient(135deg, #10b981, #059669); margin-top: 10px;">🚀 프로토타입 화면 보러가기</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="ui-footer">
+        &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
+        <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
+    </footer>
+
+</body>
+</html>

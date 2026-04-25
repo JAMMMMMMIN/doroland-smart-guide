@@ -1,0 +1,707 @@
+<!-- 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (@xylito) & DORO Inc.
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기상청 초단기 강수 예측 API - Swagger UI</title>
+    <!-- Swagger UI CSS 베이스 로드 -->
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f4c81 0%, #0088cc 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 15px 0 0 0;
+            opacity: 0.9;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        #swagger-ui {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 20px 30px;
+            overflow: hidden;
+        }
+        /* Swagger 내부 UI 일부 커스텀 */
+        .swagger-ui .topbar { display: none; } /* 기본 탑바 숨김 */
+        .swagger-ui .info { margin: 20px 0; }
+        .swagger-ui .btn.execute { background-color: #0f4c81; border-color: #0f4c81; box-shadow: 0 2px 4px rgba(15,76,129,0.3); }
+        .swagger-ui .btn.execute:hover { background-color: #0b3960; }
+        .swagger-ui .try-out { display: none !important; } /* 테스트 시작 버튼 디자인 숨김 */
+        .swagger-ui .response-col_links { display: none !important; } /* Links 컬럼 숨김 (사용 안함) */
+        .swagger-ui .responses-table:not(.live-responses-table) { display: none !important; } /* API Spec 상에 하드코딩된 '200 정상응답' 테이블 행 완전 제거 */
+    
+        .ui-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 8px 0;
+            background: #e2e8f0;
+            border-top: 1px solid #cbd5e1;
+            margin-top: auto;
+        }
+        .ui-footer a {
+            color: #0f4c81;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .ui-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>기상청 초단기 강수예측 Swagger Dashboard</h1>
+        <p>
+            Node.js 설치나 복잡한 백엔드 구성 없이 웹 브라우저에서 바로 API를 호출하고 확인할 수 있습니다.<br>
+            공공데이터포털(data.go.kr)의 단기예보 조회서비스(초단기예보조회)를 테스트해보세요.<br><br>
+            <span style="display: inline-block; padding: 4px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 13px; font-weight: bold;">✨ Made by XYLO</span>
+        </p>
+    </div>
+
+    <!-- 빠른 지역 선택 UI -->
+    <div id="custom-tools" style="display: none; width: 100%; background: #fbfdff; border-radius: 8px; border: 1px dashed #0088cc; padding: 15px 20px; flex-direction: column; gap: 10px; box-sizing: border-box; margin-bottom: 10px;">
+        
+        <!-- 1. 주요 지역 빠른 선택 -->
+        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <strong style="color: #0f4c81; width: 160px;">📍 주요 지역 퀵선택:</strong>
+            <select id="region-select" style="padding: 10px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; flex: 1; min-width: 250px;">
+                <option value="">-- 주요 지도/지명을 선택하세요 --</option>
+                <option value="60,127">서울특별시 종로구 (60, 127)</option>
+                <option value="61,126">서울특별시 강남구 (61, 126)</option>
+                <option value="98,76">부산광역시 해운대구 (98, 76)</option>
+                <option value="54,125">인천광역시 중구 (54, 125)</option>
+                <option value="67,100">대전광역시 서구 (67, 100)</option>
+                <option value="89,90">대구광역시 중구 (89, 90)</option>
+                <option value="59,74">광주광역시 서구 (59, 74)</option>
+                <option value="102,84">울산광역시 남구 (102, 84)</option>
+                <option value="66,103">세종특별자치시 (66, 103)</option>
+                <option value="60,121">경기도 수원시 (60, 121)</option>
+                <option value="73,134">강원특별자치도 춘천시 (73, 134)</option>
+                <option value="52,38">제주특별자치도 제주시 (52, 38)</option>
+                <option value="52,33">제주특별자치도 서귀포시 (52, 33)</option>
+            </select>
+            <button id="apply-region" style="padding: 10px 20px; background: #0088cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px;">좌표 자동 입력</button>
+        </div>
+
+        <hr style="width: 100%; border: 0; border-top: 1px dashed #e0e0e0; margin: 5px 0;">
+
+        <!-- 2. 시/도 -> 시/군/구 캐스케이딩 선택 -->
+        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <strong style="color: #0d8a5e; width: 160px;">🔎 시/군/구 상세선택:</strong>
+            <select id="sido-select" style="padding: 10px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; flex: 1; min-width: 120px;">
+                <option value="">-- 시/도 선택 --</option>
+            </select>
+            <select id="sigungu-select" style="padding: 10px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; flex: 1; min-width: 130px;" disabled>
+                <option value="">-- 시/군/구 선택 --</option>
+            </select>
+            <button id="apply-detail-region" style="padding: 10px 20px; background: #0d8a5e; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px;">좌표 자동 입력</button>
+        </div>
+    </div>
+
+    <!-- Swagger UI가 렌더링될 영역 -->
+    <div id="swagger-ui"></div>
+
+    <script>
+        // 시/도 -> 시/군/구 중심 좌표 데이터
+        const regionData = {
+            "서울특별시": {
+                "종로구": "60,127", "중구": "60,127", "용산구": "60,126", "성동구": "61,127", "광진구": "62,126",
+                "동대문구": "61,127", "중랑구": "62,128", "성북구": "61,127", "강북구": "61,128", "도봉구": "61,129",
+                "노원구": "61,129", "은평구": "59,127", "서대문구": "59,127", "마포구": "59,127", "양천구": "58,126",
+                "강서구": "58,126", "구로구": "58,125", "금천구": "59,124", "영등포구": "58,126", "동작구": "59,125",
+                "관악구": "59,125", "서초구": "61,125", "강남구": "61,126", "송파구": "62,126", "강동구": "62,126"
+            },
+            "부산광역시": {
+                "중구": "97,74", "서구": "97,74", "동구": "98,75", "영도구": "98,74", "부산진구": "97,75",
+                "동래구": "98,76", "남구": "98,75", "북구": "96,76", "해운대구": "99,75", "사하구": "96,74",
+                "금정구": "98,77", "강서구": "96,76", "연제구": "98,76", "수영구": "99,75", "사상구": "96,75", "기장군": "100,77"
+            },
+            "대구광역시": {
+                "중구": "89,90", "동구": "90,91", "서구": "88,90", "남구": "89,90", "북구": "89,91",
+                "수성구": "89,90", "달서구": "88,90", "달성군": "86,88", "군위군": "88,99"
+            },
+            "인천광역시": {
+                "중구": "54,125", "동구": "54,125", "미추홀구": "54,124", "연수구": "55,123", "남동구": "56,124",
+                "부평구": "55,125", "계양구": "56,126", "서구": "55,126", "강화군": "51,130", "옹진군": "54,124"
+            },
+            "광주광역시": {
+                "동구": "60,74", "서구": "59,74", "남구": "59,73", "북구": "59,75", "광산구": "57,74"
+            },
+            "대전광역시": {
+                "동구": "68,100", "중구": "68,100", "서구": "67,100", "유성구": "67,101", "대덕구": "68,100"
+            },
+            "울산광역시": {
+                "중구": "102,84", "남구": "102,84", "동구": "104,83", "북구": "102,85", "울주군": "101,84"
+            },
+            "세종특별자치시": {
+                "세종특별자치시": "66,103"
+            },
+            "경기도": {
+                "수원시": "60,121", "성남시": "63,124", "고양시": "57,128", "용인시": "62,121", "부천시": "56,125",
+                "안산시": "58,121", "안양시": "59,123", "남양주시": "64,128", "화성시": "57,119", "평택시": "62,114",
+                "의정부시": "61,130", "시흥시": "57,123", "파주시": "56,131", "광명시": "58,125", "김포시": "55,128",
+                "군포시": "59,122", "광주시": "65,123", "이천시": "68,121", "양주시": "61,131", "오산시": "62,118",
+                "구리시": "62,127", "안성시": "65,115", "포천시": "64,134", "의왕시": "60,122", "하남시": "64,126",
+                "여주시": "71,121", "양평군": "69,125", "동두천시": "61,134", "과천시": "60,124", "가평군": "69,133", "연천군": "58,138"
+            },
+            "강원특별자치도": {
+                "춘천시": "73,134", "원주시": "76,122", "강릉시": "92,131", "동해시": "97,127", "태백시": "95,119",
+                "속초시": "87,141", "삼척시": "98,125", "홍천군": "75,130", "횡성군": "77,125", "영월군": "86,119",
+                "평창군": "84,124", "정선군": "89,123", "철원군": "65,139", "화천군": "72,139", "양구군": "77,139",
+                "인제군": "80,138", "고성군": "85,145", "양양군": "88,138"
+            },
+            "충청북도": {
+                "청주시": "69,106", "충주시": "76,114", "제천시": "81,118", "보은군": "73,103", "옥천군": "71,99",
+                "영동군": "74,97", "증평군": "71,110", "진천군": "68,111", "괴산군": "74,111", "음성군": "73,113", "단양군": "84,115"
+            },
+            "충청남도": {
+                "천안시": "63,110", "공주시": "63,102", "보령시": "54,100", "아산시": "60,110", "서산시": "51,110",
+                "논산시": "62,97", "계룡시": "65,99", "당진시": "53,114", "금산군": "69,95", "부여군": "59,99",
+                "서천군": "55,94", "청양군": "57,103", "홍성군": "55,106", "예산군": "58,107", "태안군": "48,109"
+            },
+            "전북특별자치도": {
+                "전주시": "63,89", "군산시": "56,92", "익산시": "60,91", "정읍시": "58,83", "남원시": "68,80",
+                "김제시": "59,88", "완주군": "63,89", "진안군": "68,88", "무주군": "72,93", "장수군": "70,85",
+                "임실군": "66,84", "순창군": "63,79", "고창군": "56,80", "부안군": "56,87"
+            },
+            "전라남도": {
+                "목포시": "50,67", "여수시": "73,66", "순천시": "69,70", "나주시": "56,71", "광양시": "73,70",
+                "담양군": "61,75", "곡성군": "66,77", "구례군": "69,75", "고흥군": "66,62", "보성군": "62,66",
+                "화순군": "61,72", "장흥군": "59,64", "강진군": "57,63", "해남군": "54,61", "영암군": "56,66",
+                "무안군": "52,71", "함평군": "52,72", "영광군": "52,77", "장성군": "57,77", "완도군": "57,56",
+                "진도군": "48,59", "신안군": "50,66"
+            },
+            "경상북도": {
+                "포항시": "102,94", "경주시": "100,91", "김천시": "80,96", "안동시": "91,106", "구미시": "84,96",
+                "영주시": "89,111", "영천시": "95,93", "상주시": "81,102", "문경시": "81,106", "경산시": "91,90",
+                "의성군": "90,101", "청송군": "96,103", "영양군": "97,108", "영덕군": "102,103", "청도군": "91,86",
+                "고령군": "83,87", "성주군": "83,91", "칠곡군": "85,93", "예천군": "88,107", "봉화군": "90,113",
+                "울진군": "102,115", "울릉군": "127,127"
+            },
+            "경상남도": {
+                "창원시": "90,77", "진주시": "81,75", "통영시": "87,68", "사천시": "80,71", "김해시": "95,77",
+                "밀양시": "92,83", "거제시": "90,69", "양산시": "97,79", "의령군": "83,78", "함안군": "86,77",
+                "창녕군": "87,83", "고성군": "85,71", "남해군": "77,68", "하동군": "74,73", "산청군": "76,80",
+                "함양군": "74,82", "거창군": "77,86", "합천군": "81,84"
+            },
+            "제주특별자치도": {
+                "제주시": "52,38", "서귀포시": "52,33"
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 좌표 반영 공통 함수
+            function applyCoords(val) {
+                if(!val || val.indexOf(',') === -1) {
+                    alert("지역을 완벽히 선택해주세요.");
+                    return;
+                }
+                const [nxVal, nyVal] = val.split(',');
+                
+                const rowNx = document.querySelector('tr[data-param-name="nx"] input');
+                const rowNy = document.querySelector('tr[data-param-name="ny"] input');
+                
+                if (!rowNx || !rowNy) {
+                    alert('입력창을 찾을 수 없습니다. 아래 "테스트 시작(API 입력 열기)" 버튼을 먼저 눌러 활성화해주세요.');
+                    return;
+                }
+                
+                // React 상태 변경 우회
+                let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                
+                nativeInputValueSetter.call(rowNx, nxVal);
+                rowNx.dispatchEvent(new Event('input', { bubbles: true }));
+                
+                nativeInputValueSetter.call(rowNy, nyVal);
+                rowNy.dispatchEvent(new Event('input', { bubbles: true }));
+                
+                alert(`해당 지점의 좌표 [ nx: ${nxVal}, ny: ${nyVal} ] 가 자동 입력되었습니다.`);
+            }
+
+            // 1. 퀵선택 버튼 이벤트
+            document.getElementById('apply-region').addEventListener('click', function() {
+                applyCoords(document.getElementById('region-select').value);
+            });
+
+            // 2. 캐스케이딩 드롭다운 구성 (시/도 세팅)
+            const sidoSelect = document.getElementById('sido-select');
+            const sigunguSelect = document.getElementById('sigungu-select');
+            const applyDetailBtn = document.getElementById('apply-detail-region');
+
+            Object.keys(regionData).forEach(sido => {
+                const opt = document.createElement('option');
+                opt.value = sido;
+                opt.textContent = sido;
+                sidoSelect.appendChild(opt);
+            });
+
+            sidoSelect.addEventListener('change', function() {
+                const selectedSido = this.value;
+                sigunguSelect.innerHTML = '<option value="">-- 시/군/구 선택 --</option>';
+                
+                if (selectedSido && regionData[selectedSido]) {
+                    sigunguSelect.disabled = false;
+                    Object.keys(regionData[selectedSido]).forEach(sigungu => {
+                        const opt = document.createElement('option');
+                        opt.value = regionData[selectedSido][sigungu]; 
+                        opt.textContent = sigungu;
+                        sigunguSelect.appendChild(opt);
+                    });
+                } else {
+                    sigunguSelect.disabled = true;
+                }
+            });
+
+            // 3. 상세 구역 지역 버튼 이벤트
+            applyDetailBtn.addEventListener('click', function() {
+                applyCoords(sigunguSelect.value);
+            });
+        });
+    </script>
+
+    <!-- Swagger UI 스크립트 로드 -->
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js" crossorigin></script>
+    
+    <script>
+        // KMA 초단기 강수예측 API Spec 정의
+        const spec = {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "기상청_단기예보 조회서비스",
+            "description": "### ☔ **초단기예보조회 (getUltraSrtFcst)**\n\n초단기예보조회 기능을 활용하여 기상청의 실시간 기상 정보를 확인할 수 있는 인터페이스입니다.\n\n---\n\n#### ⏰ **초단기예보 발표시각 안내**\n* **생성 시간**: **매시간 30분**에 생성됩니다. (단, API 요청 시 `base_time`은 1200처럼 정각을 기준으로 작성하는 경우가 많습니다.)\n* **업데이트 주기**: 기온, 습도, 바람 등 일부 정보는 **10분마다 최신 정보로 업데이트**됩니다.\n\n#### 📝 **응답 자료코드(Category) 가이드**\n* **T1H** : 기온 (℃)\n* **RN1** : 1시간 강수량 (범주, 1mm)\n* **SKY** : 하늘상태 (코드값)\n* **UUU** : 동서바람성분 (m/s)\n* **VVV** : 남북바람성분 (m/s)\n* **REH** : 습도 (%)\n* **PTY** : 강수형태 (코드값)\n* **LGT** : 낙뢰 (kA, 킬로암페어)\n* **VEC** : 풍향 (deg)\n* **WSD** : 풍속 (m/s)\n\n---\n\n#### 💡 **기본 사용 방법**\n1. [공공데이터포털(data.go.kr)](https://www.data.go.kr/)에서 API Key 발급합니다.\n2. 아래 `테스트 시작` 버튼을 누르고 `serviceKey` 항목에 인증키를 입력합니다.\n3. `base_date`(발표일자), `base_time`(발표시각), `nx`, `ny`(좌표)를 알맞게 입력 후 **실행하기** 버튼을 눌러 상태를 확인합니다.",
+            "version": "2.0",
+            "contact": {
+                "name": "공공데이터포털 이동",
+                "url": "https://www.data.go.kr/data/15084084/openapi.do"
+            }
+          },
+          "servers": [
+            {
+              "url": "http://apis.data.go.kr",
+              "description": "공공데이터포털 단기예보 API 서버 (HTTP)"
+            },
+            {
+              "url": "https://apis.data.go.kr",
+              "description": "공공데이터포털 단기예보 API 서버 (HTTPS)"
+            }
+          ],
+          "paths": {
+            "/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst": {
+              "get": {
+                "tags": [
+                    "초단기 강수예측"
+                ],
+                "summary": "초단기예보조회 (강수/기온 등 실황 예측)",
+                "description": "예보시각부터 6시간 이내의 예보자료를 조회합니다. 각 카테고리(category)별 코드를 확인하여 강수량을 분석할 수 있습니다. (예: RN1=1시간 강수량, PTY=강수형태)",
+                "operationId": "getUltraSrtFcst",
+                "parameters": [
+                  {
+                    "name": "serviceKey",
+                    "in": "query",
+                    "description": "발급받은 일반 인증키 (필수)",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "pageNo",
+                    "in": "query",
+                    "description": "페이지 번호",
+                    "schema": {
+                      "type": "integer",
+                      "default": 1
+                    }
+                  },
+                  {
+                    "name": "numOfRows",
+                    "in": "query",
+                    "description": "한 페이지 결과 수",
+                    "schema": {
+                      "type": "integer",
+                      "default": 60
+                    }
+                  },
+                  {
+                    "name": "dataType",
+                    "in": "query",
+                    "description": "응답 자료 형식 (JSON 권장)",
+                    "schema": {
+                      "type": "string",
+                      "default": "JSON",
+                      "enum": ["JSON", "XML"]
+                    }
+                  },
+                  {
+                    "name": "base_date",
+                    "in": "query",
+                    "description": "발표일자 (YYYYMMDD 형식, 예: 20260414)",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "example": "20260414"
+                    }
+                  },
+                  {
+                    "name": "base_time",
+                    "in": "query",
+                    "description": "발표시각 (HHMM 형식, 매 시간 30분 단위 생성 예: 1730)",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "example": "1730"
+                    }
+                  },
+                  {
+                    "name": "nx",
+                    "in": "query",
+                    "description": "예보지점 X 좌표 (※ 상단의 좌표 자동 입력 기능을 사용하세요)",
+                    "required": true,
+                    "schema": {
+                      "type": "integer",
+                      "example": 60
+                    }
+                  },
+                  {
+                    "name": "ny",
+                    "in": "query",
+                    "description": "예보지점 Y 좌표 (※ 상단의 좌표 자동 입력 기능을 사용하세요)",
+                    "required": true,
+                    "schema": {
+                      "type": "integer",
+                      "example": 127
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "정상 응답"
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        window.onload = function() {
+            window.ui = SwaggerUIBundle({
+                spec: spec,
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                layout: "BaseLayout",
+                defaultModelsExpandDepth: -1, // 화면 맨 아래 Models (데이터 스키마) 섹션 숨기기
+                supportedSubmitMethods: ["get"], // 이 테스트 페이지에서는 GET방식만 지원
+                responseInterceptor: function(res) {
+                    if (res.url && res.url.includes("getUltraSrtFcst")) {
+                        try {
+                            window.lastParsedResponse = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+                        } catch(e) {
+                            window.lastParsedResponse = null;
+                        }
+                    }
+                    return res;
+                }
+            });
+
+            // 실행 버튼 클릭 시 이전 파싱 데이터 초기화
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.execute') || e.target.closest('.btn-clear')) {
+                    window.lastParsedResponse = null;
+                    const oldUi = document.getElementById('custom-response-ui');
+                    if (oldUi) oldUi.remove();
+                }
+            });
+
+            // Swagger UI 내부 버튼 및 텍스트 한글화 처리 (MutationObserver 활용)
+            const observer = new MutationObserver(function() {
+                const replaceTextNodes = (selector, oldText, newText) => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        Array.from(el.childNodes).forEach(node => {
+                            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === oldText) {
+                                node.nodeValue = node.nodeValue.replace(oldText, newText);
+                            }
+                        });
+                    });
+                };
+
+                // 주요 버튼 텍스트 변경
+                replaceTextNodes('.try-out__btn', 'Try it out', '테스트 시작 (API 입력 열기)');
+                replaceTextNodes('.execute', 'Execute', '실행하기 (API 호출)');
+                replaceTextNodes('.btn-clear', 'Clear', '초기화');
+                replaceTextNodes('button.cancel', 'Cancel', '취소');
+
+                // 주요 제목 텍스트 변경
+                replaceTextNodes('.opblock-section-header h4 span', 'Parameters', '파라미터 (입력값)');
+                replaceTextNodes('.responses-wrapper > .opblock-section-header h4', 'Responses', '실행 결과 (응답)');
+                // 5.x 버전에 따라 Responses 태그 위치가 다를 수 있으므로 추가 처리
+                replaceTextNodes('.responses-inner h4', 'Responses', '실행 결과 (응답)');
+                replaceTextNodes('.servers-title', 'Servers', 'API 서버 접속 주소');
+                
+                // 테이블 항목 번역
+                replaceTextNodes('.parameter__name', 'Name', '파라미터명 (Name)');
+                replaceTextNodes('.parameter__type', 'Description', '설명 (Description)');
+                replaceTextNodes('.response-col_status', 'Code', '응답 코드 (Code)');
+                replaceTextNodes('.response-col_description', 'Description', '응답 결과 설명 (Description)');
+
+                // --- 실행 결과(응답) 하단에 에러코드 및 resultMsg 안내문을 주입 ---
+                const responsesWrapper = document.querySelector('.responses-wrapper');
+                if (responsesWrapper && !document.getElementById('error-code-guide')) {
+                    const errorGuide = document.createElement('div');
+                    errorGuide.id = 'error-code-guide';
+                    errorGuide.style = "margin: 20px; padding: 25px; background: #fffdf5; border-radius: 8px; border: 1px solid #ffecca; font-size: 13px; color: #444; box-shadow: 0 4px 8px rgba(0,0,0,0.02);";
+                    errorGuide.innerHTML = `
+                        <h4 style="margin: 0 0 15px 0; color: #b7790a; font-size: 16px;">📌 공공데이터포털 응답 메시지 (resultCode / resultMsg) 코드표 및 설명</h4>
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; background: white; font-size: 13px; table-layout: fixed;">
+                            <colgroup>
+                                <col style="width: 15%;">
+                                <col style="width: 45%;">
+                                <col style="width: 40%;">
+                            </colgroup>
+                            <tr style="background: #fff8e1; border-bottom: 2px solid #ffe199;">
+                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러코드</th>
+                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러메세지</th>
+                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">설명</th>
+                            </tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold; color: #0d8a5e;">00</td><td style="padding: 8px; border: 1px solid #eee; color: #0d8a5e; font-weight: bold;">NORMAL_SERVICE</td><td style="padding: 8px; border: 1px solid #eee; color: #0d8a5e; font-weight: bold;">정상</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">01</td><td style="padding: 8px; border: 1px solid #eee;">APPLICATION_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">어플리케이션 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">02</td><td style="padding: 8px; border: 1px solid #eee;">DB_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">데이터베이스 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">03</td><td style="padding: 8px; border: 1px solid #eee;">NODATA_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">데이터없음 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">04</td><td style="padding: 8px; border: 1px solid #eee;">HTTP_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">HTTP 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">05</td><td style="padding: 8px; border: 1px solid #eee;">SERVICETIME_OUT</td><td style="padding: 8px; border: 1px solid #eee;">서비스 연결실패 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">10</td><td style="padding: 8px; border: 1px solid #eee;">INVALID_REQUEST_PARAMETER_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">잘못된 요청 파라메터 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">11</td><td style="padding: 8px; border: 1px solid #eee;">NO_MANDATORY_REQUEST_PARAMETERS_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">필수요청 파라메터가 없음</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">12</td><td style="padding: 8px; border: 1px solid #eee;">NO_OPENAPI_SERVICE_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">해당 오픈 API 서비스가 없거나 폐기됨</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">20</td><td style="padding: 8px; border: 1px solid #eee;">SERVICE_ACCESS_DENIED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서비스 접근거부</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">21</td><td style="padding: 8px; border: 1px solid #eee;">TEMPORARILY_DISABLE_THE_SERVICEKEY_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">일시적으로 사용할 수 없는 서비스 키</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">22</td><td style="padding: 8px; border: 1px solid #eee;">LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서비스 요청제한횟수 초과에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">30</td><td style="padding: 8px; border: 1px solid #eee;">SERVICE_KEY_IS_NOT_REGISTERED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">등록되지 않은 서비스키</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">31</td><td style="padding: 8px; border: 1px solid #eee;">DEADLINE_HAS_EXPIRED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">기한만료된 서비스키</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">32</td><td style="padding: 8px; border: 1px solid #eee;">UNREGISTERED_IP_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">등록되지 않은 IP</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">33</td><td style="padding: 8px; border: 1px solid #eee;">UNSIGNED_CALL_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서명되지 않은 호출</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">99</td><td style="padding: 8px; border: 1px solid #eee;">UNKNOWN_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">기타에러</td></tr>
+                        </table>
+                    `;
+                    
+                    // 실행 결과 최하단에 에러코드 가이드 표시
+                    responsesWrapper.appendChild(errorGuide);
+                }
+
+                // --- 무조건 바로 테스트 시작 상태로 고정 ---
+                const tryItOutBtn = document.querySelector('.try-out__btn');
+                if (tryItOutBtn && !tryItOutBtn.dataset.clickedAuto) {
+                    tryItOutBtn.dataset.clickedAuto = "true";
+                    tryItOutBtn.click();
+                }
+
+                // 1. base_date (발표일자) 옆 '현재 날짜 기준 자동 입력' 버튼 주입
+                const baseDateRow = document.querySelector('tr[data-param-name="base_date"]');
+                if (baseDateRow && baseDateRow.querySelector('input') && !document.getElementById('auto-date-btn')) {
+                    const descTd = baseDateRow.querySelector('.parameters-col_description');
+                    if (descTd) {
+                        const btn = document.createElement('button');
+                        btn.id = 'auto-date-btn';
+                        btn.innerHTML = '🕒 <b>현재 날짜 기준 자동 입력</b>';
+                        btn.style = 'margin-top: 15px; margin-left: 20px; padding: 10px 20px; background: #ea4335; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: inline-block;';
+                        btn.onclick = function(e) {
+                            e.preventDefault();
+                            const now = new Date();
+                            // 초단기예보용 산출식 동일 적용
+                            now.setMinutes(now.getMinutes() - 45); 
+                            
+                            const yyyy = now.getFullYear();
+                            const mm = String(now.getMonth() + 1).padStart(2, '0');
+                            const dd = String(now.getDate()).padStart(2, '0');
+                            
+                            const dateInput = baseDateRow.querySelector('input');
+                            let setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                            if (dateInput) {
+                                setter.call(dateInput, `${yyyy}${mm}${dd}`);
+                                dateInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        };
+                        descTd.appendChild(btn);
+                    }
+                }
+
+                // 2. base_time (발표시각) 옆 '현재 시각 기준 자동 입력' 버튼 주입
+                const baseTimeRow = document.querySelector('tr[data-param-name="base_time"]');
+                if (baseTimeRow && baseTimeRow.querySelector('input') && !document.getElementById('auto-time-btn')) {
+                    const descTd = baseTimeRow.querySelector('.parameters-col_description');
+                    if (descTd) {
+                        const btn = document.createElement('button');
+                        btn.id = 'auto-time-btn';
+                        btn.innerHTML = '🕒 <b>현재 시각 기준 자동 입력</b>';
+                        btn.style = 'margin-top: 15px; margin-left: 20px; padding: 10px 20px; background: #ea4335; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: inline-block;';
+                        btn.onclick = function(e) {
+                            e.preventDefault();
+                            const now = new Date();
+                            now.setMinutes(now.getMinutes() - 45); 
+                            
+                            const hh = String(now.getHours()).padStart(2, '0');
+                            
+                            const timeInput = baseTimeRow.querySelector('input');
+                            let setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                            if (timeInput) {
+                                setter.call(timeInput, `${hh}30`);
+                                timeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        };
+                        descTd.appendChild(btn);
+                    }
+                }
+
+                // 3. nx 위쪽에 '지역 퀵선택' 돔 구조를 쏙 이동시켜 주입
+                const nxRow = document.querySelector('tr[data-param-name="nx"]');
+                // 테스트 모드(input 객체가 있는 활성 상태)에서만 주입하여 React에 의한 소실 방지
+                if (nxRow && nxRow.querySelector('input') && !document.getElementById('injected-custom-tools')) {
+                    const customTools = document.getElementById('custom-tools');
+                    if (customTools) {
+                        customTools.style.display = 'flex'; // 숨겨둔 요소 보이기
+                        
+                        const tr = document.createElement('tr');
+                        tr.id = 'injected-custom-tools';
+                        const td = document.createElement('td');
+                        td.colSpan = 3;
+                        td.style.padding = '10px 0';
+                        td.appendChild(customTools);
+                        tr.appendChild(td);
+                        
+                        nxRow.parentNode.insertBefore(tr, nxRow);
+                    }
+                }
+
+                // --- 응답 렌더링 감지 및 카테고리 다이얼로그 추가 ---
+                const responseBodyWrapper = document.querySelector('.responses-inner');
+                if (responseBodyWrapper && window.lastParsedResponse && !document.getElementById('custom-response-ui')) {
+                    const customUi = document.createElement('div');
+                    customUi.id = 'custom-response-ui';
+                    customUi.style = "margin: 20px; padding: 25px; background: #f8fbff; border-radius: 12px; border: 1px solid #cce0ff; box-shadow: 0 4px 10px rgba(0,0,0,0.03);";
+                    customUi.innerHTML = "<h4 style='margin-top:0; color: #0f4c81; font-size: 18px; margin-bottom: 20px;'>📊 카테고리별 초단기예측 분석 결과 (자동화 UI)</h4><div id='custom-response-content'></div>";
+                    
+                    const errGuide = document.getElementById('error-code-guide');
+                    const wrapper = document.querySelector('.responses-wrapper');
+                    if (errGuide && wrapper) {
+                        wrapper.insertBefore(customUi, errGuide);
+                    } else if (wrapper) {
+                        wrapper.appendChild(customUi);
+                    }
+                    
+                    try {
+                        const items = window.lastParsedResponse.response.body.items.item;
+                        if(Array.isArray(items) && items.length > 0) {
+                            let grouped = {};
+                            items.forEach(it => {
+                                if (!grouped[it.category]) grouped[it.category] = [];
+                                grouped[it.category].push(it);
+                            });
+                            
+                            const catNames = {
+                                "T1H": "기온 (℃)", "RN1": "1시간 강수량 (mm)", "SKY": "하늘상태", "UUU": "동서바람 (m/s)", "VVV": "남북바람 (m/s)",
+                                "REH": "습도 (%)", "PTY": "강수형태", "LGT": "낙뢰 (kA)", "VEC": "풍향 (deg)", "WSD": "풍속 (m/s)"
+                            };
+                            
+                            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">';
+                            for (let cat in grouped) {
+                                html += `<div style="background: #fff; border: 1px solid #e1e8f0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                                    <strong style="color: #0b3960; font-size: 16px; border-bottom: 2px solid #0088cc; padding-bottom: 5px; display: inline-block; margin-bottom: 12px; width: 100%;">
+                                        ▶ ${cat} <span style="font-size:13px; font-weight:normal; color:#666;">(${catNames[cat] || '기타'})</span>
+                                    </strong>
+                                    <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 14px;">
+                                        <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1;">
+                                            <th style="padding: 8px; color: #475569;">일자</th>
+                                            <th style="padding: 8px; color: #475569;">시간</th>
+                                            <th style="padding: 8px; color: #475569;">예측값</th>
+                                        </tr>`;
+                                grouped[cat].forEach(it => {
+                                    let valStr = it.fcstValue;
+                                    // 이해하기 쉬운 카테고리 부연설명 처리
+                                    if(cat === 'SKY') {
+                                        if(valStr === '1') valStr += ' (맑음 ☀️)';
+                                        else if(valStr === '3') valStr += ' (구름많음 ⛅)';
+                                        else if(valStr === '4') valStr += ' (흐림 ☁️)';
+                                    } else if(cat === 'PTY') {
+                                        if(valStr === '0') valStr += ' (없음)';
+                                        else if(valStr === '1') valStr += ' (비 🌧️)';
+                                        else if(valStr === '2') valStr += ' (비/눈 🌨️)';
+                                        else if(valStr === '3') valStr += ' (눈 ❄️)';
+                                        else if(valStr === '5') valStr += ' (빗방울 💧)';
+                                        else if(valStr === '6') valStr += ' (빗방울눈날림)';
+                                        else if(valStr === '7') valStr += ' (눈날림)';
+                                    }
+
+                                    // MMDD, HHMM 포맷팅
+                                    let dateFmt = it.fcstDate.length === 8 ? `${it.fcstDate.substring(4,6)}/${it.fcstDate.substring(6,8)}` : it.fcstDate;
+                                    let timeFmt = it.fcstTime.length === 4 ? `${it.fcstTime.substring(0,2)}:${it.fcstTime.substring(2,4)}` : it.fcstTime;
+
+                                    html += `<tr style="border-bottom: 1px solid #e2e8f0;">
+                                        <td style="padding: 8px; color: #334155;">${dateFmt}</td>
+                                        <td style="padding: 8px; color: #334155;">${timeFmt}</td>
+                                        <td style="padding: 8px; font-weight: bold; color: #0ea5e9;">${valStr}</td>
+                                    </tr>`;
+                                });
+                                html += `</table></div>`;
+                            }
+                            html += '</div>';
+                            document.getElementById('custom-response-content').innerHTML = html;
+                        } else {
+                            throw new Error("No items contained in API root");
+                        }
+                    } catch(e) {
+                         document.getElementById('custom-response-content').innerHTML = "<span style='color: #ef4444; font-size: 14px;'>(⛔ JSON 결과를 분석할 수 없습니다. 요청 파라미터의 dataType이 JSON인지, 응답 코드가 정상(00)인지 한번 더 확인해주세요.)</span>";
+                    }
+                }
+            });
+
+            observer.observe(document.getElementById('swagger-ui'), { childList: true, subtree: true });
+        };
+    </script>
+
+    <footer class="ui-footer">
+        &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
+        <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
+    </footer>
+</body>
+</html>

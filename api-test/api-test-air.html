@@ -1,0 +1,393 @@
+<!-- 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (@xylito) & DORO Inc.
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에어코리아 대기오염정보 API - Swagger UI</title>
+    <!-- Swagger UI CSS 베이스 로드 -->
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 15px 0 0 0;
+            opacity: 0.9;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        #swagger-ui {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 20px 30px;
+            overflow: hidden;
+        }
+        /* Swagger 내부 UI 일부 커스텀 */
+        .swagger-ui .topbar { display: none; } /* 기본 탑바 숨김 */
+        .swagger-ui .info { margin: 20px 0; }
+        .swagger-ui .btn.execute { background-color: #059669; border-color: #059669; box-shadow: 0 2px 4px rgba(5,150,105,0.3); }
+        .swagger-ui .btn.execute:hover { background-color: #047857; }
+        .swagger-ui .try-out { display: none !important; } /* 테스트 시작 버튼 디자인 숨김 */
+        .swagger-ui .response-col_links { display: none !important; } /* Links 컬럼 숨김 (사용 안함) */
+        .swagger-ui .responses-table:not(.live-responses-table) { display: none !important; } /* API Spec 상에 하드코딩된 '200 정상응답' 테이블 행 완전 제거 */
+    
+        .ui-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding: 8px 0;
+            background: #e2e8f0;
+            border-top: 1px solid #cbd5e1;
+            margin-top: auto;
+        }
+        .ui-footer a {
+            color: #0f4c81;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .ui-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>에어코리아 대기오염 실시간 측정정보 Dashboard</h1>
+        <p>
+            대한민국 시도별 실시간 대기 대기오염 및 미세먼지 측정정보를 확인하는 API 테스트 페이지입니다.<br>
+            공공데이터포털(data.go.kr)의 한국환경공단_에어코리아 대기오염정보 서비스를 호출합니다.<br><br>
+            <span style="display: inline-block; padding: 4px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 13px; font-weight: bold;">✨ Made by XYLO</span>
+        </p>
+    </div>
+
+    <!-- Swagger UI가 렌더링될 영역 -->
+    <div id="swagger-ui"></div>
+
+    <!-- Swagger UI 스크립트 로드 -->
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js" crossorigin></script>
+    
+    <script>
+        // 에어코리아 대기오염정보 API Spec 정의
+        const spec = {
+          "openapi": "3.0.0",
+          "info": {
+            "title": "시도별 실시간 측정정보 조회",
+            "description": "### 🌬️ **한국환경공단 에어코리아 실시간 오염도 조회**\n\n시도명을 검색조건으로 하여 시도별 측정소목록에 대한 일반 항목과 CAI 최종 실시간 측정값, 지수 정보 조회 기능을 제공합니다.\n\n---\n\n#### 📝 **요청 파라미터 (주요 가이드)**\n* **sidoName** : 조회하고자 하는 시/도명 (전국, 서울, 부산, 대구... 중 선택)\n* **ver** : 오퍼레이션 버전 (1.0~1.5) \n  * `1.0` : PM2.5 데이터 포함 결과 표시\n  * `1.3` : PM10, PM2.5 1시간 등급 자료 포함\n  * `1.5` : **(최신)** 측정값 소수점 아래 자리 수 확대 정보 포함\n\n#### 📊 **수치 및 등급 안내 (Grade 1~4)**\n* `1` : 🔵 좋음\n* `2` : 🟢 보통\n* `3` : 🟡 나쁨\n* `4` : 🔴 매우나쁨\n\n---\n\n#### 💡 **기본 사용 방법**\n1. [공공데이터포털(data.go.kr)](https://www.data.go.kr/)에서 공단 API Key를 발급받습니다.\n2. 아래 `serviceKey` 항목에 인증키를 입력합니다.\n3. `sidoName`(시도 명)을 선택하고 **실행하기** 버튼을 눌러 오염도 상태를 빠르게 확인하세요.",
+            "version": "1.5"
+          },
+          "servers": [
+            {
+              "url": "http://apis.data.go.kr",
+              "description": "운영서버 (HTTP)"
+            },
+            {
+              "url": "https://apis.data.go.kr",
+              "description": "운영서버 (HTTPS)"
+            }
+          ],
+          "paths": {
+            "/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty": {
+              "get": {
+                "tags": [
+                    "대기오염정보"
+                ],
+                "summary": "시도별 실시간 측정정보 조회 (PM10, PM2.5 등)",
+                "description": "시도명을 검색조건으로 하여 소속된 모든 측정소의 대기오염 정보(미세먼지, 오존, 일산화탄소 등)를 상세하게 가져옵니다.",
+                "operationId": "getCtprvnRltmMesureDnsty",
+                "parameters": [
+                  {
+                    "name": "serviceKey",
+                    "in": "query",
+                    "description": "발급받은 일반 인증키 (필수)",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "returnType",
+                    "in": "query",
+                    "description": "응답 자료 형식 (JSON 권장)",
+                    "schema": {
+                      "type": "string",
+                      "default": "json",
+                      "enum": ["json", "xml"]
+                    }
+                  },
+                  {
+                    "name": "numOfRows",
+                    "in": "query",
+                    "description": "한 페이지 결과 수",
+                    "schema": {
+                      "type": "integer",
+                      "default": 100
+                    }
+                  },
+                  {
+                    "name": "pageNo",
+                    "in": "query",
+                    "description": "페이지 번호",
+                    "schema": {
+                      "type": "integer",
+                      "default": 1
+                    }
+                  },
+                  {
+                    "name": "sidoName",
+                    "in": "query",
+                    "description": "조회할 시도 명 (예: 서울, 전국 등)",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "default": "서울",
+                      "enum": ["전국", "서울", "부산", "대구", "인천", "광주", "대전", "울산", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주", "세종"]
+                    }
+                  },
+                  {
+                    "name": "ver",
+                    "in": "query",
+                    "description": "API 오퍼레이션 버전 (1.0 ~ 1.5, 최신버전 1.5 권장)",
+                    "schema": {
+                      "type": "string",
+                      "default": "1.5",
+                      "enum": ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5"]
+                    }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "정상 응답"
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        window.onload = function() {
+            window.ui = SwaggerUIBundle({
+                spec: spec,
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                layout: "BaseLayout",
+                defaultModelsExpandDepth: -1, // 화면 맨 아래 Models (데이터 스키마) 섹션 숨기기
+                supportedSubmitMethods: ["get"],
+                responseInterceptor: function(res) {
+                    if (res.url && res.url.includes("getCtprvnRltmMesureDnsty")) {
+                        try {
+                            window.lastParsedResponse = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+                        } catch(e) {
+                            window.lastParsedResponse = null;
+                        }
+                    }
+                    return res;
+                }
+            });
+
+            // 실행 버튼 클릭 시 이전 파싱 데이터 초기화
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.execute') || e.target.closest('.btn-clear')) {
+                    window.lastParsedResponse = null;
+                    const oldUi = document.getElementById('custom-response-ui');
+                    if (oldUi) oldUi.remove();
+                }
+            });
+
+            // 등급 파싱 유틸 함수
+            function getGradeLabel(val) {
+                switch(val) {
+                    case "1": return "<span style='color: #2563eb; font-weight:bold;'>좋음 🔵</span>";
+                    case "2": return "<span style='color: #16a34a; font-weight:bold;'>보통 🟢</span>";
+                    case "3": return "<span style='color: #d97706; font-weight:bold;'>나쁨 🟡</span>";
+                    case "4": return "<span style='color: #dc2626; font-weight:bold;'>매우나쁨 🔴</span>";
+                    default: return "<span style='color: #64748b; font-weight:bold;'>장비점검 등 (-)</span>";
+                }
+            }
+
+            // Swagger UI 내부 상태 변화 대응 Observer
+            const observer = new MutationObserver(function() {
+                const replaceTextNodes = (selector, oldText, newText) => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        Array.from(el.childNodes).forEach(node => {
+                            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === oldText) {
+                                node.nodeValue = node.nodeValue.replace(oldText, newText);
+                            }
+                        });
+                    });
+                };
+
+                // 번역
+                replaceTextNodes('.try-out__btn', 'Try it out', '테스트 시작 (API 입력 열기)');
+                replaceTextNodes('.execute', 'Execute', '실행하기 (API 호출)');
+                replaceTextNodes('.btn-clear', 'Clear', '초기화');
+                replaceTextNodes('button.cancel', 'Cancel', '취소');
+                replaceTextNodes('.opblock-section-header h4 span', 'Parameters', '파라미터 (입력값)');
+                replaceTextNodes('.responses-wrapper > .opblock-section-header h4', 'Responses', '실행 결과 (응답)');
+                replaceTextNodes('.responses-inner h4', 'Responses', '실행 결과 (응답)');
+                replaceTextNodes('.servers-title', 'Servers', 'API 서버 접속 주소');
+                replaceTextNodes('.parameter__name', 'Name', '파라미터명 (Name)');
+                replaceTextNodes('.parameter__type', 'Description', '설명 (Description)');
+                replaceTextNodes('.response-col_status', 'Code', '응답 코드 (Code)');
+                replaceTextNodes('.response-col_description', 'Description', '응답 결과 설명 (Description)');
+
+                // 자동 테스트 시작 상태 돌입
+                const tryItOutBtn = document.querySelector('.try-out__btn');
+                if (tryItOutBtn && !tryItOutBtn.dataset.clickedAuto) {
+                    tryItOutBtn.dataset.clickedAuto = "true";
+                    tryItOutBtn.click();
+                }
+
+                // 분석결과 자동화 UI 주입
+                const responseBodyWrapper = document.querySelector('.responses-inner');
+                if (responseBodyWrapper && window.lastParsedResponse && !document.getElementById('custom-response-ui')) {
+                    const customUi = document.createElement('div');
+                    customUi.id = 'custom-response-ui';
+                    customUi.style = "margin: 20px; padding: 25px; background: #fdfdfd; border-radius: 12px; border: 1px solid #10b981; box-shadow: 0 4px 10px rgba(0,0,0,0.03);";
+                    customUi.innerHTML = "<h4 style='margin-top:0; color: #059669; font-size: 18px; margin-bottom: 20px;'>📊 지역별 측정소 실시간 현황 (자동분석 표)</h4><div id='custom-response-content'></div>";
+                    
+                    const wrapper = document.querySelector('.responses-wrapper');
+                    const errGuide = document.getElementById('error-code-guide');
+                    if (errGuide && wrapper) {
+                        wrapper.insertBefore(customUi, errGuide);
+                    } else if (wrapper) {
+                        wrapper.appendChild(customUi);
+                    }
+                    
+                    try {
+                        const items = window.lastParsedResponse.response.body.items;
+                        if(Array.isArray(items) && items.length > 0) {
+                            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px;">';
+                            
+                            items.forEach(it => {
+                                html += `
+                                <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #10b981; padding-bottom: 5px;">
+                                        <div style="font-size: 17px; font-weight: bold; color: #1f2937;">📍 ${it.stationName || '-'}</div>
+                                        <div style="font-size: 12px; color: #6b7280;">망 정보: ${it.mangName || '-'}</div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #059669; font-weight: bold; margin-bottom: 5px;">측정시간: ${it.dataTime || '-'}</div>
+                                    
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px;">
+                                        <div style="background: #f8fafc; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                            <div style="color: #64748b; font-size: 11px;">미세먼지(PM10)</div>
+                                            <div style="font-weight: bold;">${it.pm10Value && it.pm10Value !== '-' ? it.pm10Value + ' ㎍/㎥' : '점검중'}</div>
+                                            <div style="margin-top: 3px;">${getGradeLabel(it.pm10Grade1h || it.pm10Grade)}</div>
+                                        </div>
+                                        <div style="background: #f8fafc; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                            <div style="color: #64748b; font-size: 11px;">초미세먼지(PM2.5)</div>
+                                            <div style="font-weight: bold;">${it.pm25Value && it.pm25Value !== '-' ? it.pm25Value + ' ㎍/㎥' : '점검중'}</div>
+                                            <div style="margin-top: 3px;">${getGradeLabel(it.pm25Grade1h || it.pm25Grade)}</div>
+                                        </div>
+                                        <div style="background: #f8fafc; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                            <div style="color: #64748b; font-size: 11px;">오존농도(O3)</div>
+                                            <div style="font-weight: bold;">${it.o3Value && it.o3Value !== '-' ? it.o3Value + ' ppm' : '점검중'}</div>
+                                            <div style="margin-top: 3px;">${getGradeLabel(it.o3Grade)}</div>
+                                        </div>
+                                        <div style="background: #f8fafc; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                            <div style="color: #64748b; font-size: 11px;">통합대기(CAI)</div>
+                                            <div style="font-weight: bold;">${it.khaiValue && it.khaiValue !== '-' ? '지수 ' + it.khaiValue : '점검중'}</div>
+                                            <div style="margin-top: 3px;">${getGradeLabel(it.khaiGrade)}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            });
+                            html += '</div>';
+                            document.getElementById('custom-response-content').innerHTML = html;
+                        } else {
+                            throw new Error("No items contained in API root");
+                        }
+                    } catch(e) {
+                         document.getElementById('custom-response-content').innerHTML = "<span style='color: #ef4444; font-size: 14px;'>(⛔ JSON 결과를 분석할 수 없습니다. 요청 파라미터의 returnType이 JSON인지, 응답 코드가 정상(00)인지 한번 더 확인해주세요.)</span>";
+                    }
+                }
+
+                // 에러 코드 맵핑 가이드 (가장 아래 배치)
+                const ewWrapper = document.querySelector('.responses-wrapper');
+                if (ewWrapper && !document.getElementById('error-code-guide')) {
+                    const errorGuide = document.createElement('div');
+                    errorGuide.id = 'error-code-guide';
+                    errorGuide.style = "margin: 20px; padding: 25px; background: #fffdf5; border-radius: 8px; border: 1px solid #ffecca; font-size: 13px; color: #444; box-shadow: 0 4px 8px rgba(0,0,0,0.02);";
+                    errorGuide.innerHTML = `
+                        <h4 style="margin: 0 0 15px 0; color: #b7790a; font-size: 16px;">📌 공공데이터 API 공통 응답 메시지 (resultCode) 코드표</h4>
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; background: white; font-size: 13px; table-layout: fixed;">
+                            <colgroup><col style="width: 15%;"><col style="width: 45%;"><col style="width: 40%;"></colgroup>
+                            <tr style="background: #fff8e1; border-bottom: 2px solid #ffe199;">
+                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러코드</th>
+                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러메세지</th>
+                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">설명</th>
+                            </tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold; color: #0d8a5e;">00</td><td style="padding: 8px; border: 1px solid #eee; color: #0d8a5e; font-weight: bold;">NORMAL_SERVICE</td><td style="padding: 8px; border: 1px solid #eee; color: #0d8a5e; font-weight: bold;">정상</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">01</td><td style="padding: 8px; border: 1px solid #eee;">APPLICATION_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">어플리케이션 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">02</td><td style="padding: 8px; border: 1px solid #eee;">DB_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">데이터베이스 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">03</td><td style="padding: 8px; border: 1px solid #eee;">NODATA_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">데이터없음 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">04</td><td style="padding: 8px; border: 1px solid #eee;">HTTP_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">HTTP 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">05</td><td style="padding: 8px; border: 1px solid #eee;">SERVICETIME_OUT</td><td style="padding: 8px; border: 1px solid #eee;">서비스 연결실패 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">10</td><td style="padding: 8px; border: 1px solid #eee;">INVALID_REQUEST_PARAMETER_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">잘못된 요청 파라메터 에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">11</td><td style="padding: 8px; border: 1px solid #eee;">NO_MANDATORY_REQUEST_PARAMETERS_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">필수요청 파라메터가 없음</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">12</td><td style="padding: 8px; border: 1px solid #eee;">NO_OPENAPI_SERVICE_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">해당 오픈 API 서비스가 없거나 폐기됨</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">20</td><td style="padding: 8px; border: 1px solid #eee;">SERVICE_ACCESS_DENIED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서비스 접근거부</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">21</td><td style="padding: 8px; border: 1px solid #eee;">TEMPORARILY_DISABLE_THE_SERVICEKEY_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">일시적으로 사용할 수 없는 서비스 키</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">22</td><td style="padding: 8px; border: 1px solid #eee;">LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서비스 요청제한횟수 초과에러</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">30</td><td style="padding: 8px; border: 1px solid #eee;">SERVICE_KEY_IS_NOT_REGISTERED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">등록되지 않은 서비스키</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">31</td><td style="padding: 8px; border: 1px solid #eee;">DEADLINE_HAS_EXPIRED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">기한만료된 서비스키</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">32</td><td style="padding: 8px; border: 1px solid #eee;">UNREGISTERED_IP_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">등록되지 않은 IP</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">33</td><td style="padding: 8px; border: 1px solid #eee;">UNSIGNED_CALL_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서명되지 않은 호출</td></tr>
+                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">99</td><td style="padding: 8px; border: 1px solid #eee;">UNKNOWN_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">기타에러</td></tr>
+                        </table>
+                    `;
+                    ewWrapper.appendChild(errorGuide);
+                }
+            });
+
+            observer.observe(document.getElementById('swagger-ui'), { childList: true, subtree: true });
+        };
+    </script>
+
+    <footer class="ui-footer">
+        &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
+        <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
+    </footer>
+</body>
+</html>

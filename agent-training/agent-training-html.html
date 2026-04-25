@@ -1,0 +1,603 @@
+<!-- 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (github.com/xylito) & DORO Inc.
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도로랜드 웹마스터 코딩 실습</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff8c42;
+            --primary-glow: rgba(255, 140, 66, 0.4);
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #ffa66b;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 140, 66, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 166, 107, 0.05) 0%, transparent 20%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 140, 66, 0.2);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .status-badge {
+            background: rgba(255, 140, 66, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 140, 66, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 140, 66, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 140, 66, 0); }
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+            height: calc(100vh - 105px);
+            box-sizing: border-box;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Columns Layout */
+        .scenario-col { flex: 1.2; min-width: 300px; }
+        .editor-col { flex: 1.5; min-width: 300px; }
+        .preview-col { flex: 1.5; min-width: 300px; }
+
+        /* Scenario Content */
+        .scenario-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .dictionary-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .dictionary-box summary {
+            padding: 15px;
+            background: rgba(255, 140, 66, 0.05);
+            cursor: pointer;
+            color: var(--primary);
+            outline: none;
+            user-select: none;
+            font-size: 1.05rem;
+        }
+        
+        .dictionary-box summary:hover {
+            background: rgba(255, 140, 66, 0.1);
+        }
+
+        .dict-content {
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .dict-content h4 {
+            color: var(--accent);
+            margin: 15px 0 10px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+        
+        .dict-content h4:first-child { margin-top: 0; }
+
+        .dict-content ul {
+            padding-left: 20px;
+            margin: 0 0 15px 0;
+        }
+
+        .dict-content li {
+            margin-bottom: 8px;
+        }
+
+        .dict-content i {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .intro-box {
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.1), rgba(0, 0, 0, 0));
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .agent-avatar {
+            width: 90px;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+        }
+
+        .intro-text {
+            line-height: 1.6;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .mission-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .mission-step {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 900;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .mission-card h3 {
+            margin: 10px 0 5px 0;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .mission-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        code {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        .tag-hint {
+            display: inline-block;
+            margin-top: 5px;
+            background: rgba(255, 140, 66, 0.1);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Editor */
+        .editor-container {
+            flex: 1;
+            position: relative;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            width: 100%;
+            flex: 1;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            border: 1px solid rgba(255, 140, 66, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 140, 66, 0.2);
+        }
+
+        /* Preview */
+        .preview-container {
+            flex: 1;
+            background: #fff; /* White background for preview */
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; height: auto; overflow-y: auto;}
+            .panel { min-height: 400px; }
+            body { overflow: auto; height: auto; }
+        }
+    
+        .ui-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 8px 0;
+            background: var(--bg-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+        .ui-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .ui-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            🤖 <span>도로랜드</span> 정보국 특수작전팀
+        </div>
+        <div class="status-badge">
+            신입 요원 훈련 모드 가동 중
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Scenario Column -->
+        <div class="panel scenario-col">
+            <div class="panel-header">
+                📜 임무 지령서
+            </div>
+            <div class="scenario-content">
+                <div class="intro-box">
+                    <img src="./assets/images/agent-html.png" alt="HTML 요원" class="agent-avatar">
+                    <div class="intro-text">
+                        <strong>신입 정보국 요원이구만. 환영한다.</strong><br>
+                        나는 정보국 웹 특수작전팀을 이끄는 <strong>HTML 요원</strong>이다.<br>
+                        우리는 도로랜드를 <strong>'미래형 테마파크'</strong>로 전환하는 작전을 진행중이다.<br>
+                        <strong>'도로랜드 스마트 안내 시스템 웹페이지'</strong>를 만드는 게 임무라고 했지?<br>
+                        항상 기반이 제일 중요한 법, 우선 뼈대부터 차근차근 배워보자고!<br>
+                        우측 훈련 단말기에 아래 미션들을 차례대로 수행하도록.
+                    </div>
+                </div>
+
+                <details class="dictionary-box">
+                    <summary>📘 <b>정보국 1급 기밀 (HTML 태그 백과사전)</b></summary>
+                    <div class="dict-content">
+                        <h4>1. 웹 문서 기본 뼈대 태그</h4>
+                        <ul>
+                            <li><code>&lt;html&gt;</code> <b>문서 정의 태그</b>: 웹 문서의 시작과 끝을 나타냅니다. 모든 내용은 이 안에 들어갑니다.</li>
+                            <li><code>&lt;head&gt;</code> <b>머리말 태그</b>: 브라우저에게 문서의 정보를 알려줍니다. 화면에 직접 보이지 않습니다.</li>
+                            <li><code>&lt;meta&gt;</code> <b>메타 태그</b>: 문서의 문자 인코딩 설정 등 부가 정보를 담습니다. <i>(예: &lt;meta charset="UTF-8"&gt;)</i></li>
+                            <li><code>&lt;title&gt;</code> <b>제목 태그</b>: 브라우저 탭에 표시될 웹페이지의 제목을 정합니다. <i>(예: &lt;title&gt;도로랜드&lt;/title&gt;)</i></li>
+                            <li><code>&lt;body&gt;</code> <b>내용(본문) 태그</b>: 실제로 화면에 보여질 모든 내용이 들어가는 공간입니다.</li>
+                        </ul>
+                        <h4>2. 제목 & 텍스트 꾸미기 태그</h4>
+                        <ul>
+                            <li><code>&lt;h1&gt; ~ &lt;h6&gt;</code> <b>제목 태그</b>: 글의 제목을 만듭니다. h1이 가장 크고 h6이 가장 작습니다. <i>(예: &lt;h1&gt;대제목&lt;/h1&gt;, &lt;h3&gt;중제목&lt;/h3&gt;)</i></li>
+                            <li><code>&lt;b&gt;</code> <b>굵은 글씨 (Bold)</b>: 글자를 단순히 굵게 만듭니다. <i>(예: &lt;b&gt;굵게&lt;/b&gt;)</i></li>
+                            <li><code>&lt;strong&gt;</code> <b>강조 (Strong)</b>: 내용이 '중요함'을 의미하며 굵게 표시됩니다. <i>(예: &lt;strong&gt;중요!&lt;/strong&gt;)</i></li>
+                            <li><code>&lt;i&gt;</code> <b>기울임꼴 (Italic)</b>: 글자를 단순히 기울여 씁니다. <i>(예: &lt;i&gt;기울임&lt;/i&gt;)</i></li>
+                            <li><code>&lt;em&gt;</code> <b>강조 (Emphasis)</b>: 내용을 강조할 때 쓰며 기울임꼴로 표시됩니다. <i>(예: &lt;em&gt;진짜&lt;/em&gt; 맛있어요)</i></li>
+                        </ul>
+                        <h4>3. 공간 나누기 태그 (섹션)</h4>
+                        <ul>
+                            <li><code>&lt;div&gt;</code> <b>박스 태그</b>: 여러 요소들을 하나의 투명한 상자에 담아 묶어줍니다. (디자인을 위해 아주 많이 사용됨)</li>
+                            <li><code>&lt;section&gt;</code> <b>섹션 태그</b>: 내용이 같은 부분들을 하나의 구역으로 묶어줍니다. div와 비슷하지만 '의미'를 가집니다.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 1</div>
+                    <h3>테마파크 간판 달기</h3>
+                    <p>방문객이 가장 먼저 볼 수 있도록 웹페이지의 가장 큰 제목을 생성하라.</p>
+                    <span class="tag-hint">힌트: &lt;h1&gt; 태그 사용</span><br>
+                    <code>&lt;h1&gt;도로랜드에 오신 것을 환영합니다!&lt;/h1&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 2</div>
+                    <h3>소개글 작성하기</h3>
+                    <p>도로랜드의 정체를 알리는 짧은 소개글을 작성한다.</p>
+                    <span class="tag-hint">힌트: &lt;p&gt; 태그 사용</span><br>
+                    <code>&lt;p&gt;이곳은 공공데이터로 움직이는 미래형 테마파크입니다. 스마트 어트랙션을 즐겨보세요!&lt;/p&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 3</div>
+                    <h3>주요 시설 목록 만들기</h3>
+                    <p>테마파크의 3대 어트랙션을 점이 찍힌 목록으로 정리하라.</p>
+                    <span class="tag-hint">힌트: &lt;ul&gt; 과 &lt;li&gt; 태그 사용</span><br>
+                    <code>
+&lt;ul&gt;<br>
+&nbsp;&nbsp;&lt;li&gt;스마트 사파리&lt;/li&gt;<br>
+&nbsp;&nbsp;&lt;li&gt;기상 조절 돔&lt;/li&gt;<br>
+&nbsp;&nbsp;&lt;li&gt;대기 오염 정화탑&lt;/li&gt;<br>
+&lt;/ul&gt;
+                    </code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 4</div>
+                    <h3>멋진 사진 걸기</h3>
+                    <p>시각적인 임팩트를 위해 테마파크의 전경 이미지를 삽입하라.</p>
+                    <span class="tag-hint">힌트: &lt;img&gt; 태그 사용</span><br>
+                    <code>&lt;img src="https://images.unsplash.com/photo-1656647657563-ae3274b59492?q=80&w=1887&auto=format&fit=crop" alt="테마파크 사진"&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 5</div>
+                    <h3>예약 페이지로 가는 문 만들기</h3>
+                    <p>클릭 시 지정된 구역으로 이동하는 하이퍼링크를 구축하라.</p>
+                    <span class="tag-hint">힌트: &lt;a&gt; 태그 사용</span><br>
+                    <code>&lt;a href="https://doroedu.net/"&gt;👉 티켓 예약하러 가기&lt;/a&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 6</div>
+                    <h3>방문자 이름 묻기</h3>
+                    <p>방문객이 자신의 이름을 직접 입력할 수 있는 텍스트 필드를 생성하라.</p>
+                    <span class="tag-hint">힌트: &lt;input&gt; 태그 사용</span><br>
+                    <code>&lt;input type="text" placeholder="이름을 입력하세요"&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 7</div>
+                    <h3>방명록 남기기</h3>
+                    <p>대량의 텍스트를 입력할 수 있는 다중행 입력창을 확보하라.</p>
+                    <span class="tag-hint">힌트: &lt;textarea&gt; 태그 사용</span><br>
+                    <code>&lt;textarea placeholder="도로랜드 기대평을 남겨주세요!" rows="4"&gt;&lt;/textarea&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 8</div>
+                    <h3>제출 버튼 만들기</h3>
+                    <p>작성된 데이터를 서버로 전송하기 위한 실행 버튼을 구축하라.</p>
+                    <span class="tag-hint">힌트: &lt;button&gt; 태그 사용</span><br>
+                    <code>&lt;button&gt;제출하기&lt;/button&gt;</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 9</div>
+                    <h3>소개 영역 박스 만들기 (섹션)</h3>
+                    <p>지금까지 만든 내용들을 예쁘게 하나로 묶을 수 있는 투명한 상자(구역)를 만들어라.</p>
+                    <span class="tag-hint">힌트: &lt;div&gt; 또는 &lt;section&gt; 태그 사용</span><br>
+                    <code>&lt;div class="intro-box"&gt;<br>&nbsp;&nbsp;여기에 여러 내용들을 담을 수 있다!<br>&lt;/div&gt;</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editor Column -->
+        <div class="panel editor-col">
+            <div class="panel-header">
+                💻 코드 편집기 (HTML)
+            </div>
+            <div class="editor-container">
+                <textarea id="html-editor" spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- Preview Column -->
+        <div class="panel preview-col">
+            <div class="panel-header" style="background: rgba(0, 0, 0, 0.8); border-bottom: none;">
+                🌐 실시간 결과 화면
+            </div>
+            <div class="preview-container">
+                <iframe id="preview-frame"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editor = document.getElementById('html-editor');
+        const preview = document.getElementById('preview-frame');
+
+        const initialCode = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>도로랜드 테마파크</title>
+</head>
+<body>
+    <!-- 신입 정보국 요원이구만. 임무를 시작하지! -->
+    
+    <!-- 미션 1: 여기에 큰 제목(h1)을 입력하세요 -->
+    
+    
+    <!-- 미션 2: 여기에 소개글(p)을 입력하세요 -->
+    
+    
+    <!-- 미션 3: 여기에 목록(ul, li)을 만들어보세요 -->
+    
+    
+    <!-- 미션 4: 여기에 이미지(img)를 넣어보세요 -->
+    
+    
+    <!-- 미션 5: 여기에 링크(a)를 만들어보세요 -->
+    
+    
+    <!-- 미션 6: 여기에 입력창(input)을 만들어보세요 -->
+    
+    
+    <!-- 미션 7: 여기에 큰 입력창(textarea)을 만들어보세요 -->
+    
+    
+    <!-- 미션 8: 여기에 버튼(button)을 만들어보세요 -->
+    
+        
+    <!-- 미션 9: 여러 요소들을 묶을 상자(div나 section)를 만들어보세요 -->
+    
+
+</body>
+</html>`;
+
+        editor.value = initialCode;
+
+        function updatePreview() {
+            const htmlContent = editor.value;
+            
+            // 기본 스타일을 주입하여 결과 화면이 조금 더 예쁘게 보이도록 함
+            const customStyles = `
+<style>
+    body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; padding: 20px; color: #333; line-height: 1.6; }
+    h1 { color: #0f172a; border-bottom: 2px solid #ff8c42; padding-bottom: 10px; }
+    img { max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 10px 0; }
+    a { display: inline-block; background: #ff8c42; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; margin-top: 15px; }
+    a:hover { background: #e67d3b; }
+    ul { background: #f8fafc; padding: 15px 15px 15px 35px; border-radius: 8px; }
+    li { margin-bottom: 5px; }
+    input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; resize: vertical; }
+    button { background: #ff8c42; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 16px; }
+    button:hover { background: #e67d3b; }
+
+        .ui-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 8px 0;
+            background: var(--bg-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+        .ui-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .ui-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>`;
+
+            let finalHtml = htmlContent;
+            if (finalHtml.includes('</head>')) {
+                finalHtml = finalHtml.replace('</head>', customStyles + '\n</head>');
+            } else {
+                finalHtml = customStyles + '\n' + finalHtml;
+            }
+
+            preview.srcdoc = finalHtml;
+        }
+
+        // 입력할 때마다 실시간으로 결과 화면 업데이트
+        editor.addEventListener('input', updatePreview);
+
+        // 초기 화면 렌더링
+        updatePreview();
+    </script>
+
+    <footer class="ui-footer">
+        &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
+        <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
+    </footer>
+</body>
+</html>

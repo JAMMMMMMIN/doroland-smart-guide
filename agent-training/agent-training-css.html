@@ -1,0 +1,655 @@
+<!-- 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (github.com/xylito) & DORO Inc.
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도로랜드 웹마스터 코딩 실습</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --primary-glow: rgba(0, 240, 255, 0.5);
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #00c9d7;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 20%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .color-picker-container, .status-badge {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .color-picker-container {
+            gap: 8px;
+        }
+        
+        .color-picker-container label {
+            cursor: pointer;
+        }
+
+        #color-picker {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+        }
+        
+        #color-picker::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        #color-picker::-webkit-color-swatch {
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
+
+        #hex-value {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            user-select: all;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+            height: calc(100vh - 105px);
+            box-sizing: border-box;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Columns Layout */
+        .scenario-col { flex: 1.2; min-width: 300px; }
+        .editor-col { flex: 1.5; min-width: 300px; }
+        .preview-col { flex: 1.5; min-width: 300px; }
+
+        /* Scenario Content */
+        .scenario-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .dictionary-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .dictionary-box summary {
+            padding: 15px;
+            background: rgba(56, 189, 248, 0.05);
+            cursor: pointer;
+            color: #38bdf8;
+            outline: none;
+            user-select: none;
+            font-size: 1.05rem;
+        }
+        
+        .dictionary-box summary:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .dict-content {
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .dict-content h4 {
+            color: var(--accent);
+            margin: 15px 0 10px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+        
+        .dict-content h4:first-child { margin-top: 0; }
+
+        .dict-content ul {
+            padding-left: 20px;
+            margin: 0 0 15px 0;
+        }
+
+        .dict-content li {
+            margin-bottom: 8px;
+        }
+
+        .dict-content i {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .intro-box {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(0, 0, 0, 0));
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .agent-avatar {
+            width: 90px;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+        }
+
+        .intro-text {
+            line-height: 1.6;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .mission-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .mission-step {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 900;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .mission-card h3 {
+            margin: 10px 0 5px 0;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .mission-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        code {
+            background: #0f172a;
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        .tag-hint {
+            display: inline-block;
+            margin-top: 5px;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Editor */
+        .editor-container {
+            flex: 1;
+            position: relative;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            width: 100%;
+            flex: 1;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+        }
+
+        /* Preview */
+        .preview-container {
+            flex: 1;
+            background: #fff; /* White background for preview */
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; height: auto; overflow-y: auto;}
+            .panel { min-height: 400px; }
+            body { overflow: auto; height: auto; }
+        }
+    
+        .ui-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 8px 0;
+            background: var(--bg-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+        .ui-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .ui-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            🤖 <span>도로랜드</span> 정보국 특수작전팀
+        </div>
+        <div class="header-controls">
+            <div class="color-picker-container">
+                <label for="color-picker">🎨 색상 추출기</label>
+                <input type="color" id="color-picker" value="#38bdf8">
+                <span id="hex-value">#38bdf8</span>
+            </div>
+            <div class="status-badge">
+                신입 요원 훈련 모드 가동 중
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Scenario Column -->
+        <div class="panel scenario-col">
+            <div class="panel-header">
+                📜 임무 지령서
+            </div>
+            <div class="scenario-content">
+                                <div class="intro-box">
+                    <img src="./assets/images/agent-css.png" alt="CSS 요원" class="agent-avatar">
+                    <div class="intro-text">
+                        <strong>안녕하세요~ 신입 요원님! 환영해요 💕</strong><br>
+                        저는 정보국 웹 특수작전팀에서 디자인을 담당하고 있는 <strong>CSS 요원</strong>이랍니다.<br>
+                        HTML 요원님이 튼튼한 뼈대를 만들어 주셨네요! 하지만 아직 색깔도 없고 조금 심심해 보이죠?<br>
+                        저와 함께 마법 같은 CSS 스타일링으로 도로랜드를 예쁘게 꾸며볼까요?<br>
+                        천천히 따라오시면 누구나 멋진 웹디자이너가 될 수 있어요~ 우측 편집기에서 미션을 시작해볼까요!
+                    </div>
+                </div>
+
+                <details class="dictionary-box">
+                    <summary>📘 <b>정보국 1급 기밀 (CSS 스타일 백과사전)</b></summary>
+                    <div class="dict-content">
+                        <h4>0. 선택자(Selector)의 비밀</h4>
+                        <p>CSS 요원은 HTML 요원이 만든 뼈대 중 <b>누구에게 예술적 마법을 걸지</b> 먼저 찾아야 해요. 이것을 <b>'선택자'</b>라고 부릅니다.</p>
+                        <ul>
+                            <li><b>태그 선택자</b>: <code>h1 { }</code>처럼 태그 이름으로 모두 찾습니다.</li>
+                            <li><b>클래스 선택자</b>: <code>.box { }</code>처럼 HTML 요소에 붙은 별명(class)을 찾아갑니다. <i>(앞에 점 <code>.</code>을 붙여요!)</i></li>
+                        </ul>
+                        <h4>1. 텍스트 꾸미기 마법</h4>
+                        <ul>
+                            <li><code>color</code>: 글자 색상을 바꿉니다. <i>(예: color: blue;)</i></li>
+                            <li><code>font-size</code>: 글자 크기를 조절합니다. <i>(예: font-size: 20px;)</i></li>
+                            <li><code>text-align</code>: 글자를 정렬합니다. <i>(예: text-align: center;)</i></li>
+                        </ul>
+                        <h4>2. 배경과 여백 마법</h4>
+                        <ul>
+                            <li><code>background-color</code>: 배경색을 칠합니다. <i>(예: background-color: lightblue;)</i></li>
+                            <li><code>padding</code>: 요소 안쪽의 여백을 줍니다. <i>(예: padding: 10px;)</i></li>
+                            <li><code>border-radius</code>: 모서리를 둥글게 깎아줍니다. <i>(예: border-radius: 15px;)</i></li>
+                        </ul>
+                        <h4>3. 특별한 마법</h4>
+                        <ul>
+                            <li><code>:hover</code>: 마우스를 올렸을 때의 모습을 지정합니다. <i>(예: button:hover { background-color: red; })</i></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 1</div>
+                    <h3>배경색 칠하기</h3>
+                    <p>웹페이지 전체 배경색을 연한 파란색으로 칠해볼까요?</p>
+                    <span class="tag-hint">힌트: body 태그 사용</span><br>
+                    <code>body { background-color: #f0f8ff; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 2</div>
+                    <h3>제목 색상 바꾸기</h3>
+                    <p>가장 큰 제목이 눈에 띄도록 진한 파란색으로 바꿔주세요!</p>
+                    <span class="tag-hint">힌트: h1 태그 사용</span><br>
+                    <code>h1 { color: #1e3a8a; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 3</div>
+                    <h3>제목 가운데 정렬하기</h3>
+                    <p>제목이 예쁘게 가운데에 오도록 위치를 옮겨볼게요.</p>
+                    <span class="tag-hint">힌트: text-align 속성 사용</span><br>
+                    <code>h1 { text-align: center; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 4</div>
+                    <h3>소개글 크기 키우기</h3>
+                    <p>사람들이 잘 읽을 수 있게 소개글의 크기를 18px로 키워주세요.</p>
+                    <span class="tag-hint">힌트: p 태그 사용</span><br>
+                    <code>p { font-size: 18px; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 5</div>
+                    <h3>사진 테두리 둥글게 깎기</h3>
+                    <p>테마파크 사진이 부드러워 보이도록 모서리를 둥글게 깎아주세요~</p>
+                    <span class="tag-hint">힌트: border-radius 속성 사용</span><br>
+                    <code>img { border-radius: 20px; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 6</div>
+                    <h3>버튼 예쁘게 꾸미기</h3>
+                    <p>제출 버튼에 색상과 안쪽 여백(padding)을 줘서 누르고 싶게 만들어요!</p>
+                    <span class="tag-hint">힌트: button 태그 사용</span><br>
+                    <code>button { background-color: #38bdf8; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 7</div>
+                    <h3>버튼에 호버 마법 걸기</h3>
+                    <p>버튼에 마우스를 올렸을 때 진한 색으로 변하는 마법을 걸어주세요!</p>
+                    <span class="tag-hint">힌트: button:hover 사용</span><br>
+                    <code>button:hover { background-color: #0284c7; }</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 8</div>
+                    <h3>섹션 꾸미기 (박스 마법)</h3>
+                    <p>내용이 들어있는 상자(content-box)에 예쁜 색상과 테두리를 줘서 특별한 구역으로 만들어볼까요?</p>
+                    <span class="tag-hint">힌트: .content-box 클래스 선택자 사용</span><br>
+                    <code>.content-box { background-color: #e0f2fe; padding: 20px; border-radius: 10px; border: 2px dashed #38bdf8; }</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editor Column -->
+        <div class="panel editor-col">
+            <div class="panel-header">
+                🎨 코드 편집기 (CSS)
+            </div>
+            <div class="editor-container">
+                <textarea id="html-editor" spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- Preview Column -->
+        <div class="panel preview-col">
+            <div class="panel-header" style="background: rgba(0, 0, 0, 0.8); border-bottom: none;">
+                🌐 실시간 결과 화면
+            </div>
+            <div class="preview-container">
+                <iframe id="preview-frame"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editor = document.getElementById('html-editor');
+        const preview = document.getElementById('preview-frame');
+
+        const initialCode = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>도로랜드 테마파크</title>
+    <style>
+        /* CSS 요원의 마법이 시작되는 곳이에요~ 💕 */
+        
+        /* 미션 1: 배경색 칠하기 */
+        
+        
+        /* 미션 2: 제목 색상 바꾸기 */
+        
+        
+        /* 미션 3: 제목 가운데 정렬하기 */
+        
+        
+        /* 미션 4: 소개글 크기 키우기 */
+        
+        
+        /* 미션 5: 사진 테두리 둥글게 깎기 */
+        
+        
+        /* 미션 6: 버튼 예쁘게 꾸미기 */
+        
+        
+        /* 미션 7: 버튼에 호버 마법 걸기 */
+        
+        
+        /* 미션 8: 섹션 꾸미기 (박스 마법) */
+        
+        
+    </style>
+</head>
+<body>
+    <div class="content-box">
+        <h1>도로랜드에 오신 것을 환영합니다!</h1>
+        <p>이곳은 공공데이터로 움직이는 미래형 테마파크입니다. 스마트 어트랙션을 즐겨보세요!</p>
+        <ul>
+            <li>스마트 사파리</li>
+            <li>기상 조절 돔</li>
+            <li>대기 오염 정화탑</li>
+        </ul>
+    </div>
+    <img src="https://images.unsplash.com/photo-1656647657563-ae3274b59492?q=80&w=1887&auto=format&fit=crop" alt="테마파크 사진" width="400">
+    <br><br>
+    <button>제출하기</button>
+</body>
+</html>`;
+
+        editor.value = initialCode;
+
+        function updatePreview() {
+            const htmlContent = editor.value;
+            
+            // 학생이 작성한 CSS가 돋보이도록 최소한의 초기 스타일만 주입합니다.
+            const customStyles = `
+<style>
+    body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; padding: 20px; line-height: 1.6; transition: all 0.3s ease; }
+    img { max-width: 100%; transition: all 0.3s ease; display: block; margin-top: 15px; }
+    button { transition: all 0.3s ease; }
+    ul { margin: 15px 0; padding-left: 20px; }
+    li { margin-bottom: 5px; }
+
+        .ui-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 8px 0;
+            background: var(--bg-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+        .ui-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .ui-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>`;
+
+            let finalHtml = htmlContent;
+            if (finalHtml.includes('</head>')) {
+                finalHtml = finalHtml.replace('</head>', customStyles + '\n</head>');
+            } else {
+                finalHtml = customStyles + '\n' + finalHtml;
+            }
+
+            preview.srcdoc = finalHtml;
+        }
+
+        editor.addEventListener('input', updatePreview);
+        updatePreview();
+
+        // Color Picker Logic
+        const colorPicker = document.getElementById('color-picker');
+        const hexValue = document.getElementById('hex-value');
+        colorPicker.addEventListener('input', (e) => {
+            const hex = e.target.value;
+            hexValue.textContent = hex;
+        });
+    </script>
+    <footer class="ui-footer">
+        &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
+        <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
+    </footer>
+</body>

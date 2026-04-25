@@ -1,0 +1,106 @@
+<!-- 
+  ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
+  - Creator:   XYLO (@xylito) & DORO Inc. & You
+  - Version:   1.0.0 (2026.04.24.)
+  - Source:    https://github.com/xylito/doroland-smart-guide
+  - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 검색엔진 최적화(SEO) 반영 -->
+    <title>도로랜드 스마트 안내 시스템 - AI 기술과 함께하는 놀이공원 가이드</title>
+    <meta name="description" content="도로랜드 놀이공원의 실시간 날씨와 공기 질을 알려주는 스마트 추천 가이드입니다.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 배경 장식 이미지들 (현재 폴더에 있는 자원 적극 활용) -->
+    <img src="assets/images/cloud1.png" class="deco cloud cloud-1" alt="구름 장식">
+    <img src="assets/images/cloud2.png" class="deco cloud cloud-2" alt="구름 장식">
+    <img src="assets/images/airballoon1.png" class="deco balloon" alt="열기구 장식">
+    <img src="assets/images/robot1.png" class="deco robot robot-right" alt="도로랜드 로봇">
+    <img src="assets/images/robot_balloon1.png" class="deco robot-balloon" alt="로봇 열기구 장식">
+    <img src="assets/images/circus_and_ferriswheel1.png" class="deco ferriswheel" alt="관람차 배경">
+    
+    <div class="container">
+        <!-- 1. 제목 영역 (HTML 문서 구조 만들기) -->
+        <header>
+            <h1>🎡 도로랜드 스마트 안내 시스템 🤖</h1>
+            <p>오늘의 도로랜드 날씨와 공기 상태를 확인하고, 맞춤형 관람 계획을 세워보세요!</p>
+            <p class="source-info">데이터 출처: 기상청(초단기예보), 한국환경공단(에어코리아)</p>
+        </header>
+
+        <!-- 2. 주요 정보 카드 영역 (화면 영역 나누기) -->
+        <section class="card-container">
+            <!-- 날씨 카드 -->
+            <div class="card glass">
+                <div class="card-header">
+                    <h2>🌤️ 현재 날씨 정보</h2>
+                </div>
+                <!-- 자바스크립트로 데이터를 넣을 자리 (id 지정) -->
+                <div class="card-body" id="weather-info">
+                    <p class="loading">데이터를 불러오는 중...</p>
+                </div>
+            </div>
+
+            <!-- 미세먼지 카드 -->
+            <div class="card glass">
+                <div class="card-header">
+                    <h2>😷 공기 질 (미세먼지)</h2>
+                </div>
+                <!-- 자바스크립트로 데이터를 넣을 자리 (id 지정) -->
+                <div class="card-body" id="air-info">
+                    <p class="loading">데이터를 불러오는 중...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 데이터 해석 및 안내 문구 영역 (데이터 기반 설명 추가) -->
+        <section class="guide-container glass">
+            <h2>📢 AI 맞춤형 관람 추천</h2>
+            <div id="recommendation-msg">
+                <!-- 상황에 따른 추천 문구가 이곳에 자동으로 표시됩니다 -->
+            </div>
+        </section>
+
+        <!-- 4. 실시간 상세 표 (표 만들기 및 활용) -->
+        <section class="table-container glass">
+            <h2>시간별 날씨 예보 상세내역</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>시간</th>
+                        <th>기온</th>
+                        <th>강수확률</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody id="forecast-table-body">
+                    <!-- 자바스크립트로 줄(tr)이 추가될 자리 -->
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- 데이터 불러오기 버튼 (UI 요소 배치) -->
+        <div class="action-btn-container">
+            <button id="fetch-data-btn" class="primary-btn">새로고침 (최신 데이터 가져오기)</button>
+        </div>
+    </div>
+
+    <!-- 스크립트 연결 (JS 동작) -->
+    <script src="js/script.js"></script>
+    <footer class="ui-footer">
+        &copy; 2026 XYLO & DORO Inc. & You | Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
+        <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
+    </footer>
+</body>
+</html>
