@@ -32,6 +32,14 @@
             --footer-border: rgba(0, 0, 0, 0.08);
             --footer-text: #64748b;
             --footer-link: #059669;
+            --swagger-link-color: #34d399;
+            --swagger-get-bg: rgba(16, 185, 129, 0.08);
+            --swagger-get-border: rgba(16, 185, 129, 0.3);
+            --swagger-get-summary-border: rgba(16, 185, 129, 0.2);
+            --swagger-get-method-bg: #059669;
+            --execute-btn-bg: #059669;
+            --execute-btn-hover: #047857;
+            --execute-btn-shadow: rgba(5,150,105,0.3);
         }
 
         [data-theme="dark"] {
@@ -42,142 +50,6 @@
             --footer-border: rgba(255,255,255,0.1);
             --footer-text: #94a3b8;
             --footer-link: #34d399;
-        }
-
-        /* ===== Dark Mode: Swagger UI 내부 전면 오버라이드 ===== */
-        [data-theme="dark"] .swagger-ui,
-        [data-theme="dark"] .swagger-ui .scheme-container,
-        [data-theme="dark"] .swagger-ui .opblock-tag-section { background: transparent; }
-
-        [data-theme="dark"] .swagger-ui .info .title,
-        [data-theme="dark"] .swagger-ui .info h1,
-        [data-theme="dark"] .swagger-ui .info h2,
-        [data-theme="dark"] .swagger-ui .info h3,
-        [data-theme="dark"] .swagger-ui .info h4,
-        [data-theme="dark"] .swagger-ui .opblock-tag,
-        [data-theme="dark"] .swagger-ui .opblock-summary-description,
-        [data-theme="dark"] .swagger-ui table thead tr th,
-        [data-theme="dark"] .swagger-ui .parameter__name,
-        [data-theme="dark"] .swagger-ui .parameter__type,
-        [data-theme="dark"] .swagger-ui .response-col_status,
-        [data-theme="dark"] .swagger-ui .response-col_description,
-        [data-theme="dark"] .swagger-ui label,
-        [data-theme="dark"] .swagger-ui .servers-title,
-        [data-theme="dark"] .swagger-ui .opblock-section-header h4,
-        [data-theme="dark"] .swagger-ui .opblock-section-header h4 span,
-        [data-theme="dark"] .swagger-ui .responses-inner h4,
-        [data-theme="dark"] .swagger-ui .response-col_links { color: #e2e8f0; }
-
-        [data-theme="dark"] .swagger-ui .info li,
-        [data-theme="dark"] .swagger-ui .info p,
-        [data-theme="dark"] .swagger-ui .info .markdown p,
-        [data-theme="dark"] .swagger-ui .info .markdown li,
-        [data-theme="dark"] .swagger-ui .opblock-description-wrapper p,
-        [data-theme="dark"] .swagger-ui table tbody tr td,
-        [data-theme="dark"] .swagger-ui .parameter__in { color: #94a3b8; }
-
-        [data-theme="dark"] .swagger-ui .info a,
-        [data-theme="dark"] .swagger-ui .info .markdown a { color: #34d399; }
-
-        [data-theme="dark"] .swagger-ui .opblock-section-header {
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        /* 버전 배지 원본 스타일 유지 */
-        [data-theme="dark"] .swagger-ui .info .title small {
-            background: #7d8492 !important;
-            color: #ffffff !important;
-        }
-        [data-theme="dark"] .swagger-ui .info .title small.version-stamp {
-            background-color: rgba(0,0,0,0.3) !important;
-            border: 1px solid #89bf04 !important;
-            color: #89bf04 !important;
-        }
-
-        [data-theme="dark"] .swagger-ui .opblock.opblock-get {
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-        [data-theme="dark"] .swagger-ui .opblock.opblock-get .opblock-summary {
-            border-color: rgba(16, 185, 129, 0.2);
-        }
-
-        [data-theme="dark"] .swagger-ui select,
-        [data-theme="dark"] .swagger-ui input[type=text],
-        [data-theme="dark"] .swagger-ui input[type=search],
-        [data-theme="dark"] .swagger-ui input[type=password],
-        [data-theme="dark"] .swagger-ui textarea {
-            background: #0f172a;
-            color: #e2e8f0;
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-
-        [data-theme="dark"] .swagger-ui .scheme-container {
-            background: transparent;
-            box-shadow: none;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        [data-theme="dark"] .swagger-ui .servers > label select {
-            background: #0f172a;
-            color: #e2e8f0;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        [data-theme="dark"] .swagger-ui .highlight-code,
-        [data-theme="dark"] .swagger-ui .microlight,
-        [data-theme="dark"] .swagger-ui pre {
-            background: #0f172a !important;
-            color: #a5d6ff !important;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 6px;
-        }
-
-        [data-theme="dark"] .swagger-ui .copy-to-clipboard { background: #334155; }
-        [data-theme="dark"] .swagger-ui .copy-to-clipboard button { color: #e2e8f0; }
-
-        [data-theme="dark"] .swagger-ui .responses-wrapper .responses-inner,
-        [data-theme="dark"] .swagger-ui .response-controls { background: transparent; }
-
-        [data-theme="dark"] .swagger-ui .model-box,
-        [data-theme="dark"] .swagger-ui .model { color: #94a3b8; }
-
-        /* 에러 코드표 다크모드 */
-        [data-theme="dark"] #error-code-guide {
-            background: #1e293b !important;
-            border-color: rgba(255,255,255,0.1) !important;
-            color: #cbd5e1 !important;
-        }
-        [data-theme="dark"] #error-code-guide h4 { color: #fbbf24 !important; }
-        [data-theme="dark"] #error-code-guide table { background: #0f172a !important; }
-        [data-theme="dark"] #error-code-guide tr {
-            background: transparent !important;
-            border-color: rgba(255,255,255,0.06) !important;
-        }
-        [data-theme="dark"] #error-code-guide tr[style*="background: #fff8e1"] {
-            background: rgba(251, 191, 36, 0.12) !important;
-            border-bottom: 2px solid rgba(251, 191, 36, 0.3) !important;
-        }
-        [data-theme="dark"] #error-code-guide th {
-            color: #fbbf24 !important;
-            border-color: rgba(255,255,255,0.08) !important;
-            background: transparent !important;
-        }
-        [data-theme="dark"] #error-code-guide td {
-            color: #94a3b8 !important;
-            border-color: rgba(255,255,255,0.08) !important;
-        }
-        [data-theme="dark"] #error-code-guide td[style*="color: #0d8a5e"] {
-            color: #34d399 !important;
-        }
-
-        /* GET 엔드포인트 경로 텍스트 다크모드 */
-        [data-theme="dark"] .swagger-ui .opblock-summary-path,
-        [data-theme="dark"] .swagger-ui .opblock-summary-path span {
-            color: #e2e8f0 !important;
-        }
-        [data-theme="dark"] .swagger-ui .opblock-summary-method {
-            background: #059669 !important;
         }
 
         /* 커스텀 응답 분석 UI 다크모드 */
@@ -202,160 +74,8 @@
         [data-theme="dark"] #custom-response-ui div[style*="color: #64748b"] { color: #94a3b8 !important; }
         [data-theme="dark"] #custom-response-ui div[style*="color: #6b7280"] { color: #94a3b8 !important; }
         [data-theme="dark"] #custom-response-ui div[style*="font-weight: bold"] { color: #e2e8f0 !important; }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            background-color: var(--bg);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            transition: background-color 0.4s ease;
-        }
-        .header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            margin: 15px 0 0 0;
-            opacity: 0.9;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        #swagger-ui {
-            max-width: 1200px;
-            margin: 40px auto;
-            background: var(--swagger-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px var(--swagger-shadow);
-            padding: 20px 30px;
-            overflow: hidden;
-            transition: background-color 0.4s ease;
-        }
-        /* Swagger 내부 UI 일부 커스텀 */
-        .swagger-ui .topbar { display: none; } /* 기본 탑바 숨김 */
-        .swagger-ui .info { margin: 20px 0; }
-        .swagger-ui .btn.execute { background-color: #059669; border-color: #059669; box-shadow: 0 2px 4px rgba(5,150,105,0.3); }
-        .swagger-ui .btn.execute:hover { background-color: #047857; }
-        .swagger-ui .try-out { display: none !important; } /* 테스트 시작 버튼 디자인 숨김 */
-        .swagger-ui .response-col_links { display: none !important; } /* Links 컬럼 숨김 (사용 안함) */
-        .swagger-ui .responses-table:not(.live-responses-table) { display: none !important; } /* API Spec 상에 하드코딩된 '200 정상응답' 테이블 행 완전 제거 */
-    
-        .ui-footer {
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--footer-text);
-            padding: 8px 0;
-            line-height: 1.4;
-            background: var(--footer-bg);
-            border-top: 1px solid var(--footer-border);
-            margin-top: auto;
-            z-index: 10;
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-        .ui-footer a {
-            color: var(--footer-link);
-            text-decoration: none;
-        }
-        .ui-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Floating Controls */
-        .floating-controls {
-            position: fixed;
-            top: 15px;
-            right: 20px;
-            z-index: 100;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .portal-btn {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid #1e293b;
-            color: #f8fafc;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s ease;
-            user-select: none;
-            text-decoration: none;
-            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-        }
-        .portal-btn:hover {
-            background: rgba(15, 23, 42, 0.95);
-            transform: scale(1.05);
-        }
-        [data-theme="dark"] .portal-btn {
-            background: rgba(248, 250, 252, 0.9);
-            border: 1px solid rgba(226, 232, 240, 0.6);
-            color: #334155;
-        }
-        [data-theme="dark"] .portal-btn:hover {
-            background: rgba(248, 250, 252, 1);
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid #1e293b;
-            color: #f8fafc;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s ease;
-            user-select: none;
-            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-        }
-        .theme-toggle:hover {
-            background: rgba(15, 23, 42, 0.95);
-            transform: scale(1.05);
-        }
-        .theme-toggle .toggle-icon {
-            font-size: 0.85rem;
-            transition: transform 0.4s ease;
-        }
-        [data-theme="dark"] .theme-toggle {
-            background: rgba(248, 250, 252, 0.9);
-            border: 1px solid rgba(226, 232, 240, 0.6);
-            color: #334155;
-        }
-        [data-theme="dark"] .theme-toggle:hover {
-            background: rgba(248, 250, 252, 1);
-        }
-        [data-theme="dark"] .theme-toggle .toggle-icon {
-            transform: rotate(180deg);
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #059669; }
-        [data-theme="dark"] ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
-        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
-        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #34d399; }
     </style>
+    <link rel="stylesheet" href="./assets/css/api-test.css">
 </head>
 <body>
 
@@ -527,29 +247,7 @@
 
             // Swagger UI 내부 상태 변화 대응 Observer
             const observer = new MutationObserver(function() {
-                const replaceTextNodes = (selector, oldText, newText) => {
-                    document.querySelectorAll(selector).forEach(el => {
-                        Array.from(el.childNodes).forEach(node => {
-                            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === oldText) {
-                                node.nodeValue = node.nodeValue.replace(oldText, newText);
-                            }
-                        });
-                    });
-                };
-
-                // 번역
-                replaceTextNodes('.try-out__btn', 'Try it out', '테스트 시작 (API 입력 열기)');
-                replaceTextNodes('.execute', 'Execute', '실행하기 (API 호출)');
-                replaceTextNodes('.btn-clear', 'Clear', '초기화');
-                replaceTextNodes('button.cancel', 'Cancel', '취소');
-                replaceTextNodes('.opblock-section-header h4 span', 'Parameters', '파라미터 (입력값)');
-                replaceTextNodes('.responses-wrapper > .opblock-section-header h4', 'Responses', '실행 결과 (응답)');
-                replaceTextNodes('.responses-inner h4', 'Responses', '실행 결과 (응답)');
-                replaceTextNodes('.servers-title', 'Servers', 'API 서버 접속 주소');
-                replaceTextNodes('.parameter__name', 'Name', '파라미터명 (Name)');
-                replaceTextNodes('.parameter__type', 'Description', '설명 (Description)');
-                replaceTextNodes('.response-col_status', 'Code', '응답 코드 (Code)');
-                replaceTextNodes('.response-col_description', 'Description', '응답 결과 설명 (Description)');
+                applySwaggerTranslationsAndErrorGuide();
 
                 // 자동 테스트 시작 상태 돌입
                 const tryItOutBtn = document.querySelector('.try-out__btn');
@@ -622,43 +320,6 @@
                          document.getElementById('custom-response-content').innerHTML = "<span style='color: #ef4444; font-size: 14px;'>(⛔ JSON 결과를 분석할 수 없습니다. 요청 파라미터의 returnType이 JSON인지, 응답 코드가 정상(00)인지 한번 더 확인해주세요.)</span>";
                     }
                 }
-
-                // 에러 코드 맵핑 가이드 (가장 아래 배치)
-                const ewWrapper = document.querySelector('.responses-wrapper');
-                if (ewWrapper && !document.getElementById('error-code-guide')) {
-                    const errorGuide = document.createElement('div');
-                    errorGuide.id = 'error-code-guide';
-                    errorGuide.style = "margin: 20px; padding: 25px; background: #fffdf5; border-radius: 8px; border: 1px solid #ffecca; font-size: 13px; color: #444; box-shadow: 0 4px 8px rgba(0,0,0,0.02);";
-                    errorGuide.innerHTML = `
-                        <h4 style="margin: 0 0 15px 0; color: #b7790a; font-size: 16px;">📌 공공데이터 API 공통 응답 메시지 (resultCode) 코드표</h4>
-                        <table style="width: 100%; border-collapse: collapse; text-align: left; background: white; font-size: 13px; table-layout: fixed;">
-                            <colgroup><col style="width: 15%;"><col style="width: 45%;"><col style="width: 40%;"></colgroup>
-                            <tr style="background: #fff8e1; border-bottom: 2px solid #ffe199;">
-                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러코드</th>
-                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러메세지</th>
-                                <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">설명</th>
-                            </tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold; color: #0d8a5e;">00</td><td style="padding: 8px; border: 1px solid #eee; color: #0d8a5e; font-weight: bold;">NORMAL_SERVICE</td><td style="padding: 8px; border: 1px solid #eee; color: #0d8a5e; font-weight: bold;">정상</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">01</td><td style="padding: 8px; border: 1px solid #eee;">APPLICATION_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">어플리케이션 에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">02</td><td style="padding: 8px; border: 1px solid #eee;">DB_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">데이터베이스 에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">03</td><td style="padding: 8px; border: 1px solid #eee;">NODATA_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">데이터없음 에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">04</td><td style="padding: 8px; border: 1px solid #eee;">HTTP_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">HTTP 에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">05</td><td style="padding: 8px; border: 1px solid #eee;">SERVICETIME_OUT</td><td style="padding: 8px; border: 1px solid #eee;">서비스 연결실패 에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">10</td><td style="padding: 8px; border: 1px solid #eee;">INVALID_REQUEST_PARAMETER_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">잘못된 요청 파라메터 에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">11</td><td style="padding: 8px; border: 1px solid #eee;">NO_MANDATORY_REQUEST_PARAMETERS_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">필수요청 파라메터가 없음</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">12</td><td style="padding: 8px; border: 1px solid #eee;">NO_OPENAPI_SERVICE_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">해당 오픈 API 서비스가 없거나 폐기됨</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">20</td><td style="padding: 8px; border: 1px solid #eee;">SERVICE_ACCESS_DENIED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서비스 접근거부</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">21</td><td style="padding: 8px; border: 1px solid #eee;">TEMPORARILY_DISABLE_THE_SERVICEKEY_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">일시적으로 사용할 수 없는 서비스 키</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">22</td><td style="padding: 8px; border: 1px solid #eee;">LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서비스 요청제한횟수 초과에러</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">30</td><td style="padding: 8px; border: 1px solid #eee;">SERVICE_KEY_IS_NOT_REGISTERED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">등록되지 않은 서비스키</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">31</td><td style="padding: 8px; border: 1px solid #eee;">DEADLINE_HAS_EXPIRED_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">기한만료된 서비스키</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">32</td><td style="padding: 8px; border: 1px solid #eee;">UNREGISTERED_IP_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">등록되지 않은 IP</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">33</td><td style="padding: 8px; border: 1px solid #eee;">UNSIGNED_CALL_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">서명되지 않은 호출</td></tr>
-                            <tr><td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">99</td><td style="padding: 8px; border: 1px solid #eee;">UNKNOWN_ERROR</td><td style="padding: 8px; border: 1px solid #eee;">기타에러</td></tr>
-                        </table>
-                    `;
-                    ewWrapper.appendChild(errorGuide);
-                }
             });
 
             observer.observe(document.getElementById('swagger-ui'), { childList: true, subtree: true });
@@ -670,39 +331,7 @@
         <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
     </footer>
 
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme') || 'light';
-            const next = current === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('doroland-theme', next);
-            updateToggleUI(next);
-        }
-        function updateToggleUI(theme) {
-            const icon = document.querySelector('.toggle-icon');
-            const label = document.querySelector('.toggle-label');
-            if (theme === 'light') {
-                icon.textContent = '🌙';
-                label.textContent = '야간 모드';
-            } else {
-                icon.textContent = '☀️';
-                label.textContent = '주간 모드';
-            }
-        }
-        (function() {
-            const saved = localStorage.getItem('doroland-theme');
-            let theme;
-            if (saved) {
-                theme = saved;
-            } else {
-                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                theme = systemDark ? 'dark' : 'light';
-            }
-            document.documentElement.setAttribute('data-theme', theme);
-            updateToggleUI(theme);
-        })();
-    </script>
+    <script src="./assets/js/api-test.js"></script>
 
 </body>
 </html>

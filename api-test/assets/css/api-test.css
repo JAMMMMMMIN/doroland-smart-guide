@@ -1,0 +1,300 @@
+/* api-test-common.css */
+/* ===== Dark Mode: Swagger UI 내부 전면 오버라이드 ===== */
+[data-theme="dark"] .swagger-ui,
+[data-theme="dark"] .swagger-ui .scheme-container,
+[data-theme="dark"] .swagger-ui .opblock-tag-section { background: transparent; }
+
+[data-theme="dark"] .swagger-ui .info .title,
+[data-theme="dark"] .swagger-ui .info h1,
+[data-theme="dark"] .swagger-ui .info h2,
+[data-theme="dark"] .swagger-ui .info h3,
+[data-theme="dark"] .swagger-ui .info h4,
+[data-theme="dark"] .swagger-ui .opblock-tag,
+[data-theme="dark"] .swagger-ui .opblock-summary-description,
+[data-theme="dark"] .swagger-ui table thead tr th,
+[data-theme="dark"] .swagger-ui .parameter__name,
+[data-theme="dark"] .swagger-ui .parameter__type,
+[data-theme="dark"] .swagger-ui .response-col_status,
+[data-theme="dark"] .swagger-ui .response-col_description,
+[data-theme="dark"] .swagger-ui label,
+[data-theme="dark"] .swagger-ui .servers-title,
+[data-theme="dark"] .swagger-ui .opblock-section-header h4,
+[data-theme="dark"] .swagger-ui .opblock-section-header h4 span,
+[data-theme="dark"] .swagger-ui .responses-inner h4,
+[data-theme="dark"] .swagger-ui .response-col_links { color: #e2e8f0; }
+
+[data-theme="dark"] .swagger-ui .info li,
+[data-theme="dark"] .swagger-ui .info p,
+[data-theme="dark"] .swagger-ui .info .markdown p,
+[data-theme="dark"] .swagger-ui .info .markdown li,
+[data-theme="dark"] .swagger-ui .opblock-description-wrapper p,
+[data-theme="dark"] .swagger-ui table tbody tr td,
+[data-theme="dark"] .swagger-ui .parameter__in { color: #94a3b8; }
+
+[data-theme="dark"] .swagger-ui .info a,
+[data-theme="dark"] .swagger-ui .info .markdown a { color: var(--swagger-link-color, #34d399); }
+
+[data-theme="dark"] .swagger-ui .opblock-section-header {
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* 버전 배지 원본 스타일 유지 */
+[data-theme="dark"] .swagger-ui .info .title small {
+    background: #7d8492 !important;
+    color: #ffffff !important;
+}
+[data-theme="dark"] .swagger-ui .info .title small.version-stamp {
+    background-color: rgba(0,0,0,0.3) !important;
+    border: 1px solid #89bf04 !important;
+    color: #89bf04 !important;
+}
+
+[data-theme="dark"] .swagger-ui .opblock.opblock-get {
+    background: var(--swagger-get-bg, rgba(16, 185, 129, 0.08));
+    border-color: var(--swagger-get-border, rgba(16, 185, 129, 0.3));
+}
+[data-theme="dark"] .swagger-ui .opblock.opblock-get .opblock-summary {
+    border-color: var(--swagger-get-summary-border, rgba(16, 185, 129, 0.2));
+}
+
+[data-theme="dark"] .swagger-ui select,
+[data-theme="dark"] .swagger-ui input[type=text],
+[data-theme="dark"] .swagger-ui input[type=search],
+[data-theme="dark"] .swagger-ui input[type=password],
+[data-theme="dark"] .swagger-ui textarea {
+    background: #0f172a;
+    color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+[data-theme="dark"] .swagger-ui .scheme-container {
+    background: transparent;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .swagger-ui .servers > label select {
+    background: #0f172a;
+    color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+[data-theme="dark"] .swagger-ui .highlight-code,
+[data-theme="dark"] .swagger-ui .microlight,
+[data-theme="dark"] .swagger-ui pre {
+    background: #0f172a !important;
+    color: #a5d6ff !important;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+}
+
+[data-theme="dark"] .swagger-ui .copy-to-clipboard { background: #334155; }
+[data-theme="dark"] .swagger-ui .copy-to-clipboard button { color: #e2e8f0; }
+
+[data-theme="dark"] .swagger-ui .responses-wrapper .responses-inner,
+[data-theme="dark"] .swagger-ui .response-controls { background: transparent; }
+
+[data-theme="dark"] .swagger-ui .model-box,
+[data-theme="dark"] .swagger-ui .model { color: #94a3b8; }
+
+/* GET 엔드포인트 경로 텍스트 다크모드 */
+[data-theme="dark"] .swagger-ui .opblock-summary-path,
+[data-theme="dark"] .swagger-ui .opblock-summary-path span {
+    color: #e2e8f0 !important;
+}
+[data-theme="dark"] .swagger-ui .opblock-summary-method {
+    background: var(--swagger-get-method-bg, #059669) !important;
+}
+
+/* 에러 코드표 다크모드 */
+[data-theme="dark"] #error-code-guide {
+    background: #1e293b !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] #error-code-guide h4 { color: #fbbf24 !important; }
+[data-theme="dark"] #error-code-guide table { background: #0f172a !important; }
+[data-theme="dark"] #error-code-guide tr {
+    background: transparent !important;
+    border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="dark"] #error-code-guide tr[style*="background: #fff8e1"] {
+    background: rgba(251, 191, 36, 0.12) !important;
+    border-bottom: 2px solid rgba(251, 191, 36, 0.3) !important;
+}
+[data-theme="dark"] #error-code-guide th {
+    color: #fbbf24 !important;
+    border-color: rgba(255,255,255,0.08) !important;
+    background: transparent !important;
+}
+[data-theme="dark"] #error-code-guide td {
+    color: #94a3b8 !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+[data-theme="dark"] #error-code-guide td[style*="color: #0d8a5e"] {
+    color: #34d399 !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background-color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color 0.4s ease;
+}
+
+.header {
+    background: linear-gradient(135deg, var(--header-gradient-1) 0%, var(--header-gradient-2) 100%);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+.header p {
+    margin: 15px 0 0 0;
+    opacity: 0.9;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+#swagger-ui {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    background: var(--swagger-bg);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px var(--swagger-shadow);
+    padding: 20px 30px;
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+    overflow: hidden;
+    transition: background-color 0.4s ease;
+}
+
+/* Swagger 내부 UI 일부 커스텀 */
+.swagger-ui .wrapper { padding: 0 !important; max-width: none !important; } /* 내부 여백 및 너비 제한 제거 (클릭 전후 너비 고정) */
+.swagger-ui .opblock { width: 100% !important; } /* 섹션 너비 100% 고정 */
+.swagger-ui .topbar { display: none; } /* 기본 탑바 숨김 */
+.swagger-ui .info { margin: 20px 0; }
+.swagger-ui .btn.execute { 
+    background-color: var(--execute-btn-bg, var(--header-gradient-2)); 
+    border-color: var(--execute-btn-bg, var(--header-gradient-2)); 
+    box-shadow: 0 2px 4px var(--execute-btn-shadow, rgba(5,150,105,0.3)); 
+}
+.swagger-ui .btn.execute:hover { background-color: var(--execute-btn-hover); }
+.swagger-ui .try-out { display: none !important; } /* 테스트 시작 버튼 디자인 숨김 */
+.swagger-ui .response-col_links { display: none !important; } /* Links 컬럼 숨김 (사용 안함) */
+.swagger-ui .responses-table:not(.live-responses-table) { display: none !important; } /* API Spec 상에 하드코딩된 '200 정상응답' 테이블 행 완전 제거 */
+
+.ui-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--footer-text);
+    padding: 8px 0;
+    line-height: 1.4;
+    background: var(--footer-bg);
+    border-top: 1px solid var(--footer-border);
+    margin-top: auto;
+    z-index: 10;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+.ui-footer a {
+    color: var(--footer-link);
+    text-decoration: none;
+}
+.ui-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Floating Controls */
+.floating-controls {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.portal-btn {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid #1e293b;
+    color: #f8fafc;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    user-select: none;
+    text-decoration: none;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+.portal-btn:hover {
+    background: rgba(15, 23, 42, 0.95);
+    transform: scale(1.05);
+}
+[data-theme="dark"] .portal-btn {
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    color: #334155;
+}
+[data-theme="dark"] .portal-btn:hover {
+    background: rgba(248, 250, 252, 1);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid #1e293b;
+    color: #f8fafc;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+.theme-toggle:hover {
+    background: rgba(15, 23, 42, 0.95);
+    transform: scale(1.05);
+}
+.theme-toggle .toggle-icon {
+    font-size: 0.85rem;
+    transition: transform 0.4s ease;
+}
+[data-theme="dark"] .theme-toggle {
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    color: #334155;
+}
+[data-theme="dark"] .theme-toggle:hover {
+    background: rgba(248, 250, 252, 1);
+}
+[data-theme="dark"] .theme-toggle .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--header-gradient-2); }
+[data-theme="dark"] ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: var(--swagger-link-color, #34d399); }
