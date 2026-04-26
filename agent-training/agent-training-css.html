@@ -1,14 +1,14 @@
-<!-- 
+<!--
   ============================================================================================================
   [ Credits & License ]
   
   - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
-  - Creator:   XYLO (github.com/xylito) & DORO Inc.
-  - Version:   1.0.0 (2026.04.24.)
+  - Creator:   XYLO (@xylito) & DORO Inc.
+  - Version:   1.0.1 (2026.04.26.)
   - Source:    https://github.com/xylito/doroland-smart-guide
   - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
   
-  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  이 저작물은 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
   미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
   ============================================================================================================
 -->
@@ -18,24 +18,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도로랜드 웹마스터 코딩 실습</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <style>
         :root {
+            --primary: #14afd5;
+            --primary-glow: rgba(8, 145, 178, 0.3);
+            --accent: #27c5ed;
+            --bg-dark: #f0f4f8;
+            --panel-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --header-border: rgba(0, 200, 215, 0.3);
+            --panel-border: rgba(0, 0, 0, 0.08);
+            --panel-shadow: rgba(0, 0, 0, 0.08);
+            --panel-header-bg: rgba(0, 200, 215, 0.05);
+            --panel-header-border: rgba(0, 0, 0, 0.06);
+            --dict-bg: rgba(0, 200, 215, 0.03);
+            --dict-border: rgba(0, 200, 215, 0.25);
+            --dict-summary-bg: rgba(0, 200, 215, 0.06);
+            --dict-summary-hover: rgba(0, 200, 215, 0.12);
+            --dict-summary-color: #0891b2;
+            --dict-text: #475569;
+            --dict-divider: rgba(0, 0, 0, 0.08);
+            --intro-gradient: rgba(0, 200, 215, 0.08);
+            --mission-bg: rgba(0, 0, 0, 0.02);
+            --mission-border: rgba(0, 0, 0, 0.08);
+            --mission-title: #1e293b;
+            --code-bg: #f1f5f9;
+            --tag-hint-bg: rgba(0, 200, 215, 0.1);
+            --editor-bg: #f8fafc;
+            --editor-text: #334155;
+            --editor-border: rgba(0, 200, 215, 0.3);
+            --scrollbar-track: rgba(0, 0, 0, 0.05);
+            --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+            --footer-border: rgba(0, 0, 0, 0.08);
+            --radial-1: rgba(56, 189, 248, 0.06);
+            --radial-2: rgba(14, 165, 233, 0.06);
+            --badge-bg: rgba(0, 200, 215, 0.1);
+            --hex-bg: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] {
             --primary: #00f0ff;
-            --primary-glow: rgba(0, 240, 255, 0.5);
+            --primary-glow: rgba(0, 240, 255, 0.4);
             --bg-dark: #0f172a;
             --panel-bg: #1e293b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #00c9d7;
+            --header-bg: rgba(30, 41, 59, 0.8);
+            --header-border: rgba(56, 189, 248, 0.2);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --panel-shadow: rgba(0, 0, 0, 0.5);
+            --panel-header-bg: rgba(0, 0, 0, 0.2);
+            --panel-header-border: rgba(255, 255, 255, 0.05);
+            --dict-bg: rgba(0, 0, 0, 0.2);
+            --dict-border: rgba(56, 189, 248, 0.3);
+            --dict-summary-bg: rgba(56, 189, 248, 0.05);
+            --dict-summary-hover: rgba(56, 189, 248, 0.1);
+            --dict-summary-color: #38bdf8;
+            --dict-text: #cbd5e1;
+            --dict-divider: rgba(255, 255, 255, 0.1);
+            --intro-gradient: rgba(56, 189, 248, 0.1);
+            --mission-bg: rgba(255, 255, 255, 0.03);
+            --mission-border: rgba(255, 255, 255, 0.08);
+            --mission-title: #fff;
+            --code-bg: #0f172a;
+            --tag-hint-bg: rgba(14, 165, 233, 0.1);
+            --editor-bg: #0f172a;
+            --editor-text: #e2e8f0;
+            --editor-border: rgba(56, 189, 248, 0.2);
+            --scrollbar-track: rgba(0, 0, 0, 0.2);
+            --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+            --footer-border: rgba(255, 255, 255, 0.1);
+            --radial-1: rgba(56, 189, 248, 0.05);
+            --radial-2: rgba(14, 165, 233, 0.05);
+            --badge-bg: rgba(56, 189, 248, 0.1);
+            --hex-bg: rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 20%);
+                radial-gradient(circle at 10% 20%, var(--radial-1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, var(--radial-2) 0%, transparent 20%);
+            transition: background-color 0.4s ease, color 0.4s ease;
             color: var(--text-main);
             margin: 0;
             padding: 0;
@@ -50,9 +119,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(30, 41, 59, 0.8);
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            border-bottom: 1px solid var(--header-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
             z-index: 10;
         }
 
@@ -63,6 +133,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            line-height: 1;
         }
 
         .logo span {
@@ -72,30 +143,36 @@
 
         .header-controls {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             align-items: center;
         }
 
         .color-picker-container, .status-badge {
-            background: rgba(56, 189, 248, 0.1);
+            background: var(--badge-bg);
             border: 1px solid var(--primary);
             color: var(--primary);
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: bold;
-            animation: pulse 2s infinite;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
+        .status-badge {
+            animation: pulse 2s infinite;
+            line-height: normal;
+            margin-left: 5px;
+        }
         
         .color-picker-container {
-            gap: 8px;
+            gap: 6px;
         }
         
         .color-picker-container label {
             cursor: pointer;
+            font-size: 0.85rem;
         }
 
         #color-picker {
@@ -103,8 +180,8 @@
             -moz-appearance: none;
             appearance: none;
             border: none;
-            width: 25px;
-            height: 25px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             cursor: pointer;
             padding: 0;
@@ -124,7 +201,7 @@
             font-family: monospace;
             font-size: 0.85rem;
             color: var(--primary);
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--hex-bg);
             padding: 2px 6px;
             border-radius: 4px;
             user-select: all;
@@ -132,9 +209,9 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(0, 200, 215, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 200, 215, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 200, 215, 0); }
         }
 
         .main-container {
@@ -148,19 +225,19 @@
 
         .panel {
             background-color: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--panel-border);
             border-radius: 16px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px var(--panel-shadow);
             overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.4s ease, border-color 0.4s ease;
         }
 
         .panel-header {
             padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--panel-header-bg);
+            border-bottom: 1px solid var(--panel-header-border);
             font-weight: bold;
             color: var(--primary);
             display: flex;
@@ -182,8 +259,8 @@
         }
 
         .dictionary-box {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(56, 189, 248, 0.3);
+            background: var(--dict-bg);
+            border: 1px solid var(--dict-border);
             border-radius: 8px;
             margin-bottom: 25px;
             overflow: hidden;
@@ -191,22 +268,22 @@
 
         .dictionary-box summary {
             padding: 15px;
-            background: rgba(56, 189, 248, 0.05);
+            background: var(--dict-summary-bg);
             cursor: pointer;
-            color: #38bdf8;
+            color: var(--dict-summary-color);
             outline: none;
             user-select: none;
             font-size: 1.05rem;
         }
         
         .dictionary-box summary:hover {
-            background: rgba(56, 189, 248, 0.1);
+            background: var(--dict-summary-hover);
         }
 
         .dict-content {
             padding: 15px;
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: var(--dict-text);
             line-height: 1.6;
             max-height: 400px;
             overflow-y: auto;
@@ -215,7 +292,7 @@
         .dict-content h4 {
             color: var(--accent);
             margin: 15px 0 10px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            border-bottom: 1px dashed var(--dict-divider);
             padding-bottom: 5px;
         }
         
@@ -236,7 +313,7 @@
         }
 
         .intro-box {
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(0, 0, 0, 0));
+            background: linear-gradient(135deg, var(--intro-gradient), rgba(0, 0, 0, 0));
             border-left: 4px solid var(--primary);
             padding: 15px;
             border-radius: 0 8px 8px 0;
@@ -261,8 +338,8 @@
         }
 
         .mission-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--mission-bg);
+            border: 1px solid var(--mission-border);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
@@ -284,7 +361,7 @@
         .mission-card h3 {
             margin: 10px 0 5px 0;
             font-size: 1.1rem;
-            color: #fff;
+            color: var(--mission-title);
         }
 
         .mission-card p {
@@ -295,7 +372,7 @@
         }
 
         code {
-            background: #0f172a;
+            background: var(--code-bg);
             color: var(--primary);
             padding: 3px 8px;
             border-radius: 4px;
@@ -306,7 +383,7 @@
         .tag-hint {
             display: inline-block;
             margin-top: 5px;
-            background: rgba(14, 165, 233, 0.1);
+            background: var(--tag-hint-bg);
             color: var(--accent);
             padding: 4px 8px;
             border-radius: 4px;
@@ -326,11 +403,11 @@
         textarea {
             width: 100%;
             flex: 1;
-            background: #0f172a;
-            color: #e2e8f0;
+            background: var(--editor-bg);
+            color: var(--editor-text);
             font-family: 'Courier New', Courier, monospace;
             font-size: 16px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            border: 1px solid var(--editor-border);
             border-radius: 8px;
             padding: 15px;
             resize: none;
@@ -341,7 +418,7 @@
 
         textarea:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 10px rgba(0, 200, 215, 0.1);
         }
 
         /* Preview */
@@ -362,8 +439,8 @@
 
         /* Scrollbar styling */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         @media (max-width: 1024px) {
@@ -377,8 +454,9 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             padding: 8px 0;
+            line-height: 1.4;
             background: var(--bg-dark);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--footer-border);
             z-index: 10;
         }
         .ui-footer a {
@@ -388,6 +466,84 @@
         .ui-footer a:hover {
             text-decoration: underline;
         }
+
+        /* Floating Controls */
+        .floating-controls {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .portal-btn {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            color: #334155;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            user-select: none;
+            text-decoration: none;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        .portal-btn:hover {
+            background: rgba(248, 250, 252, 1);
+            transform: scale(1.05);
+        }
+        [data-theme="light"] .portal-btn {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e293b;
+            color: #f8fafc;
+        }
+        [data-theme="light"] .portal-btn:hover {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            color: #334155;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            user-select: none;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        .theme-toggle:hover {
+            background: rgba(248, 250, 252, 1);
+            transform: scale(1.05);
+        }
+        .theme-toggle .toggle-icon {
+            font-size: 0.85rem;
+            transition: transform 0.4s ease;
+            transform: rotate(180deg);
+        }
+        [data-theme="light"] .theme-toggle {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e293b;
+            color: #f8fafc;
+        }
+        [data-theme="light"] .theme-toggle:hover {
+            background: rgba(15, 23, 42, 0.95);
+        }
+        [data-theme="light"] .theme-toggle .toggle-icon {
+            transform: rotate(0deg);
+        }
     </style>
 </head>
 <body>
@@ -395,18 +551,22 @@
     <header>
         <div class="logo">
             🤖 <span>도로랜드</span> 정보국 특수작전팀
-        </div>
-        <div class="header-controls">
+            <div class="status-badge">신입 요원 훈련 중</div>
             <div class="color-picker-container">
                 <label for="color-picker">🎨 색상 추출기</label>
                 <input type="color" id="color-picker" value="#38bdf8">
                 <span id="hex-value">#38bdf8</span>
             </div>
-            <div class="status-badge">
-                신입 요원 훈련 모드 가동 중
-            </div>
         </div>
     </header>
+
+    <div class="floating-controls">
+        <a href="../index.html" class="portal-btn">🏠 포털 이동</a>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+            <span class="toggle-icon">☀️</span>
+            <span class="toggle-label">주간 모드</span>
+        </button>
+    </div>
 
     <div class="main-container">
         <!-- Scenario Column -->
@@ -532,7 +692,7 @@
 
         <!-- Preview Column -->
         <div class="panel preview-col">
-            <div class="panel-header" style="background: rgba(0, 0, 0, 0.8); border-bottom: none;">
+            <div class="panel-header">
                 🌐 실시간 결과 화면
             </div>
             <div class="preview-container">
@@ -542,6 +702,39 @@
     </div>
 
     <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('doroland-theme', next);
+            updateToggleUI(next);
+        }
+        function updateToggleUI(theme) {
+            const icon = document.querySelector('.toggle-icon');
+            const label = document.querySelector('.toggle-label');
+            if (theme === 'light') {
+                icon.textContent = '🌙';
+                label.textContent = '야간 모드';
+            } else {
+                icon.textContent = '☀️';
+                label.textContent = '주간 모드';
+            }
+        }
+        (function() {
+            const saved = localStorage.getItem('doroland-theme');
+            let theme;
+            if (saved) {
+                theme = saved;
+            } else {
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                theme = systemDark ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', theme);
+            updateToggleUI(theme);
+        })();
+
         const editor = document.getElementById('html-editor');
         const preview = document.getElementById('preview-frame');
 
@@ -603,7 +796,7 @@
             // 학생이 작성한 CSS가 돋보이도록 최소한의 초기 스타일만 주입합니다.
             const customStyles = `
 <style>
-    body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; padding: 20px; line-height: 1.6; transition: all 0.3s ease; }
+    body { font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif; padding: 20px; line-height: 1.6; transition: all 0.3s ease; }
     img { max-width: 100%; transition: all 0.3s ease; display: block; margin-top: 15px; }
     button { transition: all 0.3s ease; }
     ul { margin: 15px 0; padding-left: 20px; }

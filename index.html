@@ -1,14 +1,14 @@
-<!-- 
+<!--
   ============================================================================================================
   [ Credits & License ]
   
   - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
   - Creator:   XYLO (@xylito) & DORO Inc.
-  - Version:   1.0.0 (2026.04.24.)
+  - Version:   1.0.1 (2026.04.26.)
   - Source:    https://github.com/xylito/doroland-smart-guide
   - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
   
-  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  이 저작물은 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
   미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
   ============================================================================================================
 -->
@@ -18,6 +18,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도로랜드 정보국 - 신입 요원 훈련 포털</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <style>
         :root {
             --bg-color: #0f172a;
@@ -26,21 +27,45 @@
             --secondary: #8b5cf6;
             --card-bg: rgba(30, 41, 59, 0.7);
             --card-border: rgba(255, 255, 255, 0.1);
+            --muted: #94a3b8;
+            --card-title: #e2e8f0;
+            --link-btn-bg: rgba(255, 255, 255, 0.05);
+            --link-btn-hover: rgba(255, 255, 255, 0.1);
+            --link-btn-text: #e2e8f0;
+            --footer-color: #64748b;
+            --radial-1: rgba(59, 130, 246, 0.15);
+            --radial-2: rgba(139, 92, 246, 0.15);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f0f4f8;
+            --text-color: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --muted: #64748b;
+            --card-title: #1e293b;
+            --link-btn-bg: rgba(0, 0, 0, 0.04);
+            --link-btn-hover: rgba(0, 0, 0, 0.08);
+            --link-btn-text: #334155;
+            --footer-color: #64748b;
+            --radial-1: rgba(59, 130, 246, 0.08);
+            --radial-2: rgba(139, 92, 246, 0.08);
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             background: var(--bg-color);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, var(--radial-1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, var(--radial-2) 0px, transparent 50%);
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         .header {
@@ -59,7 +84,7 @@
 
         .header p {
             font-size: 1.1rem;
-            color: #94a3b8;
+            color: var(--muted);
             line-height: 1.6;
         }
 
@@ -79,13 +104,12 @@
             border-radius: 20px;
             padding: 2rem;
             backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .card-icon {
@@ -96,11 +120,11 @@
         .card h2 {
             margin: 0 0 1rem;
             font-size: 1.5rem;
-            color: #e2e8f0;
+            color: var(--card-title);
         }
 
         .card-desc {
-            color: #94a3b8;
+            color: var(--muted);
             margin-bottom: 1.5rem;
             font-size: 0.95rem;
             line-height: 1.5;
@@ -120,16 +144,16 @@
             display: flex;
             align-items: center;
             padding: 0.8rem 1.2rem;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--link-btn-bg);
             border-radius: 10px;
-            color: #e2e8f0;
+            color: var(--link-btn-text);
             text-decoration: none;
             font-weight: 500;
             transition: all 0.2s ease;
         }
 
         .link-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--link-btn-hover);
             padding-left: 1.5rem;
         }
 
@@ -164,7 +188,7 @@
         footer {
             margin-top: auto;
             padding: 2rem;
-            color: #64748b;
+            color: var(--footer-color);
             font-size: 0.9rem;
             text-align: center;
         }
@@ -172,15 +196,79 @@
         footer a {
             color: #3b82f6;
             text-decoration: none;
-            font-weight: bold;
         }
 
         footer a:hover {
             text-decoration: underline;
         }
+
+        /* Floating Controls */
+        .floating-controls {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            color: #334155;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            user-select: none;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        .theme-toggle:hover {
+            background: rgba(248, 250, 252, 1);
+            transform: scale(1.05);
+        }
+        .theme-toggle .toggle-icon {
+            font-size: 0.85rem;
+            transition: transform 0.4s ease;
+            transform: rotate(180deg);
+        }
+        [data-theme="light"] .theme-toggle {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: #1e293b;
+            color: #f8fafc;
+        }
+        [data-theme="light"] .theme-toggle:hover {
+            background: rgba(15, 23, 42, 0.95);
+        }
+        [data-theme="light"] .theme-toggle .toggle-icon {
+            transform: rotate(0deg);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        [data-theme="light"] ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); }
+        [data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
     </style>
 </head>
 <body>
+
+    <div class="floating-controls">
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+            <span class="toggle-icon">☀️</span>
+            <span class="toggle-label">주간 모드</span>
+        </button>
+    </div>
 
     <div class="header">
         <h1>도로랜드 정보국 훈련 포털 🎯</h1>
@@ -227,6 +315,40 @@
         &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
         <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('doroland-theme', next);
+            updateToggleUI(next);
+        }
+        function updateToggleUI(theme) {
+            const icon = document.querySelector('.toggle-icon');
+            const label = document.querySelector('.toggle-label');
+            if (theme === 'light') {
+                icon.textContent = '🌙';
+                label.textContent = '야간 모드';
+            } else {
+                icon.textContent = '☀️';
+                label.textContent = '주간 모드';
+            }
+        }
+        (function() {
+            const saved = localStorage.getItem('doroland-theme');
+            let theme;
+            if (saved) {
+                theme = saved;
+            } else {
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                theme = systemDark ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', theme);
+            updateToggleUI(theme);
+        })();
+    </script>
 
 </body>
 </html>

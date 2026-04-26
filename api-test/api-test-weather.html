@@ -1,14 +1,14 @@
-<!-- 
+<!--
   ============================================================================================================
   [ Credits & License ]
   
   - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
   - Creator:   XYLO (@xylito) & DORO Inc.
-  - Version:   1.0.0 (2026.04.24.)
+  - Version:   1.0.1 (2026.04.26.)
   - Source:    https://github.com/xylito/doroland-smart-guide
   - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
   
-  이 소스 코드는 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  이 저작물은 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
   미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
   ============================================================================================================
 -->
@@ -20,15 +20,219 @@
     <title>기상청 초단기 강수 예측 API - Swagger UI</title>
     <!-- Swagger UI CSS 베이스 로드 -->
     <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <style>
+        :root {
+            --bg: #f4f6f8;
+            --header-gradient-1: #0f4c81;
+            --header-gradient-2: #0088cc;
+            --swagger-bg: white;
+            --swagger-shadow: rgba(0,0,0,0.05);
+            --footer-bg: #f4f6f8;
+            --footer-border: rgba(0, 0, 0, 0.08);
+            --footer-text: #64748b;
+            --footer-link: #0088cc;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --swagger-bg: #1e293b;
+            --swagger-shadow: rgba(0,0,0,0.4);
+            --footer-bg: #0f172a;
+            --footer-border: rgba(255,255,255,0.1);
+            --footer-text: #94a3b8;
+            --footer-link: #38bdf8;
+        }
+
+        /* ===== Dark Mode: Swagger UI 내부 전면 오버라이드 ===== */
+        [data-theme="dark"] .swagger-ui,
+        [data-theme="dark"] .swagger-ui .scheme-container,
+        [data-theme="dark"] .swagger-ui .opblock-tag-section { background: transparent; }
+
+        [data-theme="dark"] .swagger-ui .info .title,
+        [data-theme="dark"] .swagger-ui .info h1,
+        [data-theme="dark"] .swagger-ui .info h2,
+        [data-theme="dark"] .swagger-ui .info h3,
+        [data-theme="dark"] .swagger-ui .info h4,
+        [data-theme="dark"] .swagger-ui .opblock-tag,
+        [data-theme="dark"] .swagger-ui .opblock-summary-description,
+        [data-theme="dark"] .swagger-ui table thead tr th,
+        [data-theme="dark"] .swagger-ui .parameter__name,
+        [data-theme="dark"] .swagger-ui .parameter__type,
+        [data-theme="dark"] .swagger-ui .response-col_status,
+        [data-theme="dark"] .swagger-ui .response-col_description,
+        [data-theme="dark"] .swagger-ui label,
+        [data-theme="dark"] .swagger-ui .servers-title,
+        [data-theme="dark"] .swagger-ui .opblock-section-header h4,
+        [data-theme="dark"] .swagger-ui .opblock-section-header h4 span,
+        [data-theme="dark"] .swagger-ui .responses-inner h4,
+        [data-theme="dark"] .swagger-ui .response-col_links { color: #e2e8f0; }
+
+        [data-theme="dark"] .swagger-ui .info li,
+        [data-theme="dark"] .swagger-ui .info p,
+        [data-theme="dark"] .swagger-ui .info .markdown p,
+        [data-theme="dark"] .swagger-ui .info .markdown li,
+        [data-theme="dark"] .swagger-ui .opblock-description-wrapper p,
+        [data-theme="dark"] .swagger-ui table tbody tr td,
+        [data-theme="dark"] .swagger-ui .parameter__in { color: #94a3b8; }
+
+        [data-theme="dark"] .swagger-ui .info a,
+        [data-theme="dark"] .swagger-ui .info .markdown a { color: #60a5fa; }
+
+        [data-theme="dark"] .swagger-ui .opblock-section-header {
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* 버전 배지 원본 스타일 유지 */
+        [data-theme="dark"] .swagger-ui .info .title small {
+            background: #7d8492 !important;
+            color: #ffffff !important;
+        }
+        [data-theme="dark"] .swagger-ui .info .title small.version-stamp {
+            background-color: rgba(0,0,0,0.3) !important;
+            border: 1px solid #89bf04 !important;
+            color: #89bf04 !important;
+        }
+
+        [data-theme="dark"] .swagger-ui .opblock.opblock-get {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        [data-theme="dark"] .swagger-ui .opblock.opblock-get .opblock-summary {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="dark"] .swagger-ui select,
+        [data-theme="dark"] .swagger-ui input[type=text],
+        [data-theme="dark"] .swagger-ui input[type=search],
+        [data-theme="dark"] .swagger-ui input[type=password],
+        [data-theme="dark"] .swagger-ui textarea {
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        [data-theme="dark"] .swagger-ui .scheme-container {
+            background: transparent;
+            box-shadow: none;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        [data-theme="dark"] .swagger-ui .servers > label select {
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        [data-theme="dark"] .swagger-ui .highlight-code,
+        [data-theme="dark"] .swagger-ui .microlight,
+        [data-theme="dark"] .swagger-ui pre {
+            background: #0f172a !important;
+            color: #a5d6ff !important;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+        }
+
+        [data-theme="dark"] .swagger-ui .copy-to-clipboard { background: #334155; }
+        [data-theme="dark"] .swagger-ui .copy-to-clipboard button { color: #e2e8f0; }
+
+        [data-theme="dark"] .swagger-ui .responses-wrapper .responses-inner,
+        [data-theme="dark"] .swagger-ui .response-controls { background: transparent; }
+
+        [data-theme="dark"] .swagger-ui .model-box,
+        [data-theme="dark"] .swagger-ui .model { color: #94a3b8; }
+
+        /* 커스텀 도구 (지역 퀵선택) 다크모드 */
+        [data-theme="dark"] #custom-tools {
+            background: #1e293b !important;
+            border-color: rgba(96, 165, 250, 0.3) !important;
+        }
+        [data-theme="dark"] #custom-tools strong { color: #60a5fa !important; }
+        [data-theme="dark"] #custom-tools select {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+            border-color: rgba(255,255,255,0.15) !important;
+        }
+        [data-theme="dark"] #custom-tools button {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+        }
+        [data-theme="dark"] #custom-tools hr {
+            border-color: rgba(255,255,255,0.08) !important;
+        }
+
+        /* 에러 코드표 다크모드 */
+        [data-theme="dark"] #error-code-guide {
+            background: #1e293b !important;
+            border-color: rgba(255,255,255,0.1) !important;
+            color: #cbd5e1 !important;
+        }
+        [data-theme="dark"] #error-code-guide h4 { color: #fbbf24 !important; }
+        [data-theme="dark"] #error-code-guide table { background: #0f172a !important; }
+        [data-theme="dark"] #error-code-guide tr {
+            background: transparent !important;
+            border-color: rgba(255,255,255,0.06) !important;
+        }
+        [data-theme="dark"] #error-code-guide tr[style*="background: #fff8e1"] {
+            background: rgba(251, 191, 36, 0.12) !important;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.3) !important;
+        }
+        [data-theme="dark"] #error-code-guide th {
+            color: #fbbf24 !important;
+            border-color: rgba(255,255,255,0.08) !important;
+            background: transparent !important;
+        }
+        [data-theme="dark"] #error-code-guide td {
+            color: #94a3b8 !important;
+            border-color: rgba(255,255,255,0.08) !important;
+        }
+        [data-theme="dark"] #error-code-guide td[style*="color: #0d8a5e"] {
+            color: #34d399 !important;
+        }
+
+        /* GET 엔드포인트 경로 텍스트 다크모드 */
+        [data-theme="dark"] .swagger-ui .opblock-summary-path,
+        [data-theme="dark"] .swagger-ui .opblock-summary-path span {
+            color: #e2e8f0 !important;
+        }
+        [data-theme="dark"] .swagger-ui .opblock-summary-method {
+            background: #2563eb !important;
+        }
+
+        /* 커스텀 응답 분석 UI 다크모드 */
+        [data-theme="dark"] #custom-response-ui {
+            background: #1e293b !important;
+            border-color: rgba(96, 165, 250, 0.3) !important;
+        }
+        [data-theme="dark"] #custom-response-ui h4 { color: #60a5fa !important; }
+        [data-theme="dark"] #custom-response-ui div[style*="background: #fff"],
+        [data-theme="dark"] #custom-response-ui div[style*="background: #ffffff"] {
+            background: #0f172a !important;
+            border-color: rgba(255,255,255,0.08) !important;
+        }
+        [data-theme="dark"] #custom-response-ui strong { color: #e2e8f0 !important; }
+        [data-theme="dark"] #custom-response-ui table { background: transparent !important; }
+        [data-theme="dark"] #custom-response-ui tr[style*="background: #f1f5f9"] {
+            background: rgba(255,255,255,0.05) !important;
+        }
+        [data-theme="dark"] #custom-response-ui th { color: #94a3b8 !important; }
+        [data-theme="dark"] #custom-response-ui td { color: #cbd5e1 !important; }
+        [data-theme="dark"] #custom-response-ui tr { border-color: rgba(255,255,255,0.06) !important; }
+
+        /* 자동 날짜/시각 버튼 다크모드 */
+        [data-theme="dark"] #auto-date-btn,
+        [data-theme="dark"] #auto-time-btn {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background-color: var(--bg);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: background-color 0.4s ease;
         }
         .header {
             background: linear-gradient(135deg, #0f4c81 0%, #0088cc 100%);
@@ -51,11 +255,12 @@
         #swagger-ui {
             max-width: 1200px;
             margin: 40px auto;
-            background: white;
+            background: var(--swagger-bg);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px var(--swagger-shadow);
             padding: 20px 30px;
             overflow: hidden;
+            transition: background-color 0.4s ease;
         }
         /* Swagger 내부 UI 일부 커스텀 */
         .swagger-ui .topbar { display: none; } /* 기본 탑바 숨김 */
@@ -69,23 +274,119 @@
         .ui-footer {
             text-align: center;
             font-size: 0.75rem;
-            color: #64748b;
+            color: var(--footer-text);
             padding: 8px 0;
-            background: #e2e8f0;
-            border-top: 1px solid #cbd5e1;
+            line-height: 1.4;
+            background: var(--footer-bg);
+            border-top: 1px solid var(--footer-border);
             margin-top: auto;
+            z-index: 10;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
         .ui-footer a {
-            color: #0f4c81;
+            color: var(--footer-link);
             text-decoration: none;
-            font-weight: bold;
         }
         .ui-footer a:hover {
             text-decoration: underline;
         }
+
+        /* Floating Controls */
+        .floating-controls {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .portal-btn {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e293b;
+            color: #f8fafc;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            user-select: none;
+            text-decoration: none;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        .portal-btn:hover {
+            background: rgba(15, 23, 42, 0.95);
+            transform: scale(1.05);
+        }
+        [data-theme="dark"] .portal-btn {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            color: #334155;
+        }
+        [data-theme="dark"] .portal-btn:hover {
+            background: rgba(248, 250, 252, 1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #1e293b;
+            color: #f8fafc;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            user-select: none;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        .theme-toggle:hover {
+            background: rgba(15, 23, 42, 0.95);
+            transform: scale(1.05);
+        }
+        .theme-toggle .toggle-icon {
+            font-size: 0.85rem;
+            transition: transform 0.4s ease;
+        }
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            color: #334155;
+        }
+        [data-theme="dark"] .theme-toggle:hover {
+            background: rgba(248, 250, 252, 1);
+        }
+        [data-theme="dark"] .theme-toggle .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0088cc; }
+        [data-theme="dark"] ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
     </style>
 </head>
 <body>
+
+    <div class="floating-controls">
+        <a href="../index.html" class="portal-btn">🏠 포털 이동</a>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+            <span class="toggle-icon">🌙</span>
+            <span class="toggle-label">야간 모드</span>
+        </button>
+    </div>
 
     <div class="header">
         <h1>기상청 초단기 강수예측 Swagger Dashboard</h1>
@@ -703,5 +1004,40 @@
         &copy; 2026 XYLO & DORO Inc. Project: 도로랜드 스마트 안내 시스템 (Doroland Smart Guide) | License: CC BY-SA 4.0 | 
         <a href="https://github.com/xylito" target="_blank">github.com/xylito</a>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('doroland-theme', next);
+            updateToggleUI(next);
+        }
+        function updateToggleUI(theme) {
+            const icon = document.querySelector('.toggle-icon');
+            const label = document.querySelector('.toggle-label');
+            if (theme === 'light') {
+                icon.textContent = '🌙';
+                label.textContent = '야간 모드';
+            } else {
+                icon.textContent = '☀️';
+                label.textContent = '주간 모드';
+            }
+        }
+        (function() {
+            const saved = localStorage.getItem('doroland-theme');
+            let theme;
+            if (saved) {
+                theme = saved;
+            } else {
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                theme = systemDark ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', theme);
+            updateToggleUI(theme);
+        })();
+    </script>
+
 </body>
 </html>
