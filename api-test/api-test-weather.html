@@ -24,8 +24,8 @@
     <style>
         :root {
             --bg: #f4f6f8;
-            --header-gradient-1: #0f4c81;
-            --header-gradient-2: #0088cc;
+            --primary: #0088cc;
+            --primary-glow: rgba(0, 136, 204, 0.3);
             --swagger-bg: white;
             --swagger-shadow: rgba(0,0,0,0.05);
             --footer-bg: #f4f6f8;
@@ -102,20 +102,19 @@
 
     <div class="floating-controls">
         <a href="../index.html" class="portal-btn">🏠 훈련 포털</a>
+        <a href="https://data.go.kr" target="_blank" rel="noopener noreferrer" class="portal-btn">🌐 공공데이터 포털</a>
         <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
             <span class="toggle-icon">🌙</span>
             <span class="toggle-label">야간 모드</span>
         </button>
     </div>
 
-    <div class="header">
-        <h1>기상청 초단기 강수예측 Swagger Dashboard</h1>
-        <p>
-            Node.js 설치나 복잡한 백엔드 구성 없이 웹 브라우저에서 바로 API를 호출하고 확인할 수 있습니다.<br>
-            공공데이터포털(data.go.kr)의 단기예보 조회서비스(초단기예보조회)를 테스트해보세요.<br><br>
-            <span style="display: inline-block; padding: 4px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 13px; font-weight: bold;">✨ Made by XYLO</span>
-        </p>
-    </div>
+    <header>
+        <div class="logo">
+            📡 <span>도로랜드</span> 정보국 API 테스트
+            <div class="status-badge">초단기 예보 실습 중</div>
+        </div>
+    </header>
 
     <!-- 빠른 지역 선택 UI -->
     <div id="custom-tools" style="display: none; width: 100%; background: #fbfdff; border-radius: 8px; border: 1px dashed #0088cc; padding: 15px 20px; flex-direction: column; gap: 10px; box-sizing: border-box; margin-bottom: 10px;">
@@ -328,21 +327,13 @@
           "openapi": "3.0.0",
           "info": {
             "title": "기상청_단기예보 조회서비스",
-            "description": "### ☔ **초단기예보조회 (getUltraSrtFcst)**\n\n초단기예보조회 기능을 활용하여 기상청의 실시간 기상 정보를 확인할 수 있는 인터페이스입니다.\n\n---\n\n#### ⏰ **초단기예보 발표시각 안내**\n* **생성 시간**: **매시간 30분**에 생성됩니다. (단, API 요청 시 `base_time`은 1200처럼 정각을 기준으로 작성하는 경우가 많습니다.)\n* **업데이트 주기**: 기온, 습도, 바람 등 일부 정보는 **10분마다 최신 정보로 업데이트**됩니다.\n\n#### 📝 **응답 자료코드(Category) 가이드**\n* **T1H** : 기온 (℃)\n* **RN1** : 1시간 강수량 (범주, 1mm)\n* **SKY** : 하늘상태 (코드값)\n* **UUU** : 동서바람성분 (m/s)\n* **VVV** : 남북바람성분 (m/s)\n* **REH** : 습도 (%)\n* **PTY** : 강수형태 (코드값)\n* **LGT** : 낙뢰 (kA, 킬로암페어)\n* **VEC** : 풍향 (deg)\n* **WSD** : 풍속 (m/s)\n\n---\n\n#### 💡 **기본 사용 방법**\n1. [공공데이터포털(data.go.kr)](https://www.data.go.kr/)에서 API Key 발급합니다.\n2. 아래 `테스트 시작` 버튼을 누르고 `serviceKey` 항목에 인증키를 입력합니다.\n3. `base_date`(발표일자), `base_time`(발표시각), `nx`, `ny`(좌표)를 알맞게 입력 후 **실행하기** 버튼을 눌러 상태를 확인합니다.",
+            "description": "### ☔ **초단기예보조회 (getUltraSrtFcst)**\n\n초단기예보조회 기능을 활용하여 기상청의 실시간 기상 정보를 확인할 수 있는 인터페이스입니다.\n\n---\n\n#### ⏰ **초단기예보 발표시각 안내**\n* **생성 시간**: **매시간 30분**에 생성됩니다. (단, API 요청 시 `base_time`은 1200처럼 정각을 기준으로 작성하는 경우가 많습니다.)\n* **업데이트 주기**: 기온, 습도, 바람 등 일부 정보는 **10분마다 최신 정보로 업데이트**됩니다.\n\n#### 📝 **응답 자료코드(Category) 가이드**\n* **T1H** : 기온 (℃)\n* **RN1** : 1시간 강수량 (범주, 1mm)\n* **SKY** : 하늘상태 (코드값)\n* **UUU** : 동서바람성분 (m/s)\n* **VVV** : 남북바람성분 (m/s)\n* **REH** : 습도 (%)\n* **PTY** : 강수형태 (코드값)\n* **LGT** : 낙뢰 (kA, 킬로암페어)\n* **VEC** : 풍향 (deg)\n* **WSD** : 풍속 (m/s)\n\n---\n\n#### 💡 **기본 사용 방법**\n1. [공공데이터포털(data.go.kr)](https://data.go.kr/)에서 API Key 발급합니다.\n2. 아래 `테스트 시작` 버튼을 누르고 `serviceKey` 항목에 인증키를 입력합니다.\n3. `base_date`(발표일자), `base_time`(발표시각), `nx`, `ny`(좌표)를 알맞게 입력 후 **실행하기** 버튼을 눌러 상태를 확인합니다.",
             "version": "2.0",
-            "contact": {
-                "name": "공공데이터훈련 포털",
-                "url": "https://www.data.go.kr/data/15084084/openapi.do"
-            }
           },
           "servers": [
             {
-              "url": "http://apis.data.go.kr",
-              "description": "공공데이터포털 단기예보 API 서버 (HTTP)"
-            },
-            {
               "url": "https://apis.data.go.kr",
-              "description": "공공데이터포털 단기예보 API 서버 (HTTPS)"
+              "description": "공공데이터포털 실시간 API 운영서버"
             }
           ],
           "paths": {
@@ -448,6 +439,7 @@
                 spec: spec,
                 dom_id: '#swagger-ui',
                 deepLinking: true,
+                docExpansion: 'full', // 모든 API 항목 기본 펼치기
                 presets: [
                     SwaggerUIBundle.presets.apis,
                     SwaggerUIStandalonePreset

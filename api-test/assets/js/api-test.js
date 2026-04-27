@@ -90,7 +90,7 @@ function applySwaggerTranslationsAndErrorGuide() {
         errorGuide.style = "margin: 20px; padding: 25px; background: #fffdf5; border-radius: 8px; border: 1px solid #ffecca; font-size: 13px; color: #444; box-shadow: 0 4px 8px rgba(0,0,0,0.02);";
         errorGuide.innerHTML = `
             <h4 style="margin: 0 0 15px 0; color: #b7790a; font-size: 16px;">📌 공공데이터 API 공통 응답 메시지 (resultCode / resultMsg) 코드표</h4>
-            <table style="width: 100%; border-collapse: collapse; text-align: left; background: white; font-size: 13px; table-layout: fixed;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; background: white; font-size: 13px; table-layout: fixed; word-break: break-word;">
                 <colgroup><col style="width: 15%;"><col style="width: 45%;"><col style="width: 40%;"></colgroup>
                 <tr style="background: #fff8e1; border-bottom: 2px solid #ffe199;">
                     <th style="padding: 10px; border: 1px solid #eee; color: #7a5000;">에러코드</th>

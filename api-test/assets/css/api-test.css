@@ -53,15 +53,37 @@
     border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-/* 버전 배지 원본 스타일 유지 */
+/* 버전 배지 원본 스타일 고정 (주야간 동일 - 겹침/번짐 방지) */
+.swagger-ui .info .title small,
 [data-theme="dark"] .swagger-ui .info .title small {
     background: #7d8492 !important;
     color: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 2px 8px !important;
+    border-radius: 20px !important;
+    margin-left: 10px !important;
+    display: inline-block !important;
+    font-size: 0.9rem !important;
+    vertical-align: middle !important;
 }
+
+.swagger-ui .info .title small.version-stamp,
 [data-theme="dark"] .swagger-ui .info .title small.version-stamp {
-    background-color: rgba(0,0,0,0.3) !important;
-    border: 1px solid #89bf04 !important;
-    color: #89bf04 !important;
+    background-color: #89bf04 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* 버전 배지 내부 pre 태그 초기화 (다크모드 배경 겹침 방지) */
+.swagger-ui .info .title small pre {
+    background: transparent !important;
+    color: inherit !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
 }
 
 [data-theme="dark"] .swagger-ui .opblock.opblock-get {
@@ -100,6 +122,7 @@
     color: #a5d6ff !important;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 6px;
+    font-family: inherit !important; /* 기본 글꼴(Pretendard) 사용 */
 }
 
 [data-theme="dark"] .swagger-ui .copy-to-clipboard { background: #334155; }
@@ -107,6 +130,21 @@
 
 [data-theme="dark"] .swagger-ui .responses-wrapper .responses-inner,
 [data-theme="dark"] .swagger-ui .response-controls { background: transparent; }
+
+/* 인라인 코드(` `) 강조 스타일 */
+.swagger-ui code {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #e11d48 !important;
+    padding: 1px 5px !important;
+    border-radius: 4px !important;
+    font-family: inherit !important; /* 기본 글꼴(Pretendard) 사용 */
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .swagger-ui code {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #fb7185 !important;
+}
 
 [data-theme="dark"] .swagger-ui .model-box,
 [data-theme="dark"] .swagger-ui .model { color: #94a3b8; }
@@ -160,33 +198,78 @@ body {
     transition: background-color 0.4s ease;
 }
 
-.header {
-    background: linear-gradient(135deg, var(--header-gradient-1) 0%, var(--header-gradient-2) 100%);
-    color: white;
-    padding: 30px 20px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--primary);
+    color: #1e293b;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    transition: all 0.4s ease;
 }
-.header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
+
+[data-theme="dark"] header {
+    background: rgba(30, 41, 59, 0.8);
+    border-bottom: 1px solid var(--primary);
 }
-.header p {
-    margin: 15px 0 0 0;
-    opacity: 0.9;
-    font-size: 15px;
-    line-height: 1.5;
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1;
+}
+
+[data-theme="dark"] .logo {
+    color: #f8fafc;
+}
+
+.logo span {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.status-badge {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0 12px;
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+    margin-left: 10px;
+}
+
+[data-theme="dark"] .status-badge {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--primary-glow); }
+    70% { box-shadow: 0 0 0 10px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 #swagger-ui {
-    width: 100%;
-    max-width: 1200px;
-    margin: 40px auto;
+    width: calc(100% - 40px); /* 좌우 20px 여백 확보 */
+    max-width: 1200px; /* 원래 너비 유지 및 중앙 정렬 */
+    margin: 20px auto;
     background: var(--swagger-bg);
-    border-radius: 12px;
+    border-radius: 16px; /* agent-training의 패널 곡률과 일치 */
     box-shadow: 0 10px 30px var(--swagger-shadow);
-    padding: 20px 30px;
+    padding: 20px; /* agent-training의 내부 패딩과 일치 */
     box-sizing: border-box; /* 패딩 포함 너비 계산 */
     overflow: hidden;
     transition: background-color 0.4s ease;
@@ -195,6 +278,7 @@ body {
 /* Swagger 내부 UI 일부 커스텀 */
 .swagger-ui .wrapper { padding: 0 !important; max-width: none !important; } /* 내부 여백 및 너비 제한 제거 (클릭 전후 너비 고정) */
 .swagger-ui .opblock { width: 100% !important; } /* 섹션 너비 100% 고정 */
+.swagger-ui .scheme-container { display: none !important; } /* 서버 선택 섹션 숨김 */
 .swagger-ui .topbar { display: none; } /* 기본 탑바 숨김 */
 .swagger-ui .info { margin: 20px 0; }
 .swagger-ui .btn.execute { 
