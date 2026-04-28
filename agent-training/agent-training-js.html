@@ -305,16 +305,27 @@ btn.onclick = showMagic;</code>
 <head>
     <meta charset="UTF-8">
     <title>도로랜드 테마파크</title>
+    <style>
+        /* CSS 요원이 미리 예쁘게 꾸며둔 스타일입니다! */
+        body { font-family: 'Pretendard Variable', sans-serif; padding: 20px; line-height: 1.6; background-color: #f8fafc; }
+        .content-box { background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border: 2px solid #f59e0b; }
+        h1 { color: #333; transition: color 0.3s ease; }
+        button { background: #f59e0b; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 18px; transition: transform 0.1s; }
+        button:active { transform: scale(0.95); }
+        button:hover { background: #d97706; }
+        #park-status { color: red; font-weight: bold; }
+        #main-img { border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: block; margin: 0 auto; }
+    </style>
 </head>
 <body>
     <div class="content-box">
         <h1 id="main-title">도로랜드에 오신 것을 환영합니다!</h1>
-        <p>현재 도로랜드의 시스템 상태는 <span id="park-status" style="color: red; font-weight: bold;">점검 중</span>입니다.</p>
+        <p>현재 도로랜드의 시스템 상태는 <span id="park-status">점검 중</span>입니다.</p>
         <p>자바스크립트의 세계에 오신 것을 환영합니다. 아래 버튼을 눌러볼까요?</p>
         <button id="magic-btn">마법 버튼</button>
     </div>
     <br>
-    <img id="main-img" src="https://images.unsplash.com/photo-1656647657563-ae3274b59492?q=80&w=1887&auto=format&fit=crop" alt="테마파크 사진" width="400" style="border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: block; margin: 0 auto;">
+    <img id="main-img" src="https://images.unsplash.com/photo-1656647657563-ae3274b59492?q=80&w=1887&auto=format&fit=crop" alt="테마파크 사진" width="400">
 
     <script>
         // JS 요원 아저씨의 마법이 시작되는 곳이란다! 허허!
@@ -328,7 +339,7 @@ btn.onclick = showMagic;</code>
         // 미션 3: 제목 글자색 바꾸기
         
         
-        // 미션 4: 'park-status' 아이디를 찾아 상태 텍스트를 '정상 운영'으로 싹 바꿔보자!
+        // 미션 4: 'park-status' id 찾아 상태를 '정상 운영'로 바꿔보자!
         
         
         // 미션 5: 알림을 띄우는 마법 주문(함수) 만들기
@@ -337,7 +348,7 @@ btn.onclick = showMagic;</code>
         // 미션 6: 버튼을 클릭하면 마법 주문 발동시키기
         
         
-        // 미션 7 (보너스): 외부 통신(API)으로 데이터 가져와서 강아지 사진으로 바꾸기!
+        // 미션 7 : API로 데이터 가져와서 강아지 사진으로 바꾸기!
         
         
     <\/script>
@@ -345,12 +356,6 @@ btn.onclick = showMagic;</code>
 </html>`;
         window.agentCustomStyles = `
 <style>
-    body { font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif; padding: 20px; line-height: 1.6; background-color: #f8fafc; }
-    .content-box { background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border: 2px solid #f59e0b; }
-    h1 { color: #333; transition: color 0.3s ease; }
-    button { background: #f59e0b; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 18px; transition: transform 0.1s; }
-    button:active { transform: scale(0.95); }
-    button:hover { background: #d97706; }
 
         .ui-footer {
             text-align: center;

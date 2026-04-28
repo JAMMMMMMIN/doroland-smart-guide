@@ -387,6 +387,21 @@ body {
             border-color: var(--primary);
             box-shadow: 0 0 10px var(--primary-glow);
         }
+        
+        .cm-highlight-html {
+            background-color: rgba(249, 115, 22, 0.15) !important;
+            outline: 1px solid rgba(249, 115, 22, 0.5);
+        }
+        
+        .cm-highlight-css {
+            background-color: rgba(56, 189, 248, 0.15) !important;
+            outline: 1px solid rgba(56, 189, 248, 0.5);
+        }
+        
+        .cm-highlight-js {
+            background-color: rgba(234, 179, 8, 0.15) !important;
+            outline: 1px solid rgba(234, 179, 8, 0.5);
+        }
 
         /* Preview */
         .preview-container {
@@ -432,6 +447,19 @@ body {
             .header-controls {
                 width: 100%;
                 justify-content: flex-end;
+            }
+            .CodeMirror {
+                height: 350px !important;
+                flex: none;
+            }
+            .editor-container {
+                overflow: visible;
+                display: block;
+            }
+            .preview-container {
+                height: 350px;
+                flex: none;
+                display: block;
             }
         }
         
