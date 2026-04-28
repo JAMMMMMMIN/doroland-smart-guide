@@ -111,9 +111,12 @@
     }
 
     function highlightElement(el) {
-        if (!el || el === document.body || el === document.documentElement) return;
-        // Skip highlighting IFRAME elements in parent to avoid double highlight with internal script
-        if (el.tagName === 'IFRAME') return;
+        if (!el) return;
+        const isIframe = window !== window.top;
+        // In parent window: skip body, html, and IFRAME elements
+        // In iframe context: allow body and html as valid capture targets
+        if (!isIframe && (el === document.body || el === document.documentElement)) return;
+        if (!isIframe && el.tagName === 'IFRAME') return;
         if (hoveredEl === el) return;
 
         if (hoveredEl) {
@@ -227,7 +230,7 @@
                     allowTaint: false,
                     scale: window.devicePixelRatio || 2,
                     logging: false,
-                    ignoreElements: (el) => el.id?.startsWith('screenshot'),
+                    ignoreElements: (el) => el.id?.startsWith('screenshot') || el.tagName === 'IFRAME',
                     onclone: (clonedDoc) => {
                         sanitizeImages(clonedDoc);
                         // ⚠️ Do NOT touch letter-spacing - it breaks Korean syllable rendering
@@ -300,8 +303,14 @@
                 toggleSelectionMode(false);
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                if (hoveredEl && hoveredEl.parentElement && hoveredEl.parentElement !== document.documentElement && hoveredEl.parentElement !== document.body) {
-                    highlightElement(hoveredEl.parentElement);
+                const isIframe = window !== window.top;
+                if (hoveredEl && hoveredEl.parentElement) {
+                    const parent = hoveredEl.parentElement;
+                    // In iframe: allow going all the way up to html
+                    // In parent: stop at body's parent (html), don't select html itself
+                    if (isIframe || (parent !== document.documentElement)) {
+                        highlightElement(parent);
+                    }
                 }
             }
         }
