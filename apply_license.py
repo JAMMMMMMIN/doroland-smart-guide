@@ -7,7 +7,7 @@ import re
 INFO = {
     "PROJECT": "도로랜드 스마트 안내 시스템 (Doroland Smart Guide)",
     "CREATOR": "XYLO (@xylito) & DORO Inc.",
-    "VERSION": "1.1.1",
+    "VERSION": "1.1.2",
     "DATE": "2026.04.28.",
     "YEAR": "2026",
     "SOURCE": "https://github.com/xylito/doroland-smart-guide",
