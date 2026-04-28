@@ -199,58 +199,52 @@
 
             // Safari workaround: navigator.clipboard.write must be called immediately in the click handler.
             const capturePromise = (async () => {
-                await new Promise(resolve => setTimeout(resolve, 200)); // UI update buffer
-                
-                const rect = target.getBoundingClientRect();
-                const baseOptions = {
+                await new Promise(resolve => setTimeout(resolve, 200));
+                await document.fonts.ready;
+
+                // Helper: replace CORS-blocked images with same-size transparent placeholders (preserves layout)
+                const sanitizeImages = (clonedDoc) => {
+                    clonedDoc.querySelectorAll('img').forEach(img => {
+                        const src = img.src || '';
+                        const isExternal = src.startsWith('http') || src.startsWith('file:');
+                        if (isExternal) {
+                            const placeholder = clonedDoc.createElement('div');
+                            placeholder.style.cssText = `
+                                display: inline-block;
+                                width: ${img.offsetWidth}px;
+                                height: ${img.offsetHeight}px;
+                                background: transparent;
+                                flex-shrink: 0;
+                            `;
+                            img.replaceWith(placeholder);
+                        }
+                    });
+                };
+
+                const options = {
                     backgroundColor: null,
                     useCORS: true,
                     allowTaint: false,
-                    scale: window.devicePixelRatio > 1 ? 2 : 3,
+                    scale: window.devicePixelRatio || 2,
                     logging: false,
-                    width: rect.width,
-                    height: rect.height,
-                    scrollX: -window.scrollX,
-                    scrollY: -window.scrollY,
                     ignoreElements: (el) => el.id?.startsWith('screenshot'),
                     onclone: (clonedDoc) => {
-                        const el = clonedDoc.getElementById(target.id);
-                        if (el) el.style.transform = 'none';
+                        sanitizeImages(clonedDoc);
+                        // ⚠️ Do NOT touch letter-spacing - it breaks Korean syllable rendering
                     }
                 };
 
-                try {
-                    const canvas = await html2canvas(target, baseOptions);
-                    return await new Promise((resolve, reject) => {
-                        try {
-                            canvas.toBlob((blob) => {
-                                if (blob) resolve(blob);
-                                else reject(new Error('Canvas to Blob failed'));
-                            }, 'image/png');
-                        } catch (e) { reject(e); }
-                    });
-                } catch (err) {
-                    // FALLBACK: 보안 오류 발생 시 이미지를 제외하고 재시도
-                    console.warn('CORS/Security error detected. Retrying without images...');
-                    const fallbackOptions = {
-                        ...baseOptions,
-                        ignoreElements: (el) => el.id?.startsWith('screenshot') || el.tagName === 'IMG'
-                    };
-                    
+                const canvas = await html2canvas(target, options);
+                return await new Promise((resolve, reject) => {
                     try {
-                        const canvas = await html2canvas(target, fallbackOptions);
-                        return await new Promise((resolve, reject) => {
-                            canvas.toBlob((blob) => {
-                                if (blob) {
-                                    showGlobalToast('⚠️ 보안 정책으로 인해 외부 이미지를 제외하고 캡처되었습니다.');
-                                    resolve(blob);
-                                } else reject(new Error('Fallback capture failed'));
-                            }, 'image/png');
-                        });
-                    } catch (finalErr) {
-                        throw new Error('보안 정책 및 환경 문제로 캡처가 불가능합니다. (로컬 서버 권장)');
+                        canvas.toBlob((blob) => {
+                            if (blob) resolve(blob);
+                            else reject(new Error('Canvas to Blob 변환 실패'));
+                        }, 'image/png');
+                    } catch (e) {
+                        reject(e);
                     }
-                }
+                });
             })();
 
             const item = new ClipboardItem({ 'image/png': capturePromise });

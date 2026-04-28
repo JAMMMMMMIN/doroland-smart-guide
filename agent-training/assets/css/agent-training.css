@@ -166,7 +166,6 @@ body {
             display: flex;
             align-items: center;
             gap: 10px;
-            letter-spacing: 1px;
         }
 
         /* Columns Layout */
@@ -337,7 +336,8 @@ body {
         .mission-card code {
             display: block;
             white-space: pre-wrap;
-            word-break: break-word;
+            word-break: keep-all;      /* 한글 단어 중간 줄바꿈 방지 */
+            overflow-wrap: break-word; /* 긴 코드/URL은 여전히 줄바꿈 허용 */
             overflow-x: auto;
             padding: 10px;
             line-height: 1.4;
