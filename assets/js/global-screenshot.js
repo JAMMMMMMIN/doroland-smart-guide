@@ -187,40 +187,47 @@
         target.style.outline = '4px solid #22c55e';
         const isIframe = window !== window.top;
         
-        if (isIframe) {
-            window.parent.postMessage({ type: 'DORO_SCREENSHOT_BUSY' }, '*');
-        } else {
-            const badge = document.getElementById('screenshot-badge');
-            if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
-        }
-
         try {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            const canvas = await html2canvas(target, {
-                backgroundColor: null,
-                useCORS: true,
-                scale: 3,
-                logging: false,
-                ignoreElements: (el) => el.id?.startsWith('screenshot')
-            });
+            const isIframe = window !== window.top;
+            
+            if (isIframe) {
+                window.parent.postMessage({ type: 'DORO_SCREENSHOT_BUSY' }, '*');
+            } else {
+                const badge = document.getElementById('screenshot-badge');
+                if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
+            }
 
-            canvas.toBlob(async (blob) => {
-                try {
-                    const data = [new ClipboardItem({ 'image/png': blob })];
-                    await navigator.clipboard.write(data);
-                    showGlobalToast('✅ 이미지가 클립보드에 복사되었습니다!');
-                } catch (err) {
-                    console.error('Clipboard write failed:', err);
-                    showGlobalToast('❌ 클립보드 복사 실패');
-                }
-                
-                if (isIframe) {
-                    window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
-                }
-            });
+            // Safari workaround: navigator.clipboard.write must be called immediately in the click handler.
+            // We pass a Promise that resolves to a Blob to the ClipboardItem constructor.
+            const capturePromise = (async () => {
+                await new Promise(resolve => setTimeout(resolve, 150)); // UI update buffer
+                const canvas = await html2canvas(target, {
+                    backgroundColor: null,
+                    useCORS: true,
+                    scale: 3,
+                    logging: false,
+                    ignoreElements: (el) => el.id?.startsWith('screenshot')
+                });
+                return new Promise((resolve, reject) => {
+                    canvas.toBlob((blob) => {
+                        if (blob) resolve(blob);
+                        else reject(new Error('Canvas to Blob failed'));
+                    }, 'image/png');
+                });
+            })();
+
+            const item = new ClipboardItem({ 'image/png': capturePromise });
+            await navigator.clipboard.write([item]);
+            
+            showGlobalToast('✅ 이미지가 클립보드에 복사되었습니다!');
+            
+            if (isIframe) {
+                window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
+            }
         } catch (err) {
-            console.error('Screenshot failed:', err);
-            showGlobalToast('❌ 이미지 생성 실패');
+            console.error('Screenshot/Clipboard failed:', err);
+            showGlobalToast('❌ 클립보드 복사 실패');
+            const isIframe = window !== window.top;
             if (isIframe) {
                 window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
             }
