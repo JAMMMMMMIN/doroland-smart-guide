@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     document.addEventListener('mouseover', function(e) {
+        if (window.DoroScreenshotActive) return; // Disable inspector during screenshot mode
         let target = e.target;
         while (target && target.nodeType === 1) {
             let linesData = [];
@@ -218,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     window.addEventListener('message', function(e) {
+        if (window.DoroScreenshotActive) return; // Disable inspector logic during screenshot mode
         if (e.data.type === 'highlight-element') {
             const line = e.data.line;
             const lineType = e.data.agentType || 'html';
@@ -274,7 +276,8 @@ document.addEventListener('DOMContentLoaded', () => {
 `;
             
             let finalHtml = htmlContent;
-            const injection = customStyles + '\n' + inspectorScript;
+            const screenshotScript = '<script src="../assets/js/global-screenshot.js"></script>';
+            const injection = customStyles + '\n' + inspectorScript + '\n' + screenshotScript;
             
             if (finalHtml.includes('</head>')) {
                 finalHtml = finalHtml.replace('</head>', injection + '\n</head>');
