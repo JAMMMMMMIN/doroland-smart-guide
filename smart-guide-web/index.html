@@ -4,7 +4,7 @@
   
   - Project:   도로랜드 스마트 안내 시스템 (Doroland Smart Guide)
   - Creator:   XYLO (@xylito) & DORO Inc. & You
-  - Version:   1.1.0 (2026.04.28.)
+  - Version:   1.1.1 (2026.04.28.)
   - Source:    https://github.com/xylito/doroland-smart-guide
   - License:   CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
   
