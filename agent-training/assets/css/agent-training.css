@@ -444,7 +444,7 @@ body {
             .mobile-nav {
                 display: flex;
                 position: fixed;
-                bottom: 20px;
+                bottom: 70px;
                 right: 20px;
                 gap: 8px;
                 z-index: 1000;
@@ -597,3 +597,43 @@ body {
             transform: rotate(0deg);
         }
     
+/* Agent Switch Navigation */
+.agent-switch-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+}
+
+.agent-switch-btn {
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    color: #334155;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    user-select: none;
+    text-decoration: none;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.agent-switch-btn:hover, .agent-switch-btn:active {
+    background: rgba(248, 250, 252, 1);
+    transform: scale(1.05);
+}
+
+.agent-switch-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
