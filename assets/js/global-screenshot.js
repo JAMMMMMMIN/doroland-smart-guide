@@ -277,6 +277,9 @@
 
         if (e.key === 'Escape') {
             toggleSelectionMode(false);
+        } else if ((e.key === 'Enter' || e.key === ' ') && hoveredEl) {
+            e.preventDefault();
+            onClick(e); // Capture the currently highlighted element
         } else if (e.key === 'ArrowUp' && hoveredEl?.parentElement) {
             e.preventDefault();
             const parent = hoveredEl.parentElement;
