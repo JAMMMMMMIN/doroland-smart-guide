@@ -17,7 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>에어코리아 대기오염정보 API - Swagger UI</title>
+    <title>도로랜드 정보국 API 테스트 - 한국환경공단_에어코리아_대기오염정보</title>
     <link rel="icon" href="../favicon.png" type="image/png">
     <!-- Swagger UI CSS 베이스 로드 -->
     <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
@@ -108,8 +108,8 @@
         const spec = {
           "openapi": "3.0.0",
           "info": {
-            "title": "시도별 실시간 측정정보 조회",
-            "description": "### 🌬️ **한국환경공단 에어코리아 실시간 오염도 조회**\n\n시도명을 검색조건으로 하여 시도별 측정소목록에 대한 일반 항목과 CAI 최종 실시간 측정값, 지수 정보 조회 기능을 제공합니다.\n\n---\n\n#### 📝 **요청 파라미터 (주요 가이드)**\n* **sidoName** : 조회하고자 하는 시/도명 (전국, 서울, 부산, 대구... 중 선택)\n* **ver** : 오퍼레이션 버전 (1.0~1.5) \n  * `1.0` : PM2.5 데이터 포함 결과 표시\n  * `1.3` : PM10, PM2.5 1시간 등급 자료 포함\n  * `1.5` : **(최신)** 측정값 소수점 아래 자리 수 확대 정보 포함\n\n#### 📊 **수치 및 등급 안내 (Grade 1~4)**\n* `1` : 🔵 좋음\n* `2` : 🟢 보통\n* `3` : 🟡 나쁨\n* `4` : 🔴 매우나쁨\n\n---\n\n#### 💡 **기본 사용 방법**\n1. [공공데이터포털(data.go.kr)](https://data.go.kr/)에서 공단 API Key를 발급받습니다.\n2. 아래 `serviceKey` 항목에 인증키를 입력합니다.\n3. `sidoName`(시도 명)을 선택하고 **실행하기** 버튼을 눌러 오염도 상태를 빠르게 확인하세요.",
+            "title": "한국환경공단_에어코리아_대기오염정보",
+            "description": "### 🌬️ **시도별 실시간 측정정보 조회 (getCtprvnRltmMesureDnsty)**\n\n시도명을 검색 조건으로 하여 시도별 측정소목록에 대한 일반 항목과 CAI 최종 실시간 측정값, 지수 정보 조회 기능을 제공합니다.\n\n---\n\n#### 📝 **요청 파라미터 (주요 가이드)**\n* **sidoName** : 조회하고자 하는 시/도명 (전국, 서울, 부산, 대구... 중 선택)\n* **ver** : 오퍼레이션 버전 (1.0~1.5) \n  * `1.0` : PM2.5 데이터 포함 결과 표시\n  * `1.3` : PM10, PM2.5 1시간 등급 자료 포함\n  * `1.5` : **(최신)** 측정값 소수점 아래 자리 수 확대 정보 포함\n\n#### 📊 **수치 및 등급 안내 (Grade 1~4)**\n* `1` : 🔵 좋음\n* `2` : 🟢 보통\n* `3` : 🟡 나쁨\n* `4` : 🔴 매우나쁨\n\n---\n\n#### 💡 **기본 사용 방법**\n1. [공공데이터포털(data.go.kr)](https://data.go.kr/)에서 활용 신청을 하여 API Key를 발급받습니다.\n2. 아래 `serviceKey` 항목에 인증키를 입력합니다.\n3. `sidoName`(시도 명)을 선택하고 **실행하기** 버튼을 눌러 오염도 상태를 빠르게 확인하세요.",
             "version": "1.5"
           },
           "servers": [
@@ -122,7 +122,7 @@
             "/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty": {
               "get": {
                 "tags": [
-                    "대기오염정보"
+                    "시도별 실시간 측정정보 조회"
                 ],
                 "summary": "시도별 실시간 측정정보 조회 (PM10, PM2.5 등)",
                 "description": "시도명을 검색조건으로 하여 소속된 모든 측정소의 대기오염 정보(미세먼지, 오존, 일산화탄소 등)를 상세하게 가져옵니다.",
@@ -245,6 +245,24 @@
             // Swagger UI 내부 상태 변화 대응 Observer
             const observer = new MutationObserver(function() {
                 applySwaggerTranslationsAndErrorGuide();
+
+                const h3Elements = document.querySelectorAll('.info .description h3');
+                for (let h3 of h3Elements) {
+                    if (h3.textContent.includes('시도별 실시간 측정정보 조회') && !document.getElementById('api-doc-btn')) {
+                        h3.style.display = 'flex';
+                        h3.style.alignItems = 'center';
+                        
+                        const btn = document.createElement('a');
+                        btn.id = 'api-doc-btn';
+                        btn.href = 'https://www.data.go.kr/data/15073861/openapi.do';
+                        btn.target = '_blank';
+                        btn.rel = 'noopener noreferrer';
+                        btn.innerHTML = '📚 API 명세서';
+                        btn.style = 'margin-left: 15px; font-size: 14px; padding: 4px 12px; background: #10b981; color: white; text-decoration: none; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-weight: bold;';
+                        h3.appendChild(btn);
+                        break;
+                    }
+                }
 
                 // 자동 테스트 시작 상태 돌입
                 const tryItOutBtn = document.querySelector('.try-out__btn');
