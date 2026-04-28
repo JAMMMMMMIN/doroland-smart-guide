@@ -1,5 +1,20 @@
 /*
   ============================================================================================================
+  [ Credits & License ]
+  
+  - Project:    도로랜드 정보국 훈련소
+  - Creator:    XYLO
+  - Powered by: DORO Inc.
+  - Version:    1.3.0 (2026.04.29.)
+  - Source:     https://github.com/xylito/doroland-smart-guide
+  - License:    CC BY-SA 4.0 (상업적 이용 가능 / 동일 조건 변경 허락 / 저작자 표시)
+  
+  이 저작물은 공공데이터를 활용한 웹 개발 교육용 실습 자료로 제작되었습니다.
+  미래의 훌륭한 웹 마스터가 될 여러분을 응원합니다!
+  ============================================================================================================
+*/
+/*
+  ============================================================================================================
   [ DORO Smart Guide - Global Element Screenshot Tool ]
   - Shortcut: Cmd + Shift + S
   - Description: Capture any DOM element as an image to clipboard for PPT/Documentation.
@@ -30,7 +45,7 @@
         if (el.id) info += `<span style="color: #f87171;">#${el.id}</span>`;
         if (el.className) {
             const classes = Array.from(el.classList).filter(c => 
-                !c.startsWith('doro-') && !c.startsWith('screenshot-') && !c.startsWith('cm-')
+                !c.startsWith('') && !c.startsWith('screenshot-') && !c.startsWith('cm-')
             ).join('.');
             if (classes) info += `<span style="color: #34d399;">.${classes}</span>`;
         }
@@ -38,13 +53,13 @@
     }
 
     function createOverlay() {
-        if (document.getElementById('doro-screenshot-overlay')) return;
+        if (document.getElementById('screenshot-overlay')) return;
         
         // Hide UI in iframes if the parent is also likely running the script
         const isIframe = window !== window.top;
         
         overlay = document.createElement('div');
-        overlay.id = 'doro-screenshot-overlay';
+        overlay.id = 'screenshot-overlay';
         overlay.style.cssText = `
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, ${isIframe ? '0' : '0.15'}); z-index: 2147483640;
@@ -54,7 +69,7 @@
         
         if (!isIframe) {
             const badge = document.createElement('div');
-            badge.id = 'doro-screenshot-badge';
+            badge.id = 'screenshot-badge';
             badge.style.cssText = `
                 position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
                 background: #1e293b; color: white; padding: 10px 25px;
@@ -68,7 +83,7 @@
         }
         
         tooltip = document.createElement('div');
-        tooltip.id = 'doro-screenshot-tooltip';
+        tooltip.id = 'screenshot-tooltip';
         tooltip.style.cssText = `
             position: fixed; background: #0f172a; color: white; padding: 6px 12px;
             border-radius: 6px; font-size: 12px; font-family: monospace;
@@ -82,15 +97,15 @@
     }
 
     function removeOverlay() {
-        ['doro-screenshot-overlay', 'doro-screenshot-badge', 'doro-screenshot-tooltip'].forEach(id => {
+        ['screenshot-overlay', 'screenshot-badge', 'screenshot-tooltip'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.remove();
         });
         overlay = null;
         tooltip = null;
         if (hoveredEl) {
-            hoveredEl.style.outline = hoveredEl.getAttribute('data-doro-prev-outline') || '';
-            hoveredEl.removeAttribute('data-doro-prev-outline');
+            hoveredEl.style.outline = hoveredEl.getAttribute('data-prev-outline') || '';
+            hoveredEl.removeAttribute('data-prev-outline');
             hoveredEl = null;
         }
     }
@@ -102,10 +117,10 @@
         if (hoveredEl === el) return;
 
         if (hoveredEl) {
-            hoveredEl.style.outline = hoveredEl.getAttribute('data-doro-prev-outline') || '';
+            hoveredEl.style.outline = hoveredEl.getAttribute('data-prev-outline') || '';
         }
         hoveredEl = el;
-        hoveredEl.setAttribute('data-doro-prev-outline', hoveredEl.style.outline || '');
+        hoveredEl.setAttribute('data-prev-outline', hoveredEl.style.outline || '');
         hoveredEl.style.outline = '3px solid #ff8c42';
         
         // Update Tooltip
@@ -144,8 +159,8 @@
 
     function onWindowLeave() {
         if (hoveredEl) {
-            hoveredEl.style.outline = hoveredEl.getAttribute('data-doro-prev-outline') || '';
-            hoveredEl.removeAttribute('data-doro-prev-outline');
+            hoveredEl.style.outline = hoveredEl.getAttribute('data-prev-outline') || '';
+            hoveredEl.removeAttribute('data-prev-outline');
             hoveredEl = null;
         }
         if (tooltip) tooltip.style.display = 'none';
@@ -155,7 +170,7 @@
         if (!isSelectionMode) return;
         
         const target = document.elementFromPoint(e.clientX, e.clientY);
-        if (target && target !== hoveredEl && !target.id?.startsWith('doro-screenshot')) {
+        if (target && target !== hoveredEl && !target.id?.startsWith('screenshot')) {
             highlightElement(target);
         }
     }
@@ -175,7 +190,7 @@
         if (isIframe) {
             window.parent.postMessage({ type: 'DORO_SCREENSHOT_BUSY' }, '*');
         } else {
-            const badge = document.getElementById('doro-screenshot-badge');
+            const badge = document.getElementById('screenshot-badge');
             if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
         }
 
@@ -186,7 +201,7 @@
                 useCORS: true,
                 scale: 3,
                 logging: false,
-                ignoreElements: (el) => el.id?.startsWith('doro-screenshot')
+                ignoreElements: (el) => el.id?.startsWith('screenshot')
             });
 
             canvas.toBlob(async (blob) => {
@@ -252,7 +267,7 @@
         if (e.data.type === 'DORO_SCREENSHOT_MODE') {
             toggleSelectionMode(e.data.state);
         } else if (e.data.type === 'DORO_SCREENSHOT_BUSY') {
-            const badge = document.getElementById('doro-screenshot-badge');
+            const badge = document.getElementById('screenshot-badge');
             if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
         } else if (e.data.type === 'DORO_SCREENSHOT_DONE') {
             toggleSelectionMode(false);

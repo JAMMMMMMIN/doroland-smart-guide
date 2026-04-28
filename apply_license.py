@@ -10,7 +10,7 @@ INFO = {
     "CREATOR": "XYLO",
     "HANDLE": "@xylito",
     "POWERED_BY": "DORO Inc.",
-    "VERSION": "1.2.0",
+    "VERSION": "1.3.0",
     "DATE": "2026.04.29.",
     "YEAR": "2026",
     "SOURCE": "https://github.com/xylito/doroland-smart-guide",
@@ -115,13 +115,17 @@ def apply_license():
                     
                     if pattern.search(file_content):
                         new_content = pattern.sub(full_header.strip(), file_content)
+                        # strip()으로 인해 사라진 개행 보충 (기존 헤더가 맨 위였을 경우 대비)
+                        if not new_content.startswith(full_header):
+                             new_content = new_content.replace(full_header.strip(), full_header.strip() + "\n")
                     else:
                         # 없다면 맨 위에 추가
                         new_content = full_header + file_content
                     
                     # HTML 파일인 경우 푸터도 업데이트
                     if ext == '.html':
-                        footer_pattern = re.compile(r'^\s*<footer class="ui-footer">.*?</footer>', re.DOTALL | re.MULTILINE)
+                        # 클래스 순서나 추가 속성에 상관없이 ui-footer 클래스를 가진 footer 탐색
+                        footer_pattern = re.compile(r'^\s*<footer[^>]*class="[^"]*ui-footer[^"]*"[^>]*>.*?</footer>', re.DOTALL | re.MULTILINE)
                         if footer_pattern.search(new_content):
                             new_content = footer_pattern.sub(get_html_footer(is_final_mission), new_content)
                     
