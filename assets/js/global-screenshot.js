@@ -22,84 +22,107 @@
   ============================================================================================================
 */
 
-(function() {
-    // Prevent multiple initializations
+(function () {
     if (window.DoroScreenshotInitialized) return;
     window.DoroScreenshotInitialized = true;
 
-    // Load html2canvas from CDN
+    // ── Dependencies ──────────────────────────────────────────────────────────
     if (typeof html2canvas === 'undefined') {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
         document.head.appendChild(script);
     }
 
+    // ── State ─────────────────────────────────────────────────────────────────
+    const IS_IFRAME = window !== window.top;
     let isSelectionMode = false;
     let hoveredEl = null;
     let overlay = null;
     let tooltip = null;
 
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
     function getElementInfo(el) {
         if (!el) return '';
-        let info = `<span style="color: #60a5fa; font-weight: bold;">${el.tagName.toLowerCase()}</span>`;
-        if (el.id) info += `<span style="color: #f87171;">#${el.id}</span>`;
+        let info = `<span style="color:#60a5fa;font-weight:bold">${el.tagName.toLowerCase()}</span>`;
+        if (el.id) info += `<span style="color:#f87171">#${el.id}</span>`;
         if (el.className) {
-            const classes = Array.from(el.classList).filter(c => 
-                !c.startsWith('') && !c.startsWith('screenshot-') && !c.startsWith('cm-')
-            ).join('.');
-            if (classes) info += `<span style="color: #34d399;">.${classes}</span>`;
+            const classes = Array.from(el.classList)
+                .filter(c => c && !c.startsWith('screenshot-') && !c.startsWith('cm-'))
+                .join('.');
+            if (classes) info += `<span style="color:#34d399">.${classes}</span>`;
         }
         return info;
     }
 
+    function showGlobalToast(msg) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+            background:#1e293b; color:white; padding:15px 30px;
+            border-radius:40px; z-index:2147483647; font-weight:bold;
+            box-shadow:0 4px 25px rgba(0,0,0,.4); border:2px solid #ff8c42;
+            font-family:sans-serif; pointer-events:none;
+            opacity:1; transition:opacity .5s ease-out;
+        `;
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500);
+        }, 3500);
+    }
+
+    function notifyIframes(type, state) {
+        document.querySelectorAll('iframe').forEach(ifr => {
+            try { ifr.contentWindow.postMessage({ type, state }, '*'); } catch (_) {}
+        });
+    }
+
+    // ── Overlay / UI ──────────────────────────────────────────────────────────
+
     function createOverlay() {
         if (document.getElementById('screenshot-overlay')) return;
-        
-        // Hide UI in iframes if the parent is also likely running the script
-        const isIframe = window !== window.top;
-        
+
         overlay = document.createElement('div');
         overlay.id = 'screenshot-overlay';
         overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, ${isIframe ? '0' : '0.15'}); z-index: 2147483640;
-            cursor: crosshair; pointer-events: none;
-            transition: background 0.3s;
+            position:fixed; top:0; left:0; width:100vw; height:100vh;
+            background:rgba(0,0,0,${IS_IFRAME ? '0' : '0.15'}); z-index:2147483640;
+            cursor:crosshair; pointer-events:none; transition:background .3s;
         `;
-        
-        if (!isIframe) {
+        document.body.appendChild(overlay);
+
+        if (!IS_IFRAME) {
             const badge = document.createElement('div');
             badge.id = 'screenshot-badge';
             badge.style.cssText = `
-                position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-                background: #1e293b; color: white; padding: 10px 25px;
-                border-radius: 30px; font-weight: bold; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-                font-size: 14px; z-index: 2147483647; font-family: 'Pretendard Variable', sans-serif;
-                border: 2px solid #ff8c42; pointer-events: auto;
-                display: flex; align-items: center; gap: 10px;
+                position:fixed; top:20px; left:50%; transform:translateX(-50%);
+                background:#1e293b; color:white; padding:10px 25px;
+                border-radius:30px; font-weight:bold; box-shadow:0 4px 20px rgba(0,0,0,.4);
+                font-size:14px; z-index:2147483647; font-family:'Pretendard Variable',sans-serif;
+                border:2px solid #ff8c42; pointer-events:auto;
+                display:flex; align-items:center; gap:10px;
             `;
-            badge.innerHTML = '<span>📸</span> <strong>스크린샷 모드</strong> <span style="margin: 0 10px; color: #64748b;">|</span> 클릭: 복사, ⬆️: 상위 선택, Esc: 취소';
+            badge.innerHTML = '<span>📸</span> <strong>스크린샷 모드</strong> <span style="margin:0 10px;color:#64748b">|</span> 클릭: 복사, ⬆️: 상위 선택, Esc: 취소';
             document.body.appendChild(badge);
         }
-        
+
         tooltip = document.createElement('div');
         tooltip.id = 'screenshot-tooltip';
         tooltip.style.cssText = `
-            position: fixed; background: #0f172a; color: white; padding: 6px 12px;
-            border-radius: 6px; font-size: 12px; font-family: monospace;
-            z-index: 2147483647; pointer-events: none; display: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5); border: 1px solid #475569;
-            white-space: nowrap;
+            position:fixed; background:#0f172a; color:white; padding:6px 12px;
+            border-radius:6px; font-size:12px; font-family:monospace;
+            z-index:2147483647; pointer-events:none; display:none;
+            box-shadow:0 2px 10px rgba(0,0,0,.5); border:1px solid #475569;
+            white-space:nowrap;
         `;
-
-        document.body.appendChild(overlay);
         document.body.appendChild(tooltip);
     }
 
     function removeOverlay() {
         ['screenshot-overlay', 'screenshot-badge', 'screenshot-tooltip'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.remove();
+            document.getElementById(id)?.remove();
         });
         overlay = null;
         tooltip = null;
@@ -110,13 +133,12 @@
         }
     }
 
+    // ── Element Selection ─────────────────────────────────────────────────────
+
     function highlightElement(el) {
         if (!el) return;
-        const isIframe = window !== window.top;
-        // In parent window: skip body, html, and IFRAME elements
-        // In iframe context: allow body and html as valid capture targets
-        if (!isIframe && (el === document.body || el === document.documentElement)) return;
-        if (!isIframe && el.tagName === 'IFRAME') return;
+        // In parent: skip body, html, iframe. In iframe: allow all.
+        if (!IS_IFRAME && (el === document.body || el === document.documentElement || el.tagName === 'IFRAME')) return;
         if (hoveredEl === el) return;
 
         if (hoveredEl) {
@@ -125,8 +147,7 @@
         hoveredEl = el;
         hoveredEl.setAttribute('data-prev-outline', hoveredEl.style.outline || '');
         hoveredEl.style.outline = '3px solid #ff8c42';
-        
-        // Update Tooltip
+
         if (tooltip) {
             tooltip.style.display = 'block';
             tooltip.innerHTML = getElementInfo(hoveredEl);
@@ -136,31 +157,7 @@
         }
     }
 
-    function toggleSelectionMode(forceState) {
-        isSelectionMode = typeof forceState === 'boolean' ? forceState : !isSelectionMode;
-        window.DoroScreenshotActive = isSelectionMode; // Global flag for other scripts
-        if (isSelectionMode) {
-            createOverlay();
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('click', onClick, true);
-            window.addEventListener('mouseleave', onWindowLeave); // Fix sticky highlight
-            // Notify iframes
-            Array.from(document.querySelectorAll('iframe')).forEach(ifr => {
-                try { ifr.contentWindow.postMessage({ type: 'DORO_SCREENSHOT_MODE', state: true }, '*'); } catch(e) {}
-            });
-        } else {
-            removeOverlay();
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('click', onClick, true);
-            window.removeEventListener('mouseleave', onWindowLeave);
-            // Notify iframes
-            Array.from(document.querySelectorAll('iframe')).forEach(ifr => {
-                try { ifr.contentWindow.postMessage({ type: 'DORO_SCREENSHOT_MODE', state: false }, '*'); } catch(e) {}
-            });
-        }
-    }
-
-    function onWindowLeave() {
+    function clearHighlight() {
         if (hoveredEl) {
             hoveredEl.style.outline = hoveredEl.getAttribute('data-prev-outline') || '';
             hoveredEl.removeAttribute('data-prev-outline');
@@ -169,9 +166,31 @@
         if (tooltip) tooltip.style.display = 'none';
     }
 
+    // ── Mode Toggle ───────────────────────────────────────────────────────────
+
+    function toggleSelectionMode(forceState) {
+        isSelectionMode = typeof forceState === 'boolean' ? forceState : !isSelectionMode;
+        window.DoroScreenshotActive = isSelectionMode;
+
+        if (isSelectionMode) {
+            createOverlay();
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('click', onClick, true);
+            window.addEventListener('mouseleave', clearHighlight);
+            notifyIframes('DORO_SCREENSHOT_MODE', true);
+        } else {
+            removeOverlay();
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('click', onClick, true);
+            window.removeEventListener('mouseleave', clearHighlight);
+            notifyIframes('DORO_SCREENSHOT_MODE', false);
+        }
+    }
+
+    // ── Event Handlers ────────────────────────────────────────────────────────
+
     function onMouseMove(e) {
         if (!isSelectionMode) return;
-        
         const target = document.elementFromPoint(e.clientX, e.clientY);
         if (target && target !== hoveredEl && !target.id?.startsWith('screenshot')) {
             highlightElement(target);
@@ -186,124 +205,98 @@
         const target = hoveredEl;
         if (!target) return;
 
-        // Visual Feedback
         target.style.outline = '4px solid #22c55e';
-        const isIframe = window !== window.top;
-        
+
+        if (IS_IFRAME) {
+            window.parent.postMessage({ type: 'DORO_SCREENSHOT_BUSY' }, '*');
+        } else {
+            const badge = document.getElementById('screenshot-badge');
+            if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
+        }
+
+        // Safari workaround: ClipboardItem must receive a Promise, not a resolved Blob,
+        // so that navigator.clipboard.write() is called synchronously in the click handler.
+        const capturePromise = (async () => {
+            await new Promise(resolve => setTimeout(resolve, 200));
+            await document.fonts.ready;
+
+            const canvas = await html2canvas(target, {
+                backgroundColor: null,
+                useCORS: true,
+                allowTaint: false,
+                scale: window.devicePixelRatio || 2,
+                logging: false,
+                ignoreElements: el => el.id?.startsWith('screenshot') || el.tagName === 'IFRAME',
+                onclone: clonedDoc => {
+                    // Reveal hover-only UI elements so they appear in the screenshot
+                    clonedDoc.querySelectorAll('.copy-btn').forEach(btn => {
+                        btn.style.opacity = '1';
+                        btn.style.visibility = 'visible';
+                    });
+                }
+            });
+
+            return new Promise((resolve, reject) => {
+                try {
+                    canvas.toBlob(blob => {
+                        blob ? resolve(blob) : reject(new Error('toBlob 반환값 없음'));
+                    }, 'image/png');
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        })();
+
         try {
-            const isIframe = window !== window.top;
-            
-            if (isIframe) {
-                window.parent.postMessage({ type: 'DORO_SCREENSHOT_BUSY' }, '*');
-            } else {
-                const badge = document.getElementById('screenshot-badge');
-                if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
-            }
-
-            // Safari workaround: navigator.clipboard.write must be called immediately in the click handler.
-            const capturePromise = (async () => {
-                await new Promise(resolve => setTimeout(resolve, 200));
-                await document.fonts.ready;
-
-                const options = {
-                    backgroundColor: null,
-                    useCORS: true,
-                    allowTaint: false,
-                    scale: window.devicePixelRatio || 2,
-                    logging: false,
-                    ignoreElements: (el) => el.id?.startsWith('screenshot') || el.tagName === 'IFRAME',
-                    onclone: (clonedDoc) => {
-                        // ⚠️ Do NOT touch letter-spacing - it breaks Korean syllable rendering
-
-                        // Force-show hover-only buttons (e.g. copy-btn) so they appear in screenshots
-                        clonedDoc.querySelectorAll('.copy-btn').forEach(btn => {
-                            btn.style.opacity = '1';
-                            btn.style.visibility = 'visible';
-                        });
-                    }
-                };
-
-                const canvas = await html2canvas(target, options);
-                return await new Promise((resolve, reject) => {
-                    try {
-                        canvas.toBlob((blob) => {
-                            if (blob) resolve(blob);
-                            else reject(new Error('Canvas to Blob 변환 실패'));
-                        }, 'image/png');
-                    } catch (e) {
-                        reject(e);
-                    }
-                });
-            })();
-
-            const item = new ClipboardItem({ 'image/png': capturePromise });
-            await navigator.clipboard.write([item]);
-            
+            await navigator.clipboard.write([new ClipboardItem({ 'image/png': capturePromise })]);
             showGlobalToast('✅ 이미지가 클립보드에 복사되었습니다!');
-            
-            if (isIframe) {
-                window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
-            }
+            if (IS_IFRAME) window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
         } catch (err) {
             console.error('Screenshot/Clipboard failed:', err);
             showGlobalToast('❌ 클립보드 복사 실패');
-            const isIframe = window !== window.top;
-            if (isIframe) {
-                window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
-            }
+            if (IS_IFRAME) window.parent.postMessage({ type: 'DORO_SCREENSHOT_DONE' }, '*');
         }
 
         toggleSelectionMode(false);
     }
 
-    function showGlobalToast(msg) {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; color: white; padding: 15px 30px;
-            border-radius: 40px; z-index: 2147483647; font-weight: bold;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.4); border: 2px solid #ff8c42;
-            font-family: sans-serif; pointer-events: none;
-            opacity: 1; transition: opacity 0.5s ease-out;
-        `;
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 500);
-        }, 3500);
-    }
+    // ── Keyboard Shortcuts ────────────────────────────────────────────────────
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', e => {
         if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 's') {
             e.preventDefault();
             toggleSelectionMode();
-        } else if (isSelectionMode) {
-            if (e.key === 'Escape') {
-                toggleSelectionMode(false);
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                const isIframe = window !== window.top;
-                if (hoveredEl && hoveredEl.parentElement) {
-                    const parent = hoveredEl.parentElement;
-                    // In iframe: allow going all the way up to html
-                    // In parent: stop at body's parent (html), don't select html itself
-                    if (isIframe || (parent !== document.documentElement)) {
-                        highlightElement(parent);
-                    }
-                }
+            return;
+        }
+        if (!isSelectionMode) return;
+
+        if (e.key === 'Escape') {
+            toggleSelectionMode(false);
+        } else if (e.key === 'ArrowUp' && hoveredEl?.parentElement) {
+            e.preventDefault();
+            const parent = hoveredEl.parentElement;
+            // In iframe: allow all the way to <html>. In parent: stop before <html>.
+            if (IS_IFRAME || parent !== document.documentElement) {
+                highlightElement(parent);
             }
         }
     });
 
-    window.addEventListener('message', (e) => {
-        if (e.data.type === 'DORO_SCREENSHOT_MODE') {
-            toggleSelectionMode(e.data.state);
-        } else if (e.data.type === 'DORO_SCREENSHOT_BUSY') {
-            const badge = document.getElementById('screenshot-badge');
-            if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
-        } else if (e.data.type === 'DORO_SCREENSHOT_DONE') {
-            toggleSelectionMode(false);
+    // ── Cross-window Messaging ────────────────────────────────────────────────
+
+    window.addEventListener('message', e => {
+        switch (e.data?.type) {
+            case 'DORO_SCREENSHOT_MODE':
+                toggleSelectionMode(e.data.state);
+                break;
+            case 'DORO_SCREENSHOT_BUSY': {
+                const badge = document.getElementById('screenshot-badge');
+                if (badge) badge.innerHTML = '<span>⌛</span> 이미지 생성 중... 잠시만 기다려주세요.';
+                break;
+            }
+            case 'DORO_SCREENSHOT_DONE':
+                toggleSelectionMode(false);
+                break;
         }
     });
 })();
