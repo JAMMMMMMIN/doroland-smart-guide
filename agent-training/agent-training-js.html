@@ -180,6 +180,7 @@
                         <ul>
                             <li><code>요소.innerText = "내용"</code>: 화면에 보이는 글자를 바꿉니다.</li>
                             <li><code>요소.style.color = "색상"</code>: 글자 색상을 바꿉니다. <i>(예: title.style.color = "blue";)</i></li>
+                            <li>💡 <b>꿀팁</b>: 문장 전체뿐만 아니라, <code>&lt;span&gt;</code>으로 감싸진 텍스트 조각에 아이디를 주면 그 부분만 콕 집어서 마법을 걸 수 있단다!</li>
                         </ul>
                         <h4>3. 궁극기 마법 (함수와 이벤트)</h4>
                         <ul>
@@ -221,6 +222,16 @@
 
                 <div class="mission-card">
                     <div class="mission-step">미션 4</div>
+                    <h3>콕 집어서 마법 걸기 (부분 변경)</h3>
+                    <p>허허, 제목 전체를 바꾸는 건 너무 쉽지? 이번엔 더 정교한 마법을 보여주마!<br>문장 전체가 아니라 &lt;span&gt;이라는 투명 망토를 입고 있는 특정한 단어(아이디: park-status)만 찾아서 '정상 운영'으로 싹 바꿔보렴!</p>
+                    <span class="tag-hint">힌트: document.getElementById 와 innerText 사용</span><br>
+                    <code>const statusSpan = document.getElementById('park-status');
+statusSpan.innerText = "정상 운영";
+statusSpan.style.color = "blue";</code>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-step">미션 5</div>
                     <h3>알림 마법 주문(함수) 만들기</h3>
                     <p>화면에 환영 인사 알림창을 띄우는 'showMagic' 이라는 마법 주문을 만들어볼까?</p>
                     <span class="tag-hint">힌트: function과 alert 사용</span><br>
@@ -230,7 +241,7 @@
                 </div>
 
                 <div class="mission-card">
-                    <div class="mission-step">미션 5</div>
+                    <div class="mission-step">미션 6</div>
                     <h3>버튼에 클릭 마법 걸기</h3>
                     <p>마법 버튼을 찾아내서, 클릭할 때 방금 만든 'showMagic' 주문이 발동되게 해보자!</p>
                     <span class="tag-hint">힌트: onclick 사용</span><br>
@@ -239,7 +250,7 @@ btn.onclick = showMagic;</code>
                 </div>
 
                 <div class="mission-card">
-                    <div class="mission-step">미션 6 (보너스)</div>
+                    <div class="mission-step">미션 7 (보너스)</div>
                     <h3>외부 세계와 통신하기 (API 예습)</h3>
                     <span class="tag-hint">힌트: fetch, if, src 속성 사용</span><br>
                     <code>fetch('https://dog.ceo/api/breeds/image/random')
@@ -291,6 +302,7 @@ btn.onclick = showMagic;</code>
 <body>
     <div class="content-box">
         <h1 id="main-title">도로랜드에 오신 것을 환영합니다!</h1>
+        <p>현재 도로랜드의 시스템 상태는 <span id="park-status" style="color: red; font-weight: bold;">점검 중</span>입니다.</p>
         <p>자바스크립트의 세계에 오신 것을 환영합니다. 아래 버튼을 눌러볼까요?</p>
         <button id="magic-btn">마법 버튼</button>
     </div>
@@ -309,13 +321,16 @@ btn.onclick = showMagic;</code>
         // 미션 3: 제목 글자색 바꾸기
         
         
-        // 미션 4: 알림을 띄우는 마법 주문(함수) 만들기
+        // 미션 4: 'park-status' 아이디를 찾아 상태 텍스트를 '정상 운영'으로 싹 바꿔보자!
         
         
-        // 미션 5: 버튼을 클릭하면 마법 주문 발동시키기
+        // 미션 5: 알림을 띄우는 마법 주문(함수) 만들기
         
         
-        // 미션 6 (보너스): 외부 통신(API)으로 데이터 가져와서 강아지 사진으로 바꾸기!
+        // 미션 6: 버튼을 클릭하면 마법 주문 발동시키기
+        
+        
+        // 미션 7 (보너스): 외부 통신(API)으로 데이터 가져와서 강아지 사진으로 바꾸기!
         
         
     <\/script>
