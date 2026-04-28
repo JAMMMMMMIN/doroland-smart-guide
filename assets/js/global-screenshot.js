@@ -205,25 +205,6 @@
                 await new Promise(resolve => setTimeout(resolve, 200));
                 await document.fonts.ready;
 
-                // Helper: replace CORS-blocked images with same-size transparent placeholders (preserves layout)
-                const sanitizeImages = (clonedDoc) => {
-                    clonedDoc.querySelectorAll('img').forEach(img => {
-                        const src = img.src || '';
-                        const isExternal = src.startsWith('http') || src.startsWith('file:');
-                        if (isExternal) {
-                            const placeholder = clonedDoc.createElement('div');
-                            placeholder.style.cssText = `
-                                display: inline-block;
-                                width: ${img.offsetWidth}px;
-                                height: ${img.offsetHeight}px;
-                                background: transparent;
-                                flex-shrink: 0;
-                            `;
-                            img.replaceWith(placeholder);
-                        }
-                    });
-                };
-
                 const options = {
                     backgroundColor: null,
                     useCORS: true,
@@ -232,7 +213,6 @@
                     logging: false,
                     ignoreElements: (el) => el.id?.startsWith('screenshot') || el.tagName === 'IFRAME',
                     onclone: (clonedDoc) => {
-                        sanitizeImages(clonedDoc);
                         // ⚠️ Do NOT touch letter-spacing - it breaks Korean syllable rendering
 
                         // Force-show hover-only buttons (e.g. copy-btn) so they appear in screenshots
