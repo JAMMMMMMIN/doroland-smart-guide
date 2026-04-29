@@ -182,16 +182,46 @@
                         </ul>
                         <h4>2. 제목 & 텍스트 꾸미기 태그</h4>
                         <ul>
-                            <li><code>&lt;h1&gt; ~ &lt;h6&gt;</code> <b>제목 태그</b>: 글의 제목을 만듭니다. h1이 가장 크고 h6이 가장 작습니다. <i>(예: &lt;h1&gt;대제목&lt;/h1&gt;, &lt;h3&gt;중제목&lt;/h3&gt;)</i></li>
-                            <li><code>&lt;b&gt;</code> <b>굵은 글씨 (Bold)</b>: 글자를 단순히 굵게 만듭니다. <i>(예: &lt;b&gt;굵게&lt;/b&gt;)</i></li>
-                            <li><code>&lt;strong&gt;</code> <b>강조 (Strong)</b>: 내용이 '중요함'을 의미하며 굵게 표시됩니다. <i>(예: &lt;strong&gt;중요!&lt;/strong&gt;)</i></li>
-                            <li><code>&lt;i&gt;</code> <b>기울임꼴 (Italic)</b>: 글자를 단순히 기울여 씁니다. <i>(예: &lt;i&gt;기울임&lt;/i&gt;)</i></li>
-                            <li><code>&lt;em&gt;</code> <b>강조 (Emphasis)</b>: 내용을 강조할 때 쓰며 기울임꼴로 표시됩니다. <i>(예: &lt;em&gt;진짜&lt;/em&gt; 맛있어요)</i></li>
+                            <li><code>&lt;h1&gt; ~ &lt;h6&gt;</code> <b>제목 태그</b>: 글의 제목을 만듭니다. h1이 가장 크고 h6이 가장 작습니다.</li>
+                            <li><code>&lt;p&gt;</code> <b>단락 태그</b>: 일반적인 문장을 작성할 때 사용하며, 위아래에 약간의 여백이 생깁니다.</li>
+                            <li><code>&lt;b&gt;</code> <b>굵은 글씨 (Bold)</b>: 글자를 단순히 굵게 만듭니다.</li>
+                            <li><code>&lt;strong&gt;</code> <b>강조 (Strong)</b>: 내용이 '중요함'을 의미하며 굵게 표시됩니다.</li>
+                            <li><code>&lt;i&gt;</code> <b>기울임꼴 (Italic)</b>: 글자를 단순히 기울여 씁니다.</li>
+                            <li><code>&lt;em&gt;</code> <b>강조 (Emphasis)</b>: 내용을 강조할 때 쓰며 기울임꼴로 표시됩니다.</li>
+                            <li><code>&lt;span&gt;</code> <b>범위 태그</b>: 문장 안에서 특정 부분만 묶어 스타일을 줄 때 사용합니다.</li>
+                            <li><code>&lt;br&gt;</code> <b>줄바꿈 태그</b>: 강제로 줄을 바꿉니다. 닫는 태그가 없습니다.</li>
                         </ul>
-                        <h4>3. 공간 나누기 태그 (섹션)</h4>
+                        <h4>3. 목록 & 링크 태그</h4>
                         <ul>
-                            <li><code>&lt;div&gt;</code> <b>박스 태그</b>: 여러 요소들을 하나의 투명한 상자에 담아 묶어줍니다. (디자인을 위해 아주 많이 사용됨)</li>
-                            <li><code>&lt;section&gt;</code> <b>섹션 태그</b>: 내용이 같은 부분들을 하나의 구역으로 묶어줍니다. div와 비슷하지만 '의미'를 가집니다.</li>
+                            <li><code>&lt;ul&gt;</code> <b>순서 없는 목록</b>: 점(bullet)으로 표시되는 목록을 만듭니다.</li>
+                            <li><code>&lt;ol&gt;</code> <b>순서 있는 목록</b>: 숫자(1, 2, 3...)로 표시되는 목록을 만듭니다.</li>
+                            <li><code>&lt;li&gt;</code> <b>목록 항목</b>: ul이나 ol 안에서 실제 항목을 나타낼 때 씁니다.</li>
+                            <li><code>&lt;a&gt;</code> <b>링크 태그</b>: 다른 페이지나 파일로 연결합니다. <i>(예: &lt;a href="주소"&gt;텍스트&lt;/a&gt;)</i></li>
+                        </ul>
+                        <h4>4. 멀티미디어 & 입력 태그</h4>
+                        <ul>
+                            <li><code>&lt;img&gt;</code> <b>이미지 태그</b>: 이미지를 화면에 넣습니다. <i>(예: &lt;img src="이미지경로" alt="설명"&gt;)</i></li>
+                            <li><code>&lt;input&gt;</code> <b>입력창 태그</b>: 사용자에게 입력을 받습니다. type 속성에 따라 모양이 바뀝니다.</li>
+                            <li><code>&lt;button&gt;</code> <b>버튼 태그</b>: 클릭할 수 있는 버튼을 만듭니다.</li>
+                            <li><code>&lt;textarea&gt;</code> <b>여러 줄 입력창</b>: 긴 글을 입력받을 수 있는 박스를 만듭니다.</li>
+                            <li><code>&lt;label&gt;</code> <b>이름표 태그</b>: 입력창에 이름을 붙여줍니다. 클릭 시 연결된 입력창으로 포커스가 갑니다.</li>
+                        </ul>
+                        <h4>5. 공간 나누기 & 구조 태그 (Layout)</h4>
+                        <ul>
+                            <li><code>&lt;div&gt;</code> <b>박스 태그</b>: 여러 요소들을 하나의 투명한 상자에 담아 묶어줍니다.</li>
+                            <li><code>&lt;header&gt;</code> <b>상단 영역</b>: 페이지 상단의 로고나 메뉴 등이 들어가는 공간입니다.</li>
+                            <li><code>&lt;nav&gt;</code> <b>내비게이션</b>: 메뉴 버튼들이 모여 있는 곳임을 알려줍니다.</li>
+                            <li><code>&lt;main&gt;</code> <b>주요 내용</b>: 페이지의 핵심 콘텐츠가 들어가는 공간입니다.</li>
+                            <li><code>&lt;section&gt;</code> <b>섹션</b>: 문서의 주제별 구역을 나눌 때 사용합니다.</li>
+                            <li><code>&lt;article&gt;</code> <b>독립적 글</b>: 뉴스 기사나 블로그 포스트처럼 그 자체로 독립적인 내용을 담습니다.</li>
+                            <li><code>&lt;footer&gt;</code> <b>하단 영역</b>: 페이지 하단의 저작권 정보, 제작자 정보 등이 들어갑니다.</li>
+                        </ul>
+                        <h4>6. 표(Table) 태그</h4>
+                        <ul>
+                            <li><code>&lt;table&gt;</code> <b>표 정의</b>: 표 전체를 감싸는 태그입니다.</li>
+                            <li><code>&lt;tr&gt;</code> <b>표의 행(Row)</b>: 가로 한 줄을 나타냅니다.</li>
+                            <li><code>&lt;th&gt;</code> <b>표의 제목 칸</b>: 제목이 되는 칸이며 굵게 표시됩니다.</li>
+                            <li><code>&lt;td&gt;</code> <b>표의 내용 칸</b>: 실제 데이터가 들어가는 일반적인 칸입니다.</li>
                         </ul>
                     </div>
                 </details>

@@ -175,25 +175,38 @@
                     <div class="dict-content">
                         <h4>1. 마법 지팡이 (요소 찾기)</h4>
                         <ul>
-                            <li><code>document.getElementById('아이디')</code>: HTML에서 특별한 이름(id)을 가진 요소를 찾아냅니다.</li>
-                            <li><code>const 이름 = ...</code>: 찾은 요소를 '이름'이라는 상자에 담아둡니다. <i>(예: const title = document.getElementById('main-title');)</i></li>
+                            <li><code>document.getElementById('ID')</code>: HTML에서 특별한 이름(id)을 가진 요소를 한 개 찾아냅니다.</li>
+                            <li><code>document.querySelector('.class')</code>: CSS 선택자 방식으로 요소를 찾아냅니다. (매우 강력!)</li>
+                            <li><code>const 상자 = ...</code>: 변하지 않는 값을 담는 상자(상수)를 만듭니다.</li>
+                            <li><code>let 상자 = ...</code>: 언제든 바뀔 수 있는 값을 담는 상자(변수)를 만듭니다.</li>
                         </ul>
                         <h4>2. 기초 마법 (내용과 디자인 바꾸기)</h4>
                         <ul>
                             <li><code>요소.innerText = "내용"</code>: 화면에 보이는 글자를 바꿉니다.</li>
-                            <li><code>요소.style.color = "색상"</code>: 글자 색상을 바꿉니다. <i>(예: title.style.color = "blue";)</i></li>
-                            <li>💡 <b>꿀팁</b>: 문장 전체뿐만 아니라, <code>&lt;span&gt;</code>으로 감싸진 텍스트 조각에 아이디를 주면 그 부분만 콕 집어서 마법을 걸 수 있단다!</li>
+                            <li><code>요소.innerHTML = "&lt;b&gt;내용&lt;/b&gt;"</code>: HTML 태그까지 포함해서 내용을 바꿉니다.</li>
+                            <li><code>요소.style.속성 = "값"</code>: 디자인을 바꿉니다. <i>(예: style.color = "red")</i></li>
+                            <li><code>요소.classList.add('이름')</code>: 클래스를 추가해서 미리 만들어둔 스타일을 적용합니다.</li>
                         </ul>
                         <h4>3. 궁극기 마법 (함수와 이벤트)</h4>
                         <ul>
-                            <li><code>alert("메시지")</code>: 화면에 팝업 경고창(알림)을 띄웁니다.</li>
-                            <li><code>function 이름() { }</code>: 여러 마법을 하나로 묶어 '마법 주문'을 만듭니다.</li>
-                            <li><code>요소.onclick = 함수이름</code>: 요소를 마우스로 클릭했을 때 마법 주문이 발동되게 합니다.</li>
+                            <li><code>function 이름() { }</code>: 여러 마법을 하나로 묶어 '마법 주문'을 정의합니다.</li>
+                            <li><code>요소.onclick = 함수</code>: 요소를 클릭했을 때 주문을 발동시킵니다.</li>
+                            <li><code>요소.addEventListener('이벤트', 함수)</code>: 더 세밀하게 이벤트를 감시합니다. <i>(예: 'mouseover', 'keydown')</i></li>
+                            <li><code>alert("메시지")</code>: 팝업 알림창을 띄웁니다.</li>
                         </ul>
-                        <h4>4. 예지력 마법 (API와 조건문)</h4>
+                        <h4>4. 데이터와 논리 마법</h4>
                         <ul>
-                            <li><code>fetch('주소')</code>: 바깥세상(서버)에서 신선한 데이터를 가져옵니다! (API 통신)</li>
-                            <li><code>if (조건) { }</code>: 조건에 따라 마법을 다르게 씁니다. <i>(예: 성공적으로 데이터를 받았다면 사진 바꾸기!)</i></li>
+                            <li><code>console.log(값)</code>: 개발자 도구 콘솔에 비밀 메시지를 출력합니다. (디버깅용)</li>
+                            <li><code>if (조건) { } else { }</code>: 상황에 따라 마법을 다르게 씁니다.</li>
+                            <li><code>=== / !==</code>: 두 값이 같은지 혹은 다른지 비교합니다.</li>
+                            <li><code>Array (배열)</code>: 여러 데이터를 <code>[1, 2, 3]</code> 처럼 순서대로 모아둡니다.</li>
+                            <li><code>Object (객체)</code>: 데이터를 <code>{ name: "XYLO" }</code> 처럼 이름표를 붙여 모아둡니다.</li>
+                        </ul>
+                        <h4>5. 외부 세계와 통신 (API)</h4>
+                        <ul>
+                            <li><code>fetch('URL')</code>: 서버에서 실시간 데이터를 가져오는 통신 마법입니다.</li>
+                            <li><code>.then()</code>: 통신이 성공한 뒤에 할 일을 순서대로 정합니다.</li>
+                            <li><code>JSON.parse()</code>: 서버에서 온 암호 같은 데이터를 JS가 읽을 수 있게 바꿉니다.</li>
                         </ul>
                     </div>
                 </details>
