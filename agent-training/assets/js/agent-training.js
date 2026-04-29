@@ -62,10 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.cmEditor = CodeMirror.fromTextArea(editorElement, {
             mode: "htmlmixed",
             theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'tokyo-night' : 'default',
-            lineNumbers: true,
-            lineWrapping: true,
-            indentUnit: 4
-        });
+         });
+
+        // Codewhisper (스마트 자동완성) 초기화
+        if (window.Codewhisper) {
+            window.Codewhisper.init(window.cmEditor);
+        }
 
         if (window.agentInitialCode) {
             window.cmEditor.setValue(window.agentInitialCode);
@@ -375,15 +377,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dictBox) {
         const dictFile = dictBox.getAttribute('data-dict-file');
         const dictContent = document.getElementById('dictionary-content');
+        
+
+
         if (dictFile && dictContent) {
             fetch(`./assets/data/${dictFile}.html`)
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.text();
+                })
                 .then(html => {
                     dictContent.innerHTML = html;
+                    // 로드된 내용에서 힌트 자동 추출 (Codewhisper 모듈 사용)
+                    if (window.Codewhisper) {
+                        window.Codewhisper.updateFromHTML(html);
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading dictionary:', error);
-                    dictContent.innerHTML = '<p>백과사전 내용을 불러오는 데 실패했습니다.</p>';
+                    let errorMsg = '백과사전 내용을 불러오는 데 실패했습니다.';
+                    if (window.location.protocol === 'file:') {
+                        errorMsg += '<br><small>(로컬 파일 보안 정책 때문일 수 있습니다. 라이브 서버를 사용해 주세요.)</small>';
+                    }
+                    dictContent.innerHTML = `<p style="color: #ef4444; font-size: 0.9rem;">${errorMsg}</p>`;
                 });
         }
     }

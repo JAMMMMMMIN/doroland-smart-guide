@@ -1,51 +1,99 @@
 <h4>1. 웹 문서 기본 뼈대 태그</h4>
 <ul>
-    <li><code>&lt;html&gt;</code> <b>문서 정의 태그</b>: 웹 문서의 시작과 끝을 나타냅니다. 모든 내용은 이 안에 들어갑니다.</li>
-    <li><code>&lt;head&gt;</code> <b>머리말 태그</b>: 브라우저에게 문서의 정보를 알려줍니다. 화면에 직접 보이지 않습니다.</li>
-    <li><code>&lt;meta&gt;</code> <b>메타 태그</b>: 문서의 문자 인코딩 설정 등 부가 정보를 담습니다. <i>(예: &lt;meta charset="UTF-8"&gt;)</i></li>
-    <li><code>&lt;title&gt;</code> <b>제목 태그</b>: 브라우저 탭에 표시될 웹페이지의 제목을 정합니다. <i>(예: &lt;title&gt;도로랜드&lt;/title&gt;)</i></li>
-    <li><code>&lt;body&gt;</code> <b>내용(본문) 태그</b>: 실제로 화면에 보여질 모든 내용이 들어가는 공간입니다.</li>
+    <li><code>&lt;html&gt;</code> <b>문서 정의 태그</b></li>
+    <li><code>&lt;head&gt;</code> <b>머리말 태그 (정보)</b></li>
+    <li><code>&lt;meta&gt;</code> <b>메타 정보 설정</b></li>
+    <li><code>&lt;title&gt;</code> <b>문서 제목 설정</b></li>
+    <li><code>&lt;body&gt;</code> <b>본문 내용 구역</b></li>
+    <li><code>lang</code> <b>문서 사용 언어 (ko, en)</b></li>
 </ul>
+
 <h4>2. 제목 & 텍스트 꾸미기 태그</h4>
 <ul>
-    <li><code>&lt;h1&gt; ~ &lt;h6&gt;</code> <b>제목 태그</b>: 글의 제목을 만듭니다. h1이 가장 크고 h6이 가장 작습니다.</li>
-    <li><code>&lt;p&gt;</code> <b>단락 태그</b>: 일반적인 문장을 작성할 때 사용하며, 위아래에 약간의 여백이 생깁니다.</li>
-    <li><code>&lt;b&gt;</code> <b>굵은 글씨 (Bold)</b>: 글자를 단순히 굵게 만듭니다.</li>
-    <li><code>&lt;strong&gt;</code> <b>강조 (Strong)</b>: 내용이 '중요함'을 의미하며 굵게 표시됩니다.</li>
-    <li><code>&lt;i&gt;</code> <b>기울임꼴 (Italic)</b>: 글자를 단순히 기울여 씁니다.</li>
-    <li><code>&lt;em&gt;</code> <b>강조 (Emphasis)</b>: 내용을 강조할 때 쓰며 기울임꼴로 표시됩니다.</li>
-    <li><code>&lt;span&gt;</code> <b>범위 태그</b>: 문장 안에서 특정 부분만 묶어 스타일을 줄 때 사용합니다.</li>
-    <li><code>&lt;br&gt;</code> <b>줄바꿈 태그</b>: 강제로 줄을 바꿉니다. 닫는 태그가 없습니다.</li>
+    <li><code>&lt;h1&gt; ~ &lt;h6&gt;</code> <b>제목 (크기별)</b></li>
+    <li><code>&lt;p&gt;</code> <b>문단 태그</b></li>
+    <li><code>&lt;strong&gt;</code> <b>강한 강조 (굵게)</b></li>
+    <li><code>&lt;em&gt;</code> <b>의미 강조 (기울임)</b></li>
+    <li><code>&lt;span&gt;</code> <b>인라인 범위 지정</b></li>
+    <li><code>&lt;br&gt;</code> <b>줄바꿈 태그</b></li>
+    <li><code>&lt;blockquote&gt;</code> <b>인용문 구역</b></li>
+    <li><code>&lt;hr&gt;</code> <b>가로 구분선</b></li>
+    <li><code>&lt;pre&gt;</code> <b>형식화된 텍스트 (여백유지)</b></li>
+    <li><code>&lt;code&gt;</code> <b>코드 조각 표시</b></li>
 </ul>
+
 <h4>3. 목록 & 링크 태그</h4>
 <ul>
-    <li><code>&lt;ul&gt;</code> <b>순서 없는 목록</b>: 점(bullet)으로 표시되는 목록을 만듭니다.</li>
-    <li><code>&lt;ol&gt;</code> <b>순서 있는 목록</b>: 숫자(1, 2, 3...)로 표시되는 목록을 만듭니다.</li>
-    <li><code>&lt;li&gt;</code> <b>목록 항목</b>: ul이나 ol 안에서 실제 항목을 나타낼 때 씁니다.</li>
-    <li><code>&lt;a&gt;</code> <b>링크 태그</b>: 다른 페이지나 파일로 연결합니다. <i>(예: &lt;a href="주소"&gt;텍스트&lt;/a&gt;)</i></li>
+    <li><code>&lt;ul&gt;</code> <b>순서 없는 목록</b></li>
+    <li><code>&lt;ol&gt;</code> <b>순서 있는 목록</b></li>
+    <li><code>&lt;li&gt;</code> <b>목록 아이템</b></li>
+    <li><code>&lt;a&gt;</code> <b>하이퍼링크 태그</b></li>
+    <li><code>href</code> <b>연결 주소 (URL)</b></li>
+    <li><code>target</code> <b>창 열기 방식</b></li>
+    <li><code>target="_blank"</code> <b>새 창/새 탭에서 열기</b></li>
+    <li><code>target="_self"</code> <b>현재 창에서 열기</b></li>
+    <li><code>download</code> <b>파일 다운로드 지정</b></li>
 </ul>
+
 <h4>4. 멀티미디어 & 입력 태그</h4>
 <ul>
-    <li><code>&lt;img&gt;</code> <b>이미지 태그</b>: 이미지를 화면에 넣습니다. <i>(예: &lt;img src="이미지경로" alt="설명"&gt;)</i></li>
-    <li><code>&lt;input&gt;</code> <b>입력창 태그</b>: 사용자에게 입력을 받습니다. type 속성에 따라 모양이 바뀝니다.</li>
-    <li><code>&lt;button&gt;</code> <b>버튼 태그</b>: 클릭할 수 있는 버튼을 만듭니다.</li>
-    <li><code>&lt;textarea&gt;</code> <b>여러 줄 입력창</b>: 긴 글을 입력받을 수 있는 박스를 만듭니다.</li>
-    <li><code>&lt;label&gt;</code> <b>이름표 태그</b>: 입력창에 이름을 붙여줍니다. 클릭 시 연결된 입력창으로 포커스가 갑니다.</li>
+    <li><code>&lt;img&gt;</code> <b>이미지 삽입 태그</b></li>
+    <li><code>src</code> <b>이미지/파일 경로</b></li>
+    <li><code>alt</code> <b>대체 텍스트 설명</b></li>
+    <li><code>&lt;video&gt;</code> <b>비디오 재생 태그</b></li>
+    <li><code>&lt;audio&gt;</code> <b>오디오 재생 태그</b></li>
+    <li><code>controls</code> <b>재생 컨트롤러 표시</b></li>
+    <li><code>autoplay</code> <b>자동 재생 설정</b></li>
+    <li><code>loop</code> <b>반복 재생 설정</b></li>
+    <li><code>&lt;input&gt;</code> <b>입력창 생성 태그</b></li>
+    <li><code>type</code> <b>입력 양식 종류</b></li>
+    <li><code>type="text"</code> <b>일반 텍스트 입력</b></li>
+    <li><code>type="password"</code> <b>비밀번호 입력 (숨김)</b></li>
+    <li><code>type="checkbox"</code> <b>다중 선택 체크박스</b></li>
+    <li><code>type="radio"</code> <b>단일 선택 라디오</b></li>
+    <li><code>type="color"</code> <b>색상 선택 도구</b></li>
+    <li><code>type="range"</code> <b>슬라이더 조절 바</b></li>
+    <li><code>type="date"</code> <b>날짜 선택 달력</b></li>
+    <li><code>type="file"</code> <b>파일 업로드 선택</b></li>
+    <li><code>type="submit"</code> <b>양식 전송 버튼</b></li>
+    <li><code>placeholder</code> <b>입력 가이드 문구</b></li>
+    <li><code>required</code> <b>필수 입력 항목 설정</b></li>
+    <li><code>readonly</code> <b>읽기 전용 설정</b></li>
+    <li><code>disabled</code> <b>사용 불가(비활성) 설정</b></li>
+    <li><code>&lt;button&gt;</code> <b>클릭 버튼 태그</b></li>
+    <li><code>&lt;select&gt;</code> <b>드롭다운 선택창</b></li>
+    <li><code>&lt;option&gt;</code> <b>드롭다운 항목</b></li>
 </ul>
-<h4>5. 공간 나누기 & 구조 태그 (Layout)</h4>
+
+<h4>5. 표(Table) 태그</h4>
 <ul>
-    <li><code>&lt;div&gt;</code> <b>박스 태그</b>: 여러 요소들을 하나의 투명한 상자에 담아 묶어줍니다.</li>
-    <li><code>&lt;header&gt;</code> <b>상단 영역</b>: 페이지 상단의 로고나 메뉴 등이 들어가는 공간입니다.</li>
-    <li><code>&lt;nav&gt;</code> <b>내비게이션</b>: 메뉴 버튼들이 모여 있는 곳임을 알려줍니다.</li>
-    <li><code>&lt;main&gt;</code> <b>주요 내용</b>: 페이지의 핵심 콘텐츠가 들어가는 공간입니다.</li>
-    <li><code>&lt;section&gt;</code> <b>섹션</b>: 문서의 주제별 구역을 나눌 때 사용합니다.</li>
-    <li><code>&lt;article&gt;</code> <b>독립적 글</b>: 뉴스 기사나 블로그 포스트처럼 그 자체로 독립적인 내용을 담습니다.</li>
-    <li><code>&lt;footer&gt;</code> <b>하단 영역</b>: 페이지 하단의 저작권 정보, 제작자 정보 등이 들어갑니다.</li>
+    <li><code>&lt;table&gt;</code> <b>표 전체 구역</b></li>
+    <li><code>&lt;tr&gt;</code> <b>표의 한 줄 (행)</b></li>
+    <li><code>&lt;th&gt;</code> <b>표의 제목 칸</b></li>
+    <li><code>&lt;td&gt;</code> <b>표의 일반 칸</b></li>
+    <li><code>&lt;thead&gt;</code> <b>표 상단(제목) 구역</b></li>
+    <li><code>&lt;tbody&gt;</code> <b>표 본문 구역</b></li>
+    <li><code>border="1"</code> <b>표 테두리 두께 설정</b></li>
 </ul>
-<h4>6. 표(Table) 태그</h4>
+
+<h4>6. 구조 & 섹션 태그 (Semantic)</h4>
 <ul>
-    <li><code>&lt;table&gt;</code> <b>표 정의</b>: 표 전체를 감싸는 태그입니다.</li>
-    <li><code>&lt;tr&gt;</code> <b>표의 행(Row)</b>: 가로 한 줄을 나타냅니다.</li>
-    <li><code>&lt;th&gt;</code> <b>표의 제목 칸</b>: 제목이 되는 칸이며 굵게 표시됩니다.</li>
-    <li><code>&lt;td&gt;</code> <b>표의 내용 칸</b>: 실제 데이터가 들어가는 일반적인 칸입니다.</li>
+    <li><code>&lt;div&gt;</code> <b>블록 구역 나누기</b></li>
+    <li><code>&lt;header&gt;</code> <b>상단 영역 (로고/메뉴)</b></li>
+    <li><code>&lt;nav&gt;</code> <b>내비게이션 메뉴</b></li>
+    <li><code>&lt;main&gt;</code> <b>메인 콘텐츠 영역</b></li>
+    <li><code>&lt;section&gt;</code> <b>주제별 섹션 구역</b></li>
+    <li><code>&lt;article&gt;</code> <b>독립적 콘텐츠 구역</b></li>
+    <li><code>&lt;aside&gt;</code> <b>사이드바/부가 정보</b></li>
+    <li><code>&lt;footer&gt;</code> <b>하단 영역 (정보/카피)</b></li>
+</ul>
+
+<h4>7. 공통 속성 (Global Attributes)</h4>
+<ul>
+    <li><code>class</code> <b>그룹 스타일 이름</b></li>
+    <li><code>id</code> <b>고유 식별 이름</b></li>
+    <li><code>title</code> <b>마우스 오버 툴팁</b></li>
+    <li><code>style</code> <b>인라인 CSS 디자인</b></li>
+    <li><code>hidden</code> <b>요소 숨김 처리</b></li>
+    <li><code>data-*</code> <b>사용자 정의 데이터 저장</b></li>
 </ul>
