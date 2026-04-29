@@ -10,7 +10,7 @@ INFO = {
     "CREATOR": "XYLO",
     "HANDLE": "@xylito",
     "POWERED_BY": "DORO Inc.",
-    "VERSION": "1.3.2",
+    "VERSION": "1.3.3",
     "DATE": "2026.04.29.",
     "YEAR": "2026",
     "SOURCE": "https://github.com/xylito/doroland-smart-guide",
