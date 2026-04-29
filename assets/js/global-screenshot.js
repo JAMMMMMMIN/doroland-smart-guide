@@ -228,6 +228,18 @@
                 logging: false,
                 ignoreElements: el => el.id?.startsWith('screenshot') || el.tagName === 'IFRAME',
                 onclone: (clonedDoc, clonedTarget) => {
+                    // Fix Safari font kerning/overlapping issues
+                    const style = clonedDoc.createElement('style');
+                    style.innerHTML = `
+                        * { 
+                            -webkit-font-variant-ligatures: none !important;
+                            font-variant-ligatures: none !important;
+                            text-rendering: optimizeLegibility !important;
+                            -webkit-font-smoothing: antialiased !important;
+                        }
+                    `;
+                    clonedDoc.head.appendChild(style);
+
                     // Only reveal the copy-btn inside the captured element's code-wrapper,
                     // not all copy buttons globally (they should stay hidden when not hovered).
                     const wrapper = clonedTarget.closest?.('.code-wrapper') || clonedTarget.querySelector?.('.code-wrapper');
