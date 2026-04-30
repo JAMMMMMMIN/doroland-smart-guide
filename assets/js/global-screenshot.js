@@ -237,8 +237,27 @@
                             text-rendering: optimizeLegibility !important;
                             -webkit-font-smoothing: antialiased !important;
                         }
+                        /* Remove letter-spacing that breaks screenshot rendering */
+                        #hex-value { letter-spacing: 0 !important; }
                     `;
                     clonedDoc.head.appendChild(style);
+
+                    // Fix native color input rendering in html2canvas
+                    clonedDoc.querySelectorAll('input[type="color"]').forEach(input => {
+                        const val = input.value;
+                        const rect = input.getBoundingClientRect();
+                        const circle = clonedDoc.createElement('div');
+                        circle.style.cssText = `
+                            width: ${input.offsetWidth}px;
+                            height: ${input.offsetHeight}px;
+                            background-color: ${val};
+                            border-radius: 50%;
+                            border: 2px solid rgba(255, 255, 255, 0.5);
+                            display: inline-block;
+                            box-sizing: border-box;
+                        `;
+                        input.replaceWith(circle);
+                    });
 
                     // Only reveal the copy-btn inside the captured element's code-wrapper,
                     // not all copy buttons globally (they should stay hidden when not hovered).
