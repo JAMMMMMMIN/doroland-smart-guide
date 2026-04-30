@@ -106,10 +106,52 @@ window.Codewhisper = {
         let isCSSValue = false;
 
         if (mode === "css") {
-            const lastAnchor = Math.max(beforeCursorFull.lastIndexOf(';'), beforeCursorFull.lastIndexOf('{'), beforeCursorFull.lastIndexOf('\n'));
+            const lastSemicolon = beforeCursorFull.lastIndexOf(';');
+            const lastBrace = beforeCursorFull.lastIndexOf('{');
+            const lastLine = beforeCursorFull.lastIndexOf('\n');
+            const lastAnchor = Math.max(lastSemicolon, lastBrace, lastLine);
             const currentSegment = beforeCursorFull.slice(lastAnchor + 1);
+            
+            // 속성값 모드인지 판별 (중괄호 내부이고 콜론이 있는지 확인)
+            const isInsideBrace = /\{[^}]*$/.test(beforeCursorFull);
             attrMatch = currentSegment.match(/([a-zA-Z0-9-]+):\s*([^;}]*)$/);
-            isCSSValue = !!attrMatch;
+            
+            // 만약 중괄호 밖이라면 가상 클래스 및 가상 요소 추천 모드로 전환
+            if (!isInsideBrace && (beforeCursorFull.trim().endsWith(':') || beforeCursorFull.trim().endsWith('::'))) {
+                const isDouble = beforeCursorFull.trim().endsWith('::');
+                const curVal = currentSegment.match(/::?([a-z-]*)$/)?.[1] || "";
+                
+                const pseudoProps = {
+                    'hover': '🖱️ 마우스를 올렸을 때', 'active': '🖱️ 클릭하고 있을 때', 
+                    'focus': '⌨️ 포커스가 되었을 때', 'visited': '🔗 방문한 적이 있는 링크',
+                    'nth-child(n)': '🔢 n번째 자식 요소 선택', 'first-child': '🥇 첫 번째 자식 요소',
+                    'last-child': '🏁 마지막 자식 요소', 'first-of-type': '🏷️ 동일 태그 중 첫 번째',
+                    'last-of-type': '🏷️ 동일 태그 중 마지막', 'only-child': '👶 외동 자식 요소',
+                    'enabled': '✅ 활성화된 상태', 'disabled': '🚫 비활성화된 상태',
+                    'checked': '✔️ 체크된 상태 (input)', 'empty': '🕳️ 자식 요소가 없는 상태',
+                    'placeholder-shown': '💡 플레이스홀더가 보일 때', 'not()': '🚫 특정 조건 제외 선택',
+                    'root': '🌐 최상위 요소 (:root)', 'before': '✨ 요소 시작 부분에 삽입 (::)',
+                    'after': '✨ 요소 끝 부분에 삽입 (::)', 'placeholder': '💡 입력창 안내 문구 (::)',
+                    'selection': '🖱️ 드래그로 선택한 영역 (::)'
+                };
+                
+                let suggestions = [];
+                for (let p in pseudoProps) {
+                    if (p.startsWith(curVal)) {
+                        const prefix = (['before', 'after', 'placeholder', 'selection'].includes(p)) ? "::" : ":";
+                        // 사용자가 이미 입력한 콜론 개수에 맞춰 조절
+                        const insertText = isDouble ? p : prefix + p;
+                        suggestions.push({ 
+                            text: insertText, 
+                            displayText: `✨ ${prefix}${p} (${pseudoProps[p]})` 
+                        });
+                    }
+                }
+                const offset = isDouble ? 2 : 1;
+                if (suggestions.length > 0) return { list: suggestions, from: CodeMirror.Pos(cur.line, cur.ch - curVal.length - offset), to: cur };
+            }
+            
+            isCSSValue = isInsideBrace && !!attrMatch;
         } else {
             attrMatch = beforeCursorLine.match(/([a-zA-Z0-9-]+)=["']([^"']*)$/);
         }
