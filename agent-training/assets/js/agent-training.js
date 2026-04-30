@@ -120,9 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
             URL.revokeObjectURL(url);
         };
 
-        // 변경 시 자동 저장 (디바운스 처리)
+        // 변경 시 자동 저장 (디바운스 처리) 및 붙여넣기 자동 들여쓰기
         let saveTimeout;
-        window.cmEditor.on("change", () => {
+        window.cmEditor.on("change", (instance, changeObj) => {
+            // 붙여넣기 시 자동 들여쓰기 처리 (다중행 대응)
+            if (changeObj.origin === "paste") {
+                const from = changeObj.from.line;
+                const to = changeObj.from.line + changeObj.text.length;
+                for (let i = from; i < to; i++) {
+                    instance.indentLine(i, "smart");
+                }
+            }
+
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(() => {
                 localStorage.setItem(storageKey, window.cmEditor.getValue());
