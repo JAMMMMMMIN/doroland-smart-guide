@@ -264,7 +264,7 @@ window.Codewhisper = {
                             for (let v in values) {
                                 if (v.startsWith(curValue)) {
                                     suggestions.push({
-                                        text: v + (isCSSValue ? ";" : ""),
+                                        text: v + (isCSSValue ? ";" : '"'),
                                         displayText: `${v} : ${values[v]}`,
                                         hint: (cm, data, completion) => {
                                             cm.replaceRange(completion.text, data.from, data.to);
@@ -455,6 +455,13 @@ window.Codewhisper = {
                                             else if (completion.isStyle) {
                                                 replacement += " = '";
                                             }
+                                        } else if (mode === "html") {
+                                            // HTML 속성 자동 =" 삽입
+                                            const isInsideTag = /<[a-zA-Z0-9-]+\s+[^>]*$/.test(beforeCursor);
+                                            // 태그 시작(<tag)이 아니고 속성 이름인 경우만 삽입
+                                            if (isInsideTag && !replacement.startsWith('<') && !replacement.startsWith('/')) {
+                                                replacement += '="';
+                                            }
                                         }
                                         
                                         cm.replaceRange(replacement, data.from, data.to);
@@ -462,6 +469,8 @@ window.Codewhisper = {
                                         if (mode === "css" && replacement.endsWith(": ")) {
                                             setTimeout(() => cm.execCommand("autocomplete"), 10);
                                         } else if (mode === "javascript" && (replacement.endsWith("('") || replacement.endsWith(" = ") || replacement.endsWith(" = '"))) {
+                                            setTimeout(() => cm.execCommand("autocomplete"), 10);
+                                        } else if (mode === "html" && replacement.endsWith('="')) {
                                             setTimeout(() => cm.execCommand("autocomplete"), 10);
                                         }
                                     }
