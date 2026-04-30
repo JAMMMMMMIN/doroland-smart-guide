@@ -259,6 +259,29 @@ window.Codewhisper = {
                         const valStart = cur.ch - curValue.length;
                         
                         let suggestions = [];
+
+                        // 색상 관련 속성인 경우 컬러피커 힌트 추가
+                        const colorProps = ["background-color", "color", "border-color", "outline-color", "box-shadow"];
+                        if (colorProps.includes(attrName)) {
+                            suggestions.push({
+                                text: "", 
+                                displayText: "🎨 색상 선택기 실행...",
+                                hint: (cm, data, completion) => {
+                                    const colorPicker = document.getElementById('color-picker');
+                                    if (colorPicker) {
+                                        const onSelect = (e) => {
+                                            const selectedColor = e.target.value;
+                                            // 현재 입력 중인 부분(data.from ~ data.to)을 선택한 색상으로 교체
+                                            cm.replaceRange(selectedColor + ";", data.from, data.to);
+                                            colorPicker.removeEventListener('change', onSelect);
+                                        };
+                                        colorPicker.addEventListener('change', onSelect);
+                                        colorPicker.click();
+                                    }
+                                }
+                            });
+                        }
+
                         if (this.attributeValues[attrName]) {
                             const values = this.attributeValues[attrName];
                             for (let v in values) {
