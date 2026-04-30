@@ -262,10 +262,20 @@ window.Codewhisper = {
                     }
                 }
                 const full = cmInstance.getValue();
+                // 클래스 스캔
                 (full.match(/class=["']([^"']+)["']/g) || []).forEach(m => {
                     m.match(/["']([^"']+)["']/)[1].split(/\s+/).forEach(c => {
-                        if (!baseHints.list.some(h => (typeof h === 'string' ? h : h.text) === '.' + c)) baseHints.list.push({ text: '.' + c, displayText: `🎨 .${c} (문서 내 클래스)` });
+                        if (!baseHints.list.some(h => (typeof h === 'string' ? h : h.text) === '.' + c)) {
+                            baseHints.list.push({ text: '.' + c, displayText: `🎨 .${c} (문서 내 class)` });
+                        }
                     });
+                });
+                // 아이디 스캔
+                (full.match(/id=["']([^"']+)["']/g) || []).forEach(m => {
+                    const id = m.match(/["']([^"']+)["']/)[1];
+                    if (!baseHints.list.some(h => (typeof h === 'string' ? h : h.text) === '#' + id)) {
+                        baseHints.list.push({ text: '#' + id, displayText: `🆔 #${id} (문서 내 id)` });
+                    }
                 });
             }
         } else if (mode === "javascript") {
