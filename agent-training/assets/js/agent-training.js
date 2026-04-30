@@ -65,8 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
             lineNumbers: true,
             lineWrapping: true,
             indentUnit: 4,
+            tabSize: 4,
+            indentWithTabs: false,
+            smartIndent: true,
             extraKeys: {"Ctrl-Space": "autocomplete"},
-            autoCloseTags: true
+            autoCloseTags: true,
+            autoCloseBrackets: true
         });
 
         // Codewhisper (스마트 자동완성) 초기화
