@@ -166,7 +166,58 @@ body {
             display: flex;
             align-items: center;
             gap: 10px;
+            position: relative; /* 버튼 절대 배치를 위해 */
         }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .panel-header-actions {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .btn-reset, .btn-download {
+            background: rgba(248, 250, 252, 0.9) !important;
+            border: 1px solid rgba(226, 232, 240, 0.6) !important;
+            color: #334155 !important;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            user-select: none;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-reset:hover {
+            background: #fff !important;
+            transform: scale(1.05);
+            color: #ef4444 !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-download:hover {
+            background: #fff !important;
+            transform: scale(1.05);
+            color: var(--primary) !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-reset::before { content: '🔄'; font-size: 0.8rem; }
+        .btn-download::before { content: '💾'; font-size: 0.8rem; }
 
         /* Columns Layout */
         .scenario-col { flex: 1.2; min-width: 300px; }
@@ -457,10 +508,7 @@ body {
             color: #fff !important;
         }
 
-        @media (max-width: 1024px) {
-            .main-container { flex-direction: column; height: auto; overflow-y: auto;}
-            .panel { min-height: 400px; }
-            body { overflow: auto; height: auto; }
+        @media (max-width: 1045px) {
             header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -475,6 +523,12 @@ body {
                 width: 100%;
                 justify-content: flex-end;
             }
+        }
+
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; height: auto; overflow-y: auto;}
+            .panel { min-height: 400px; }
+            body { overflow: auto; height: auto; }
             .CodeMirror {
                 height: 350px !important;
                 flex: none;
@@ -520,14 +574,14 @@ body {
                 user-select: none;
                 text-decoration: none;
                 font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             }
             .nav-btn:hover, .nav-btn:active {
                 background: rgba(248, 250, 252, 1);
                 transform: scale(1.05);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.15);
             }
         }
-
-
 
         @media (min-width: 1025px) and (max-width: 1536px) {
             .main-container {

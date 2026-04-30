@@ -74,9 +74,53 @@ document.addEventListener('DOMContentLoaded', () => {
             window.Codewhisper.init(window.cmEditor);
         }
 
-        if (window.agentInitialCode) {
+        // 1. 코드 저장 및 불러오기 (localStorage)
+        const storageKey = `doroland-code-${window.location.pathname}`;
+        const savedCode = localStorage.getItem(storageKey);
+
+        if (savedCode) {
+            window.cmEditor.setValue(savedCode);
+        } else if (window.agentInitialCode) {
             window.cmEditor.setValue(window.agentInitialCode);
         }
+
+        // 수동 초기화 함수
+        window.resetCode = function() {
+            if (confirm("작성 중인 코드를 초기화하고 처음 상태로 되돌리겠습니까?")) {
+                localStorage.removeItem(storageKey);
+                if (window.agentInitialCode) {
+                    window.cmEditor.setValue(window.agentInitialCode);
+                }
+            }
+        };
+
+        // 코드 다운로드 함수
+        window.downloadCode = function() {
+            const code = window.cmEditor.getValue();
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            // 파일명 생성 (페이지명 기반)
+            const pageName = window.location.pathname.split('/').pop().replace('.html', '');
+            a.href = url;
+            a.download = `doroland_${pageName}_result.html`;
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        // 변경 시 자동 저장 (디바운스 처리)
+        let saveTimeout;
+        window.cmEditor.on("change", () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem(storageKey, window.cmEditor.getValue());
+            }, 1000);
+            updatePreview();
+        });
 
         function updatePreview() {
             const lines = window.cmEditor.getValue().split('\n');

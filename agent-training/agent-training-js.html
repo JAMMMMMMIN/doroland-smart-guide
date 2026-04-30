@@ -256,6 +256,10 @@ btn.onclick = showMagic;</code>
         <div class="panel editor-col" id="editor">
             <div class="panel-header">
                 ⚡ 코드 편집기 (JS)
+                <div class="panel-header-actions">
+                    <button class="btn-download" onclick="downloadCode()">다운로드</button>
+                    <button class="btn-reset" onclick="resetCode()">초기화</button>
+                </div>
             </div>
             <div class="editor-container">
                 <textarea id="html-editor" spellcheck="false"></textarea>
