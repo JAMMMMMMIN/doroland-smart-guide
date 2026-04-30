@@ -153,11 +153,6 @@
         <div class="logo">
             🤖 <span>도로랜드</span> 정보국 웹 특수작전팀
             <div class="status-badge">신입 요원 훈련 중</div>
-            <div class="color-picker-container">
-                <label for="color-picker">🎨 색상 추출기</label>
-                <input type="color" id="color-picker" value="#38bdf8">
-                <span id="hex-value">#38bdf8</span>
-            </div>
         </div>
         <div class="header-controls">
             <a href="https://developer.mozilla.org/ko/docs/Web/CSS" target="_blank" rel="noopener noreferrer" class="portal-btn">🦊 MDN CSS</a>
@@ -276,6 +271,10 @@
         <div class="panel editor-col" id="editor">
             <div class="panel-header">
                 🎨 코드 편집기 (CSS)
+                <div class="color-picker-container">
+                    <input type="color" id="color-picker" value="#38bdf8">
+                    <span id="hex-value">#38bdf8</span>
+                </div>
                 <div class="panel-header-actions">
                     <button class="btn-download" onclick="downloadCode()">다운로드</button>
                     <button class="btn-reset" onclick="resetCode()">초기화</button>
@@ -406,17 +405,35 @@
                 // 초기화
                 updateColor(colorPicker.value);
 
+                // 컨테이너 클릭 시 컬러피커 실행 (단, 헥스코드 클릭 시 제외)
+                const container = document.querySelector('.color-picker-container');
+                if (container) {
+                    container.style.cursor = 'pointer';
+                    container.addEventListener('click', (e) => {
+                        if (e.target !== hexValue) {
+                            colorPicker.click();
+                        }
+                    });
+                }
+
                 // 클릭하여 복사 기능 추가
                 hexValue.style.cursor = 'pointer';
                 hexValue.title = '클릭하여 HEX 코드 복사';
-                hexValue.addEventListener('click', () => {
+                hexValue.addEventListener('click', (e) => {
+                    e.stopPropagation(); // 컨테이너 클릭 이벤트 전파 방지
                     const color = hexValue.textContent;
+                    if (color === '복사됨 ✅') return; // 이미 복사된 상태면 중복 방지
+                    
                     navigator.clipboard.writeText(color).then(() => {
                         const originalText = hexValue.textContent;
+                        const originalColor = hexValue.style.color;
                         hexValue.textContent = '복사됨 ✅';
+                        hexValue.style.color = 'var(--primary)';
                         hexValue.style.fontWeight = 'bold';
                         setTimeout(() => {
                             hexValue.textContent = originalText;
+                            hexValue.style.color = originalColor;
+                            
                         }, 1000);
                     });
                 });
