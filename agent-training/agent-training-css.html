@@ -199,18 +199,18 @@
 
                 <div class="mission-card">
                     <div class="mission-step">미션 2</div>
-                    <h3>제목 색상 바꾸기</h3>
-                    <p>가장 큰 제목이 눈에 띄도록 진한 파란색으로 바꿔주세요!</p>
-                    <span class="tag-hint">힌트: h1 태그 사용</span><br>
-                    <code>h1 { color: #1e3a8a; }</code>
+                    <h3>모든 제목 가운데 정렬하기</h3>
+                    <p>태그 선택자(h1)를 사용하면 모든 제목이 한꺼번에 가운데로 정렬돼요!</p>
+                    <span class="tag-hint">힌트: h1 태그 선택자 사용</span><br>
+                    <code>h1 { text-align: center; }</code>
                 </div>
 
                 <div class="mission-card">
                     <div class="mission-step">미션 3</div>
-                    <h3>제목 가운데 정렬하기</h3>
-                    <p>제목이 예쁘게 가운데에 오도록 위치를 옮겨볼게요.</p>
-                    <span class="tag-hint">힌트: text-align 속성 사용</span><br>
-                    <code>h1 { text-align: center; }</code>
+                    <h3>특정 제목만 색상 바꾸기</h3>
+                    <p>아이디 선택자(#main-title)를 사용하면 내가 원하는 딱 하나의 제목만 색상을 바꿀 수 있어요.</p>
+                    <span class="tag-hint">힌트: #id 선택자 사용</span><br>
+                    <code>#main-title { color: #1e3a8a; }</code>
                 </div>
 
                 <div class="mission-card">
@@ -254,7 +254,7 @@
 
                 <div class="mission-card">
                     <div class="mission-step">미션 8</div>
-                    <h3>섹션 꾸미기 (박스 마법)</h3>
+                    <h3>섹션 꾸미기 (클래스 선택자)</h3>
                     <p>내용이 들어있는 상자(content-box)에 예쁜 색상과 테두리를 줘서 특별한 구역으로 만들어볼까요?</p>
                     <span class="tag-hint">힌트: .content-box 클래스 선택자 사용</span><br>
                     <code>.content-box {
@@ -322,10 +322,10 @@
         /* 미션 1: 배경색 칠하기 */
         
         
-        /* 미션 2: 제목 색상 바꾸기 */
+        /* 미션 2: 모든 제목 가운데 정렬하기 (태그 선택자) */
         
         
-        /* 미션 3: 제목 가운데 정렬하기 */
+        /* 미션 3: 특정 제목만 색상 바꾸기 (아이디 선택자) */
         
         
         /* 미션 4: 소개글 크기 키우기 */
@@ -340,14 +340,15 @@
         /* 미션 7: 버튼에 호버 마법 걸기 */
         
         
-        /* 미션 8: 섹션 꾸미기 (박스 마법) */
+        /* 미션 8: 섹션 꾸미기 (클래스 선택자) */
         
         
     </style>
 </head>
 <body>
     <div class="content-box">
-        <h1>도로랜드에 오신 것을 환영합니다!</h1>
+        <h1>당신만을 위한 신비한 모험이 준비된</h1>
+        <h1 id="main-title">도로랜드에 오신 것을 환영합니다!</h1>
         <p>이곳은 공공데이터로 움직이는 미래형 테마파크입니다. 스마트 어트랙션을 즐겨보세요!</p>
         <ul>
             <li>스마트 사파리</li>
