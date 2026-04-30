@@ -451,9 +451,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         if (dictFile && dictContent) {
-            fetch(`./assets/data/${dictFile}.html`)
+            const cleanDictFile = dictFile.trim();
+            // 타임스탬프를 추가하여 브라우저의 강한 캐싱이나 404 기억 현상을 방지
+            fetch(`assets/data/${cleanDictFile}.html?v=${Date.now()}`, { cache: 'no-cache' })
                 .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
+                    if (!response.ok) throw new Error(`HTTP ${response.status} (${response.statusText})`);
                     return response.text();
                 })
                 .then(html => {
@@ -463,23 +465,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => {
                     console.warn('External dictionary load failed, using dump fallback:', error);
                     
-                    // 덤프 자료(Fallback) 사용 로직
-                    const type = dictFile.split('-')[1]; // html, css, js 추출
+                    const type = cleanDictFile.split('-')[1]; // html, css, js 추출
                     const fallbackHtml = (window.CodewhisperDump && window.CodewhisperDump[type]) 
                                         ? `<ul>${window.CodewhisperDump[type]}</ul>`
                                         : null;
 
                     if (fallbackHtml) {
-                        dictContent.innerHTML = fallbackHtml + '<p style="color: #6366f1; font-size: 0.8rem; margin-top: 10px;">ℹ️ 오프라인 모드: 덤프 자료가 로드되었습니다.</p>';
+                        let statusMsg = 'ℹ️ 오프라인 모드: 덤프 자료가 로드되었습니다.';
+                        if (window.location.protocol !== 'file:') {
+                            // 오류 원인을 사용자에게 노출하여 디버깅 지원
+                            statusMsg = `⚠️ 자료 로드 실패 (${error.message}): 백업 데이터를 표시합니다.`;
+                        }
+                        
+                        dictContent.innerHTML = fallbackHtml + `<p style="color: #6366f1; font-size: 0.8rem; margin-top: 10px;">${statusMsg}</p>`;
                         if (window.Codewhisper) {
                             window.Codewhisper.updateFromHTML(fallbackHtml);
-                            // CSS 요원 페이지라면 HTML 태그 덤프도 추가로 불러오기 (선택자 힌트용)
                             if (type === 'css' && window.CodewhisperDump.html) {
                                 window.Codewhisper.updateFromHTML(`<ul>${window.CodewhisperDump.html}</ul>`);
                             }
                         }
                     } else {
-                        let errorMsg = '백과사전 내용을 불러오는 데 실패했습니다.';
+                        let errorMsg = `백과사전 내용을 불러오는 데 실패했습니다. (${error.message})`;
                         if (window.location.protocol === 'file:') {
                             errorMsg += '<br><small>(로컬 파일 보안 정책 때문입니다. 라이브 서버를 사용하시거나 덤프 파일을 확인해 주세요.)</small>';
                         }
@@ -490,7 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // CSS/JS 페이지라도 HTML 태그 힌트를 위해 HTML 사전을 추가로 로드
         if (dictFile && dictFile !== 'dict-html') {
-            fetch(`./assets/data/dict-html.html`)
+            fetch(`assets/data/dict-html.html`, { cache: 'no-cache' })
                 .then(r => r.ok ? r.text() : null)
                 .then(html => {
                     if (html && window.Codewhisper) window.Codewhisper.updateFromHTML(html);
@@ -503,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // JS 페이지라면 CSS 사전도 로드 (.style. 힌트용)
         if (dictFile === 'dict-js') {
-            fetch(`./assets/data/dict-css.html`)
+            fetch(`assets/data/dict-css.html`, { cache: 'no-cache' })
                 .then(r => r.ok ? r.text() : null)
                 .then(html => {
                     if (html && window.Codewhisper) window.Codewhisper.updateFromHTML(html);

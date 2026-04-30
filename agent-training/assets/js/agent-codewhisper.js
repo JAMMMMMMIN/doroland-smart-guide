@@ -418,6 +418,27 @@ window.Codewhisper = {
         return { list: filtered.slice(0, 15), from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end) };
     },
 
+    // 백과사전 HTML에서 태그와 설명을 추출하여 자동완성에 반영하는 메서드
+    updateFromHTML: function(html) {
+        if (!html) return;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const items = doc.querySelectorAll('li');
+        items.forEach(li => {
+            const code = li.querySelector('code');
+            const bold = li.querySelector('b');
+            if (code && bold) {
+                // < > 기호와 공백을 제거하여 순수 태그명/속성명 추출
+                let key = code.textContent.replace(/[<>\s]/g, '');
+                let desc = bold.textContent.trim();
+                // 기존에 없는 설명이거나 더 긴 설명인 경우 업데이트
+                if (!this.descriptions[key] || this.descriptions[key].length < desc.length) {
+                    this.descriptions[key] = desc;
+                }
+            }
+        });
+    },
+
     init: function(editor) {
         if (!editor) return;
         editor.on("inputRead", (cm, change) => {
