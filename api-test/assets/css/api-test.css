@@ -210,6 +210,7 @@ header {
     color: #1e293b;
     padding: 15px 30px;
     display: flex;
+    flex-wrap: wrap; /* 줄바꿈 허용 */
     justify-content: space-between;
     align-items: center;
     z-index: 90;
@@ -243,13 +244,13 @@ header {
 
 @media (max-width: 1024px) {
     header {
-        flex-direction: column;
+        /* flex-direction: column 대신 wrap 기반으로 부드럽게 전환 */
         align-items: flex-start;
         gap: 15px;
         padding: 15px 20px;
     }
     .logo {
-        flex-wrap: wrap;
+        width: 100%; /* 전체 너비 차지하여 아래로 밀어냄 */
         font-size: 1.2rem;
     }
     .header-controls {

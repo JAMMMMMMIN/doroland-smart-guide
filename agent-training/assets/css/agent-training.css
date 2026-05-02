@@ -130,6 +130,7 @@ body {
             top: 0;
             padding: 15px 30px;
             display: flex;
+            flex-wrap: wrap; /* 부드러운 반응형을 위해 추가 */
             justify-content: space-between;
             align-items: center;
             background: var(--header-bg);
@@ -163,11 +164,20 @@ body {
 
         .main-container {
             display: flex;
+            flex-direction: row; 
             flex: 1;
             padding: 20px;
             gap: 20px;
-            height: calc(100vh - 105px);
+            height: calc(100vh - 105px); 
             box-sizing: border-box;
+            transition: all 0.4s ease;
+        }
+
+        .training-main {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+            gap: 20px;
             transition: all 0.4s ease;
         }
 
@@ -246,9 +256,19 @@ body {
         .btn-download::before { content: '💾'; font-size: 0.8rem; }
 
         /* Columns Layout */
-        .scenario-col { flex: 1.2; min-width: 300px; }
-        .editor-col { flex: 1.5; min-width: 300px; }
-        .preview-col { flex: 1.5; min-width: 300px; }
+        /* Columns Layout - Default Desktop (> 1536px) */
+        .scenario-col { 
+            width: 30%; 
+            height: 100%; 
+        }
+        .editor-col { 
+            flex: 1;
+            height: 100%; 
+        }
+        .preview-col { 
+            flex: 1;
+            height: 100%; 
+        }
 
         /* Scenario Content */
         .scenario-content {
@@ -535,17 +555,33 @@ body {
         }
 
         @media (max-width: 1024px) {
-            .main-container { flex-direction: column; height: auto; overflow-y: auto;}
-            .panel { min-height: 400px; }
+            .main-container { 
+                flex-direction: column;
+                height: auto; 
+                overflow-y: auto;
+            }
+            .training-main {
+                flex-direction: column;
+                width: 100%;
+            }
+            .scenario-col {
+                width: 100%;
+                min-height: 400px;
+            }
+            .panel { 
+                width: 100% !important;
+                height: auto !important;
+                min-height: 400px; 
+            }
             body { overflow: auto; height: auto; }
             header {
-                flex-direction: column;
+                /* flex-direction: column 대신 wrap 기반으로 부드럽게 전환 */
                 align-items: flex-start;
                 gap: 15px;
                 padding: 15px 20px;
             }
             .logo {
-                flex-wrap: wrap;
+                width: 100%;
                 font-size: 1.2rem;
             }
             .header-controls {
@@ -616,27 +652,21 @@ body {
         }
 
         @media (min-width: 1025px) and (max-width: 1536px) {
-            .main-container {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: 1fr 1fr;
-                gap: 20px;
-            }
             .scenario-col {
-                grid-column: 1 / 2;
-                grid-row: 1 / 3;
-                min-width: unset;
-                height: 100%;
+                width: 40%;
+                height: 100%; 
+            }
+            .training-main {
+                flex-direction: column; /* 편집기와 결과창을 위아래로 쌓음 */
+                width: 60%;
             }
             .editor-col {
-                grid-column: 2 / 3;
-                grid-row: 1 / 2;
-                min-width: unset;
+                width: 100%;
+                height: calc(50% - 10px); 
             }
             .preview-col {
-                grid-column: 2 / 3;
-                grid-row: 2 / 3;
-                min-width: unset;
+                width: 100%;
+                height: calc(50% - 10px); 
             }
             .intro-box {
                 flex-direction: column;

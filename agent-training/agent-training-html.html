@@ -294,27 +294,30 @@
             </div>
         </div>
 
-        <!-- Editor Column -->
-        <div class="panel editor-col" id="editor">
-            <div class="panel-header">
-                💻 코드 편집기 (HTML)
-                <div class="panel-header-actions">
-                    <button class="btn-download" onclick="downloadCode()">다운로드</button>
-                    <button class="btn-reset" onclick="resetCode()">초기화</button>
+        <!-- Training Content (Editor + Preview) -->
+        <div class="training-main">
+            <!-- Editor Column -->
+            <div class="panel editor-col" id="editor">
+                <div class="panel-header">
+                    💻 코드 편집기 (HTML)
+                    <div class="panel-header-actions">
+                        <button class="btn-download" onclick="downloadCode()">다운로드</button>
+                        <button class="btn-reset" onclick="resetCode()">초기화</button>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <textarea id="html-editor" spellcheck="false"></textarea>
                 </div>
             </div>
-            <div class="editor-container">
-                <textarea id="html-editor" spellcheck="false"></textarea>
-            </div>
-        </div>
 
-        <!-- Preview Column -->
-        <div class="panel preview-col" id="preview">
-            <div class="panel-header">
-                🌐 실시간 결과 화면
-            </div>
-            <div class="preview-container">
-                <iframe id="preview-frame"></iframe>
+            <!-- Preview Column -->
+            <div class="panel preview-col" id="preview">
+                <div class="panel-header">
+                    🌐 실시간 결과 화면
+                </div>
+                <div class="preview-container">
+                    <iframe id="preview-frame"></iframe>
+                </div>
             </div>
         </div>
     </div>
