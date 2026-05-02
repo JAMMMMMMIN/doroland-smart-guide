@@ -216,23 +216,6 @@ header {
     transition: all 0.4s ease;
 }
 
-@media (max-width: 1024px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        padding: 15px 20px;
-    }
-    .logo {
-        flex-wrap: wrap;
-        font-size: 1.2rem;
-    }
-    .header-controls {
-        width: 100%;
-        justify-content: flex-end;
-    }
-}
-
 [data-theme="dark"] header {
     background: rgba(30, 41, 59, 0.8);
     border-bottom: 1px solid var(--primary);
@@ -255,6 +238,23 @@ header {
 .logo span {
     color: var(--primary);
     text-shadow: 0 0 10px var(--primary-glow);
+}
+
+@media (max-width: 1024px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+    .logo {
+        flex-wrap: wrap;
+        font-size: 1.2rem;
+    }
+    .header-controls {
+        width: 100%;
+        justify-content: flex-end;
+    }
 }
 
 .status-badge {
